@@ -38,6 +38,7 @@
         {
             "type": "shell",
             "label": "Build Everything",
+            "command": "${workspaceFolder}/build-all.bat",
             "windows": {
                 "command": "${workspaceFolder}/build-all.bat",
             },

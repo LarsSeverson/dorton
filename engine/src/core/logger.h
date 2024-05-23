@@ -22,7 +22,7 @@ typedef enum LOG_LEVEL
   TRACE = 5
 } LOG_LEVEL;
 
-b8 init_logging();
+DResult init_logging();
 void quit_logging();
 
 DAPI void log_print(LOG_LEVEL level, const char *message, ...);

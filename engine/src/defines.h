@@ -20,6 +20,15 @@ typedef double f64;
 typedef int b32;
 typedef _Bool b8;
 
+// Results
+typedef enum DResult {
+  D_SUCCESS = 0,
+  D_ERROR = 1
+} DResult;
+
+#define true 1
+#define false 0
+
 // Properly define static assertions
 #if defined(__clang__) || defined(__gcc__)
 #define STATIC_ASSERT _Static_assert
@@ -40,11 +49,6 @@ STATIC_ASSERT(sizeof(i64) == 8, "Expected i64 to be 8 byte.");
 
 STATIC_ASSERT(sizeof(f32) == 4, "Expected f32 to be 4 byte.");
 STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 byte.");
-
-#define TRUE 1
-#define FALSE 0
-#define D_SUCCESS 1
-#define D_FAILURE 0
 
 // Platform
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)

@@ -10,10 +10,10 @@ void report_assertion_failure(const char *expression, const char *message, const
   log_print(FATAL, "Assertion failture: %s, message: '%s', in file: %s, line: %d\n", expression, message, file, line);
 }
 
-b8 init_logging()
+DResult init_logging()
 {
   // TODO: create a log file
-  return TRUE;
+  return D_SUCCESS;
 }
 
 void quit_logging()

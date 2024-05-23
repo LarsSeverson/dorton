@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 
 typedef struct WindowCreateInfo {
-  const char* title;
+  const char *title;
   i32 x;
   i32 y;
   i32 width;
@@ -17,10 +17,10 @@ typedef struct Window {
   GLFWwindow *window;
 } Window;
 
-DAPI b8 window_create(Window* window, WindowCreateInfo* create_info);
-DAPI b8 window_destroy(Window* window);
+DResult window_create(Window* window, WindowCreateInfo* create_info);
+DResult window_destroy(Window window);
 
 DAPI b8 window_running(Window* window);
-DAPI b8 window_poll_events(Window* window);
+DAPI void window_poll_events(Window* window);
 
 

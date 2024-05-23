@@ -1,17 +1,28 @@
-#include <window/window.h>
+#include <core/app.h>
 #include <stdio.h>
+#include <crates/darray.h>
 int main(void)
 {
-  Window window = {0};
+  // App app;
+  // AppCreateInfo create_info = {0};
 
-  WindowCreateInfo create_info = {0};
-  create_info.height = 720;
-  create_info.width = 1250;
-  create_info.title = "Dorton";
-  window_create(&window, &create_info);
-  while(window_running(&window)) {
-    window_poll_events(&window);
+  // app_create(&app, &create_info);
+  // app_run(&app);
+  // getchar();
+
+  DArray array;
+
+  darray_create(&array, int);
+
+  for (int i = 0; i < 25; ++i)
+  {
+    darray_push(&array, i); 
   }
-  window_destroy(&window);
+  for (int i = 0; i < array.size; ++i)
+  {
+    printf("%i\n", ((int *)(array.raw_array))[i]);
+  }
+  darray_destroy(array);
+
   return 0;
 }
