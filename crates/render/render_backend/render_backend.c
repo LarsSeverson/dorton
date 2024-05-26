@@ -2,7 +2,12 @@
 
 #include "../../logger/logger.h"
 
+#include "../../dorton_util/darray/darray.h"
+#include "../../dorton_util/dstring/dstring.h"
+
 #include <GLFW/glfw3.h>
+
+#include <stdlib.h>
 
 DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *create_info)
 {
@@ -18,16 +23,32 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
   VkInstanceCreateInfo inst_create_info = {VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
   inst_create_info.pApplicationInfo = &app_info;
 
+  DArray required_extensions;
+  darray_create(&required_extensions, const char *);
+
   u32 extension_count = 0;
   const char **glfw_extensions = glfwGetRequiredInstanceExtensions(&extension_count);
 
-  // extension_count += other extensions
+  for (int i = 0; i < extension_count; ++i)
+  {
+    darray_push(&required_extensions, glfw_extensions[i]);
+  }
+
+#if defined(_DEBUG)
+  darray_push(&required_extensions, &VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+  extension_count++;
+
+  DDEBUG("Required extensions:");
+  for (int i = 0; i < extension_count; ++i) {
+    DDEBUG(*((const char**)darray_get(&required_extensions, i)))
+  }
+#endif
 
   inst_create_info.enabledExtensionCount = extension_count;
-  inst_create_info.ppEnabledExtensionNames = glfw_extensions;
+  inst_create_info.ppEnabledExtensionNames = darray_data(&required_extensions);
   inst_create_info.enabledLayerCount = 0;
   inst_create_info.ppEnabledLayerNames = 0;
-
+  
   if (vkCreateInstance(&inst_create_info, backend->vulkan_context.allocation_callbacks, &backend->vulkan_context.instance) != VK_SUCCESS)
   {
     DFATAL("Unable to create render instance.");
@@ -40,7 +61,7 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
 DResult render_backend_destroy(RenderBackend backend)
 {
   vkDestroyInstance(backend.vulkan_context.instance, backend.vulkan_context.allocation_callbacks);
-
+  
   return D_SUCCESS;
 }
 

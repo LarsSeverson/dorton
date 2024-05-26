@@ -12,7 +12,7 @@ typedef struct DArray
 } DArray;
 
 DAPI DResult _darray_create(DArray *array, u64 length, u64 stride);
-DAPI DResult _darray_destroy(DArray array);
+DAPI DResult _darray_destroy(DArray *array);
 
 DAPI DResult _darray_resize(DArray *array, u64 size);
 
@@ -24,6 +24,8 @@ DAPI DResult _darray_pop_at(DArray *array, u64 index);
 
 DAPI void *_darray_get(DArray *array, u64 index);
 DAPI DResult _darray_set(DArray *array, const void *val, u64 index);
+
+DAPI void *_darray_data(DArray *array);
 
 DAPI u64 darray_size(DArray *array);
 
@@ -48,7 +50,7 @@ DAPI u64 darray_size(DArray *array);
     _darray_push(array, &temp); \
   }
 
-#define darray_insert(array, val, index) \
+#define darray_insert(array, val, index)  \
   {                                       \
     typeof(val) temp = val;               \
     _darray_push_at(array, &temp, index); \
@@ -68,3 +70,6 @@ DAPI u64 darray_size(DArray *array);
     typeof(val) temp = val;           \
     _darray_set(array, &temp, index); \
   }
+
+#define darray_data(array) \
+  _darray_data(array)

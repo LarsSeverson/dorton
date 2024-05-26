@@ -17,12 +17,12 @@ DResult _darray_create(DArray *array, u64 length, u64 stride)
   return D_SUCCESS;
 }
 
-DResult _darray_destroy(DArray array)
+DResult _darray_destroy(DArray* array)
 {
-  if (array.raw_array)
+  if (array->raw_array)
   {
-    free(array.raw_array);
-    array.raw_array = NULL;
+    free(array->raw_array);
+    array->raw_array = NULL;
   }
   return D_SUCCESS;
 }
@@ -153,6 +153,11 @@ DResult _darray_set(DArray *array, const void *val, u64 index)
   char *element_at_index = (char *)array->raw_array + array->stride * index;
   memcpy(element_at_index, val, array->stride);
   return D_SUCCESS;
+}
+
+void *_darray_data(DArray *array)
+{
+  return array->raw_array;
 }
 
 u64 darray_size(DArray *array)
