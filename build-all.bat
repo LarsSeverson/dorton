@@ -3,14 +3,14 @@ REM Build Everthing
 
 ECHO "Building everything"
 
-PUSHD engine
+PUSHD crates 
 CALL build.bat
 POPD
-IF %ERRORLEVEL% NEQ 0 (echo Error:%ERRORLEVEL% && pause)
+IF %ERRORLEVEL% NEQ 0 (echo Error:%ERRORLEVEL% && exit)
 
-PUSHD testbed
+PUSHD src 
 CALL build.bat
 POPD
-IF %ERRORLEVEL% NEQ 0 (echo Error:%ERRORLEVEL% && pause)
+IF %ERRORLEVEL% NEQ 0 (echo Error:%ERRORLEVEL% && exit)
 
-ECHO "All assemblies build successfurly"
+ECHO "All assemblies build successfully"

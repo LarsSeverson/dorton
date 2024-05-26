@@ -2,15 +2,15 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "Build Engine",
+            "label": "Build crates",
             "windows": {
-                "command": "${workspaceFolder}/engine/build.bat"
+                "command": "${workspaceFolder}/crates/build.bat"
             },
             "linux": {
-                "command": "${workspaceFolder}/engine/build.sh"
+                "command": "${workspaceFolder}/crates/build.sh"
             },
             "options": {
-                "cwd": "${workspaceFolder}/engine"
+                "cwd": "${workspaceFolder}/crates"
             },
             "problemMatcher": [
                 "$gcc"

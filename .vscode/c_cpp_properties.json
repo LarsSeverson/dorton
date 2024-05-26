@@ -3,7 +3,8 @@
         { 
             "name": "Win32",
             "includePath": [
-              "${workspaceFolder}/engine/src/**",
+              "${workspaceFolder}/crates/**",
+              "${workspaceFolder}/crates/internal/**",
               "${VULKAN_SDK}/include",
               "${GLFW}/include"
             ],
