@@ -56,6 +56,10 @@ STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 byte.");
 #ifndef _WIN64
 #error "64-bit Windows is required."
 #endif
+
+#elif defined(__linux__) || defined(__gnu_linux__)
+#define DPLATFORM_LINUX 1
+
 #endif
 
 // DLL spec

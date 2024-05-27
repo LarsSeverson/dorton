@@ -1,6 +1,11 @@
 #include "app.h"
 
-#include "../logger/logger.h"
+void test(int x) {
+  print("%d", x);
+
+  
+}
+/* #include "../logger/logger.h"
 
 static b8 initialized = false; // TODO: [Temp] no more than 1 app at a time
 
@@ -121,4 +126,4 @@ DResult app_destroy(App app)
   DINFO("App destroyed successfully.");  
 
   return D_SUCCESS;
-}
+} */
