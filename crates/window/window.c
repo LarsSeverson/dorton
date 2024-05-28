@@ -4,7 +4,6 @@
 #include "../event/event.h"
 
 #include <stdlib.h>
-#include <windows.h>
 
 DResult window_create(Window *window, WindowCreateInfo *create_info)
 {
@@ -36,9 +35,9 @@ DResult window_create(Window *window, WindowCreateInfo *create_info)
   return D_SUCCESS;
 }
 
-DResult window_destroy(Window window)
+DResult window_destroy(Window *window)
 {
-  glfwDestroyWindow(window.window);
+  glfwDestroyWindow(window->window);
   glfwTerminate();
 
   return D_SUCCESS;
@@ -52,9 +51,4 @@ b8 window_running(Window *window)
 void window_poll_events(Window *window)
 {
   glfwPollEvents();
-}
-
-void window_sleep(u64 ms)
-{
-  Sleep(ms);
 }

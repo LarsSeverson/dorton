@@ -49,18 +49,21 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
   inst_create_info.enabledLayerCount = 0;
   inst_create_info.ppEnabledLayerNames = 0;
   
-  if (vkCreateInstance(&inst_create_info, backend->vulkan_context.allocation_callbacks, &backend->vulkan_context.instance) != VK_SUCCESS)
-  {
-    DFATAL("Unable to create render instance.");
-    return D_ERROR;
-  }
+  // if (vkCreateInstance(&inst_create_info, backend->vulkan_context.allocation_callbacks, &backend->vulkan_context.instance) != VK_SUCCESS)
+  // {
+  //   darray_destroy(&required_extensions);
+  //   DFATAL("Unable to create render instance.");
+  //   return D_ERROR;
+  // }
+
+  darray_destroy(&required_extensions);
 
   return D_SUCCESS;
 }
 
-DResult render_backend_destroy(RenderBackend backend)
+DResult render_backend_destroy(RenderBackend *backend)
 {
-  vkDestroyInstance(backend.vulkan_context.instance, backend.vulkan_context.allocation_callbacks);
+  vkDestroyInstance(backend->vulkan_context.instance, backend->vulkan_context.allocation_callbacks);
   
   return D_SUCCESS;
 }

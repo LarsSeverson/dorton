@@ -1,5 +1,24 @@
 {
     "configurations": [
+        {
+          "name": "Linux",
+          "includePath": [
+            "${workspaceFolder}/crates/**",
+            "${workspaceFolder}/crates/internal/**",
+            "${VULKAN_SDK}/include",
+            "${GLFW}/include"
+          ],
+          "defines": [
+            "_DEBUG",
+            "UNICODE",
+            "_UNICODE",
+            "DEXPORT"
+          ],
+          "compilerPath": "/usr/bin/clang",
+          "cStandard": "c17",
+          "cppStandard": "c++17",
+          "intelliSenseMode": "clang-x64"
+        },
         { 
             "name": "Win32",
             "includePath": [

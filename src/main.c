@@ -2,15 +2,11 @@
 #include <stdio.h>
 int main(void)
 {
-/*   App app;
-  AppCreateInfo create_info = {"Dorton"};
-
-  app_create(&app, &create_info);
+  App app;
+  AppCreateInfo info = {"Dorton"};
+  app_create(&app, &info); 
   app_run(&app);
-  app_destroy(app);
-  
-  getchar(); */
-  test(2);
-
+  app_destroy(&app);
+  getchar();
   return 0;
 }

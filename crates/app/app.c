@@ -1,11 +1,8 @@
 #include "app.h"
 
-void test(int x) {
-  print("%d", x);
+#include <stdio.h>
 
-  
-}
-/* #include "../logger/logger.h"
+#include "../logger/logger.h"
 
 static b8 initialized = false; // TODO: [Temp] no more than 1 app at a time
 
@@ -34,7 +31,7 @@ DResult app_create(App *app, AppCreateInfo *app_info)
   {
     DFATAL("Error creating window");
     return D_ERROR;
-  }
+  } 
   if (renderer_create(&app->renderer, app_info->title) != D_SUCCESS)
   {
     DFATAL("App could not create renderer.");
@@ -107,16 +104,16 @@ DResult app_run(App *app)
   return D_SUCCESS;
 }
 
-DResult app_destroy(App app)
+DResult app_destroy(App *app)
 {
-  if (renderer_destroy(app.renderer) != D_SUCCESS)
+  if (renderer_destroy(&app->renderer) != D_SUCCESS)
   {
     DERROR("App could not destroy renderer.");
   }
 
   DINFO("Renderer destroyed successfully.");
 
-  if (window_destroy(app.window) != D_SUCCESS)
+  if (window_destroy(&app->window) != D_SUCCESS)
   {
     DERROR("App could not destroy window.");
   }
@@ -126,4 +123,4 @@ DResult app_destroy(App app)
   DINFO("App destroyed successfully.");  
 
   return D_SUCCESS;
-} */
+}

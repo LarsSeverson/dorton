@@ -2,7 +2,7 @@
 
 #include "defines.h"
 
-/* #include "../window/window.h"
+#include "../window/window.h"
 #include "../render/render.h"
 #include "../clock/clock.h"
 
@@ -26,8 +26,6 @@ typedef struct App
 } App;
 
 DAPI DResult app_create(App *app, AppCreateInfo *app_info);
-DAPI DResult app_destroy(App app);
+DAPI DResult app_destroy(App *app);
 
-DAPI DResult app_run(App *app); */
-
-DAPI void test(int x);
+DAPI DResult app_run(App *app); 

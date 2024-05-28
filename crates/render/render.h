@@ -10,7 +10,7 @@ typedef struct Renderer
 } Renderer;
 
 DResult renderer_create(Renderer *renderer, const char* app_title);
-DResult renderer_destroy(Renderer renderer);
+DResult renderer_destroy(Renderer *renderer);
 
 DResult renderer_draw(Renderer* renderer, RenderPacket packet);
 

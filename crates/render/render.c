@@ -18,9 +18,9 @@ DResult renderer_create(Renderer *renderer, const char *app_title)
   return D_SUCCESS;
 }
 
-DResult renderer_destroy(Renderer renderer)
+DResult renderer_destroy(Renderer *renderer)
 {
-  if (render_backend_destroy(renderer.backend) != D_SUCCESS)
+  if (render_backend_destroy(&renderer->backend) != D_SUCCESS)
   {
     DERROR("Renderer faied to destroy backend.");
     return D_ERROR;

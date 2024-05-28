@@ -18,7 +18,7 @@ typedef struct Window {
 } Window;
 
 DResult window_create(Window* window, WindowCreateInfo* create_info);
-DResult window_destroy(Window window);
+DResult window_destroy(Window *window);
 
 DAPI b8 window_running(Window* window);
 DAPI void window_poll_events(Window* window);

@@ -7,7 +7,7 @@
                 "command": "${workspaceFolder}/crates/build.bat"
             },
             "linux": {
-                "command": "${workspaceFolder}/crates/build.sh"
+                "command": "${workspaceFolder}/crates/make"
             },
             "options": {
                 "cwd": "${workspaceFolder}/crates"
@@ -20,15 +20,15 @@
         },
         {
             "type": "shell",
-            "label": "Build Testbed",
+            "label": "Build main",
             "windows": {
-                "command": "${workspaceFolder}/testbed/build.bat"
+                "command": "${workspaceFolder}/src/build.bat"
             },
             "linux": {
-                "command": "${workspaceFolder}/testbed/build.sh"
+                "command": "${workspaceFolder}/src/make"
             },
             "options": {
-                "cwd": "${workspaceFolder}/testbed"
+                "cwd": "${workspaceFolder}/src"
             },
             "problemMatcher": [
                 "$gcc"
@@ -43,7 +43,24 @@
                 "command": "${workspaceFolder}/build-all.bat",
             },
             "linux": {
-                "command": "${workspaceFolder}/build-all.sh",
+                "command": "make"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "Run Valgrind",
+            "linux": {
+                "command": "make vrun"
             },
             "options": {
                 "cwd": "${workspaceFolder}"
