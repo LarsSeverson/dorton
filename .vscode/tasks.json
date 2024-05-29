@@ -52,8 +52,7 @@
                 "$gcc"
             ],
             "group": {
-                "kind": "build",
-                "isDefault": true
+                "kind": "build"
             }
         },
         {
@@ -62,6 +61,9 @@
             "linux": {
                 "command": "make vrun"
             },
+            "windows": {
+                "command": ""
+            },
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -69,8 +71,7 @@
                 "$gcc"
             ],
             "group": {
-                "kind": "build",
-                "isDefault": true
+                "kind": "build"
             }
         }
     ],

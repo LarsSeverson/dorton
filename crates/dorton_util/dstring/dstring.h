@@ -12,7 +12,9 @@ DAPI DResult dstring_create(DString *dstring, const char *string);
 DAPI DResult dstring_destroy(DString *string);
 
 DAPI DResult dstring_dup(DString *src, DString *dest);
+
 DAPI b8 dstring_equal(DString *str1, DString *str2);
+DAPI b8 dstring_equal_raw(const char *str1, const char *str2);
 
 DAPI char *dstring_data(DString *dstring);
 DAPI u64 dstring_length(DString *dstring);

@@ -17,7 +17,7 @@ DResult _darray_create(DArray *array, u64 length, u64 stride)
   return D_SUCCESS;
 }
 
-DResult _darray_destroy(DArray* array)
+DResult _darray_destroy(DArray *array)
 {
   if (array->raw_array)
   {

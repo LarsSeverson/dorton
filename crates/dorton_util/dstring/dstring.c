@@ -71,12 +71,12 @@ DResult dstring_dup(DString *src, DString *dest)
 
 b8 dstring_equal(DString *str1, DString *str2)
 {
-  if (str1 == NULL || str2 == NULL)
-  {
-    return false;
-  }
-
   return strcmp(str1->string, str2->string) == 0;
+}
+
+b8 dstring_equal_raw(const char *str1, const char *str2)
+{
+  return strcmp(str1, str2) == 0;
 }
 
 char *dstring_data(DString *dstring)

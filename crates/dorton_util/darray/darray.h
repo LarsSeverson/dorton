@@ -35,7 +35,7 @@ DAPI u64 darray_size(DArray *array);
 #define darray_create(array, type) \
   _darray_create(array, DARRAY_DEFAULT_SIZE, sizeof(type))
 
-#define darray_reserve(array, size, type) \
+#define darray_reserve(array, type, size) \
   _darray_create(array, size, sizeof(type))
 
 #define darray_destroy(array) \
