@@ -58,9 +58,10 @@ DResult renderer_backend_create_instance(RenderBackend *backend)
   }
 
   darray_destroy(&required_extensions);
-  darray_destroy(&required_validation_layers);
 
 #if defined(_DEBUG)
+  darray_destroy(&required_validation_layers);
+
   if (vk_debug_create(&backend->vulkan_context.instance, backend->vulkan_context.allocator, &backend->vulkan_context.debug_messenger) != D_SUCCESS)
   {
     return D_ERROR;
