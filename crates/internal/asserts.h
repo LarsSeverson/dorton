@@ -15,7 +15,7 @@
 // Defined in logger.c
 DAPI void report_assertion_failure(const char *expression, const char *message, const char *file, i32 line);
 
-#define DASSERT(expr)                                         \
+#define DASSERT(expr)                                          \
   {                                                            \
     if (expr)                                                  \
     {                                                          \
@@ -27,7 +27,7 @@ DAPI void report_assertion_failure(const char *expression, const char *message, 
     }                                                          \
   }
 
-#define DASSERT_MSG(expr, message)                                 \
+#define DASSERT_MSG(expr, message)                                  \
   {                                                                 \
     if (expr)                                                       \
     {                                                               \
@@ -40,7 +40,7 @@ DAPI void report_assertion_failure(const char *expression, const char *message, 
   }
 
 #ifdef _DEBUG
-#define DASSERT_DEBUG(expr)                                   \
+#define DASSERT_DEBUG(expr)                                    \
   {                                                            \
     if (expr)                                                  \
     {                                                          \

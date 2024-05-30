@@ -12,5 +12,6 @@ typedef struct RenderPacket
 typedef struct VulkanContext
 {
   VkInstance instance;
-  VkAllocationCallbacks *allocation_callbacks;
+  VkAllocationCallbacks *allocator;
+  VkDebugUtilsMessengerEXT debug_messenger;
 } VulkanContext;
