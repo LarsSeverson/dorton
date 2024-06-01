@@ -13,7 +13,7 @@ DResult renderer_create(Renderer *renderer, RendererCreateInfo *create_info)
   if (render_backend_create(&renderer->backend, &render_backend_create_info) != D_SUCCESS)
   {
     DFATAL("Renderer failed to create backend.");
-    return D_ERROR;
+    return D_FATAL;
   }
 
   DINFO("Renderer created successfully.");

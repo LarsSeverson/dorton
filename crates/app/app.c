@@ -43,7 +43,7 @@ DResult app_create(App *app, AppCreateInfo *app_info)
   if (renderer_create(&app->renderer, &renderer_create_info) != D_SUCCESS)
   {
     DFATAL("App could not create renderer.");
-    return D_ERROR;
+    return D_FATAL;
   }
 
   app->update = update;

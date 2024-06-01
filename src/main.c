@@ -4,17 +4,15 @@
 #include "../crates/dorton_utils/darray/darray.h"
 int main(void)
 {
-  // App app;
-  // AppCreateInfo info = {"Dorton"};
-  // app_create(&app, &info);
-  // app_run(&app);
-  // app_destroy(&app);
-
-  DArray test;
-  darray_create(&test, int);
-  darray_resize(&test, 2);
-
-  printf("%d", test.size);
+  App app;
+  AppCreateInfo info = {"Dorton"};
+  if (app_create(&app, &info) != D_SUCCESS) 
+  {
+    app_destroy(&app);
+    return 1;
+  }
+  app_run(&app);
+  app_destroy(&app);
 
   getchar();
   return 0;

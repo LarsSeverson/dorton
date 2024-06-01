@@ -52,13 +52,13 @@ DResult renderer_backend_create_instance(RenderBackend *backend)
   if (vkCreateInstance(&inst_create_info, NULL, &backend->vulkan_context.instance) != VK_SUCCESS)
   {
     darray_destroy(&required_extensions);
-    darray_destroy(&required_validation_layers);
+    // darray_destroy(&required_validation_layers);
     DFATAL("Unable to create render instance.");
     return D_ERROR;
   }
   
   darray_destroy(&required_extensions);
-  darray_destroy(&required_validation_layers);
+  // darray_destroy(&required_validation_layers);
 
   return D_SUCCESS;
 }
@@ -82,22 +82,22 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
   DINFO("Creating render backend:");
   if (renderer_backend_create_instance(backend) != D_SUCCESS)
   {
-    return D_ERROR;
+    return D_FATAL;
   }
 
   DINFO("\tBackend instance created.");
 
   if (render_backend_create_surface(backend) != D_SUCCESS)
   {
-    return D_ERROR;
+    return D_FATAL;
   }
 
   DINFO("\tBackend surface created.");
 
-  // if (render_backend_create_device(backend) != D_SUCCESS)
-  // {
-  //   return D_ERROR;
-  // }
+  if (render_backend_create_device(backend) != D_SUCCESS)
+  {
+    return D_FATAL;
+  }
 
   DINFO("\tBackend device created.");
 

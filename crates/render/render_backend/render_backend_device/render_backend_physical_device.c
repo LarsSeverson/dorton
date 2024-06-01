@@ -44,6 +44,8 @@ u8 check_physical_device_extension_support(const VkPhysicalDevice *physical_devi
   }
 
   u8 required_extensions_empty = dset_empty(&required_extensions);
+
+  darray_destroy(&available_extensions);
   dset_destroy(&required_extensions);
 
   return required_extensions_empty == 0;
@@ -149,7 +151,7 @@ DResult render_backend_pick_physical_device(struct RenderBackend *backend)
   if (backend->device.physical_device == NULL)
   {
     DFATAL("Could not find a suitable physical device.");
-    return D_ERROR;
+    return D_FATAL;
   }
 
   return D_SUCCESS;

@@ -52,7 +52,7 @@ DResult query_swap_chain_support(SwapChainSupportDetails *details, const VkPhysi
   if (format_count != 0)
   {
     darray_resize(&details->formats, format_count);
-    vkGetPhysicalDeviceSurfaceFormatsKHR(*physical_device, *surface, &format_count, (VkSurfaceFormatKHR *)darray_data(&details->present_modes));
+    vkGetPhysicalDeviceSurfaceFormatsKHR(*physical_device, *surface, &format_count, (VkSurfaceFormatKHR *)darray_data(&details->formats));
   }
 
   u32 present_mode_count;

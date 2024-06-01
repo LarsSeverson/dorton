@@ -21,7 +21,6 @@ DResult render_backend_create_logical_device(RenderBackend *backend)
   dset_push(&unique_queue_families, indices.present_family);
 
 
-
   f32 queue_priority = 1.f;
   for (u32 i = 0; i < dset_size(&unique_queue_families); ++i)
   {
