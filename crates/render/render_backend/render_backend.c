@@ -51,11 +51,14 @@ DResult renderer_backend_create_instance(RenderBackend *backend)
 
   if (vkCreateInstance(&inst_create_info, NULL, &backend->vulkan_context.instance) != VK_SUCCESS)
   {
-    // darray_destroy(&required_extensions);
-    // darray_destroy(&required_validation_layers);
+    darray_destroy(&required_extensions);
+    darray_destroy(&required_validation_layers);
     DFATAL("Unable to create render instance.");
     return D_ERROR;
   }
+  
+  darray_destroy(&required_extensions);
+  darray_destroy(&required_validation_layers);
 
   return D_SUCCESS;
 }
@@ -91,10 +94,10 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
 
   DINFO("\tBackend surface created.");
 
-  if (render_backend_create_device(backend) != D_SUCCESS)
-  {
-    return D_ERROR;
-  }
+  // if (render_backend_create_device(backend) != D_SUCCESS)
+  // {
+  //   return D_ERROR;
+  // }
 
   DINFO("\tBackend device created.");
 
@@ -108,7 +111,7 @@ DResult render_backend_destroy(RenderBackend *backend)
   //   PFN_vkDestroyDebugUtilsMessengerEXT vk_debugger_destroy_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(backend->vulkan_context.instance, "vkDestroyDebugUtilsMessengerEXT");
   //   vk_debugger_destroy_func(backend->vulkan_context.instance, backend->vulkan_context.debug_messenger, backend->vulkan_context.allocator);
   // }
-  
+
   // Device (Physical / Logical)
   // render_backend_destroy_device(backend);
 
