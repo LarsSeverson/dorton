@@ -5,12 +5,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-DResult _darray_create(DArray *array, u64 length, u64 stride)
+DResult _darray_create(DArray *array, u64 size, u64 stride)
 {
-  void *raw_array = (void *)calloc(length, stride);
+  void *raw_array = (void *)calloc(size, stride);
 
   array->size = 0;
-  array->capacity = length;
+  array->capacity = size;
+  array->stride = stride;
+  array->raw_array = raw_array;
+
+  return D_SUCCESS;
+}
+
+DResult _darray_reserve(DArray *array, u64 size, u64 stride)
+{
+  void *raw_array = (void *)calloc(size, stride);
+
+  array->size = size;
+  array->capacity = size;
   array->stride = stride;
   array->raw_array = raw_array;
 
@@ -163,4 +175,9 @@ void *_darray_data(DArray *array)
 u64 darray_size(DArray *array)
 {
   return array->size;
+}
+
+u8 _darray_empty(DArray *array)
+{
+  return array->size == 0;
 }

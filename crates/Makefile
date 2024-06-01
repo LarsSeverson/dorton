@@ -1,6 +1,6 @@
 CC = clang
 CFLAGS = -g -fPIC
-INCLUDES = -Iinternal -I$(VULKAN_SDK)/include -I$(GLFW)/include
+INCLUDES = -Iinternal -Idorton_utils -Ilogger -I$(VULKAN_SDK)/include -I$(GLFW)/include
 LFLAGS = -shared -lvulkan -lxcb -lX11 -lX11-xcb -lxkbcommon -L$(VULKAN_SDK)/lib -L/usr/X11R6/lib -L%GLFW%/lib -lglfw
 DEFINES = -DDEXPORT
 

@@ -12,6 +12,8 @@ typedef struct RenderPacket
 typedef struct VulkanContext
 {
   VkInstance instance;
+  VkSurfaceKHR surface;
+
   VkAllocationCallbacks *allocator;
   VkDebugUtilsMessengerEXT debug_messenger;
 } VulkanContext;

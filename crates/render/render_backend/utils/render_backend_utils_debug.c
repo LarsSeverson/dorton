@@ -3,7 +3,8 @@
 #include "asserts.h"
 
 #include "../../../logger/logger.h"
-#include "../../../dorton_util/dstring/dstring.h"
+
+#include "dstring/dstring.h"
 
 const char *validation_layers[] = {"VK_LAYER_KHRONOS_validation"};
 const u32 validation_layers_size = 1;

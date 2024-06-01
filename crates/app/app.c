@@ -16,23 +16,31 @@ DResult app_create(App *app, AppCreateInfo *app_info)
     DFATAL("Only 1 app can exist.");
     return D_ERROR;
   }
+
+  *app = (App){0}; // Initializing app properly
+
   if (init_logging() != D_SUCCESS)
   {
     DERROR("Logging initialization failure.");
     return D_ERROR;
   }
 
-  WindowCreateInfo create_info = {0};
-  create_info.height = 720;
-  create_info.width = 1250;
-  create_info.title = app_info->title;
+  WindowCreateInfo window_create_info;
+  window_create_info.title = app_info->title;
+  window_create_info.height = 720;
+  window_create_info.width = 1250;
 
-  if (window_create(&app->window, &create_info) != D_SUCCESS)
+  if (window_create(&app->window, &window_create_info) != D_SUCCESS)
   {
     DFATAL("Error creating window");
     return D_ERROR;
   } 
-  if (renderer_create(&app->renderer, app_info->title) != D_SUCCESS)
+
+  RendererCreateInfo renderer_create_info;
+  renderer_create_info.app_title = app_info->title;
+  renderer_create_info.window = &app->window;
+
+  if (renderer_create(&app->renderer, &renderer_create_info) != D_SUCCESS)
   {
     DFATAL("App could not create renderer.");
     return D_ERROR;

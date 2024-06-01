@@ -4,9 +4,12 @@
 
 #include "../logger/logger.h"
 
-DResult renderer_create(Renderer *renderer, const char *app_title)
+DResult renderer_create(Renderer *renderer, RendererCreateInfo *create_info)
 {
-  RenderBackendCreateInfo render_backend_create_info = {app_title};
+  RenderBackendCreateInfo render_backend_create_info;
+  render_backend_create_info.app_title = create_info->app_title;
+  render_backend_create_info.window = create_info->window;
+  
   if (render_backend_create(&renderer->backend, &render_backend_create_info) != D_SUCCESS)
   {
     DFATAL("Renderer failed to create backend.");
@@ -46,7 +49,8 @@ DResult renderer_draw(Renderer *renderer, RenderPacket packet)
     DERROR("Renderer unable to begin frame.");
     return D_ERROR;
   }
-  if (renderer_end_frame(renderer, packet.delta_time) != D_SUCCESS) {
+  if (renderer_end_frame(renderer, packet.delta_time) != D_SUCCESS)
+  {
     DERROR("Renderer unable to end frame.");
     return D_ERROR;
   }

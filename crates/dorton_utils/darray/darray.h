@@ -11,7 +11,8 @@ typedef struct DArray
   u64 stride;
 } DArray;
 
-DAPI DResult _darray_create(DArray *array, u64 length, u64 stride);
+DAPI DResult _darray_create(DArray *array, u64 size, u64 stride);
+DAPI DResult _darray_reserve(DArray *array, u64 size, u64 stride);
 DAPI DResult _darray_destroy(DArray *array);
 
 DAPI DResult _darray_resize(DArray *array, u64 size);
@@ -28,6 +29,7 @@ DAPI DResult _darray_set(DArray *array, const void *val, u64 index);
 DAPI void *_darray_data(DArray *array);
 
 DAPI u64 darray_size(DArray *array);
+DAPI u8 _darray_empty(DArray *array);
 
 #define DARRAY_DEFAULT_SIZE 1
 #define DARRAY_RESIZE_FACTOR 2
@@ -36,7 +38,7 @@ DAPI u64 darray_size(DArray *array);
   _darray_create(array, DARRAY_DEFAULT_SIZE, sizeof(type))
 
 #define darray_reserve(array, type, size) \
-  _darray_create(array, size, sizeof(type))
+  _darray_reserve(array, size, sizeof(type))
 
 #define darray_destroy(array) \
   _darray_destroy(array)
@@ -73,3 +75,6 @@ DAPI u64 darray_size(DArray *array);
 
 #define darray_data(array) \
   _darray_data(array)
+
+#define darray_empty(array) \
+  _darray_empty(array)

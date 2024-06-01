@@ -5,6 +5,8 @@
           "includePath": [
             "${workspaceFolder}/crates/**",
             "${workspaceFolder}/crates/internal/**",
+            "${workspaceFolder}/crates/dorton_utils/**",
+            "${workspaceFolder}/crates/logger/**",
             "${VULKAN_SDK}/include",
             "${GLFW}/include"
           ],
@@ -24,6 +26,8 @@
             "includePath": [
               "${workspaceFolder}/crates/**",
               "${workspaceFolder}/crates/internal/**",
+              "${workspaceFolder}/crates/dorton_utils/**",
+              "${workspaceFolder}/crates/logger/**",
               "${VULKAN_SDK}/include",
               "${GLFW}/include"
             ],

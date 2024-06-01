@@ -1,9 +1,9 @@
 #include "render_backend.h"
 
-#include "../../logger/logger.h"
+#include "logger.h"
 
-#include "../../dorton_util/darray/darray.h"
-#include "../../dorton_util/dstring/dstring.h"
+#include "darray/darray.h"
+#include "dstring/dstring.h"
 
 #include "./utils/render_backend_utils_debug.h"
 
@@ -12,7 +12,7 @@
 DResult renderer_backend_create_instance(RenderBackend *backend)
 {
   VkApplicationInfo app_info = {VK_STRUCTURE_TYPE_APPLICATION_INFO};
-  app_info.pApplicationName = backend->app_name;
+  app_info.pApplicationName = backend->app_title;
   app_info.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
   app_info.pEngineName = "Dorton Engine";
   app_info.engineVersion = VK_MAKE_VERSION(1, 0, 0);
@@ -33,66 +33,90 @@ DResult renderer_backend_create_instance(RenderBackend *backend)
   }
 
 #if defined(_DEBUG)
-  get_debug_extensions(&required_extensions, &extensions_count);
+  // get_debug_extensions(&required_extensions, &extensions_count);
 #endif
 
   inst_create_info.enabledExtensionCount = extensions_count;
-  inst_create_info.ppEnabledExtensionNames = darray_data(&required_extensions);
+  inst_create_info.ppEnabledExtensionNames = glfw_extensions;
 
-  DArray required_validation_layers;
-  u32 required_validation_layers_count = 0;
+  // DArray required_validation_layers;
+  // u32 required_validation_layers_count = 0;
 
 #if defined(_DEBUG)
-  get_debug_layers(&required_validation_layers, &required_validation_layers_count);
+  // get_debug_layers(&required_validation_layers, &required_validation_layers_count);
 #endif
 
-  inst_create_info.enabledLayerCount = required_validation_layers_count;
-  inst_create_info.ppEnabledLayerNames = darray_data(&required_validation_layers);
+  inst_create_info.enabledLayerCount = 0;
+  inst_create_info.ppEnabledLayerNames = 0;
 
-  if (vkCreateInstance(&inst_create_info, backend->vulkan_context.allocator, &backend->vulkan_context.instance) != VK_SUCCESS)
+  if (vkCreateInstance(&inst_create_info, NULL, &backend->vulkan_context.instance) != VK_SUCCESS)
   {
-    darray_destroy(&required_extensions);
-    darray_destroy(&required_validation_layers);
+    // darray_destroy(&required_extensions);
+    // darray_destroy(&required_validation_layers);
     DFATAL("Unable to create render instance.");
     return D_ERROR;
   }
 
-  darray_destroy(&required_extensions);
+  return D_SUCCESS;
+}
 
-#if defined(_DEBUG)
-  darray_destroy(&required_validation_layers);
-
-  if (vk_debug_create(&backend->vulkan_context.instance, backend->vulkan_context.allocator, &backend->vulkan_context.debug_messenger) != D_SUCCESS)
+DResult render_backend_create_surface(RenderBackend *backend)
+{
+  if (glfwCreateWindowSurface(backend->vulkan_context.instance, backend->window->window, NULL, &backend->vulkan_context.surface) != D_SUCCESS)
   {
+    DFATAL("Unable to create render surface.");
     return D_ERROR;
   }
-#endif
 
   return D_SUCCESS;
 }
 
 DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *create_info)
 {
-  backend->vulkan_context = create_info->vulkan_context;
-  backend->app_name = create_info->app_name;
+  backend->app_title = create_info->app_title;
+  backend->window = create_info->window;
 
+  DINFO("Creating render backend:");
   if (renderer_backend_create_instance(backend) != D_SUCCESS)
   {
     return D_ERROR;
   }
+
+  DINFO("\tBackend instance created.");
+
+  if (render_backend_create_surface(backend) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  DINFO("\tBackend surface created.");
+
+  if (render_backend_create_device(backend) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  DINFO("\tBackend device created.");
 
   return D_SUCCESS;
 }
 
 DResult render_backend_destroy(RenderBackend *backend)
 {
-  if (backend->vulkan_context.debug_messenger)
-  {
-    PFN_vkDestroyDebugUtilsMessengerEXT vk_debugger_destroy_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(backend->vulkan_context.instance, "vkDestroyDebugUtilsMessengerEXT");
-    vk_debugger_destroy_func(backend->vulkan_context.instance, backend->vulkan_context.debug_messenger, backend->vulkan_context.allocator);
-  }
+  // if (backend->vulkan_context.debug_messenger)
+  // {
+  //   PFN_vkDestroyDebugUtilsMessengerEXT vk_debugger_destroy_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(backend->vulkan_context.instance, "vkDestroyDebugUtilsMessengerEXT");
+  //   vk_debugger_destroy_func(backend->vulkan_context.instance, backend->vulkan_context.debug_messenger, backend->vulkan_context.allocator);
+  // }
+  
+  // Device (Physical / Logical)
+  // render_backend_destroy_device(backend);
 
-  vkDestroyInstance(backend->vulkan_context.instance, backend->vulkan_context.allocator);
+  // Surface
+  vkDestroySurfaceKHR(backend->vulkan_context.instance, backend->vulkan_context.surface, NULL);
+
+  // Instance
+  vkDestroyInstance(backend->vulkan_context.instance, NULL);
 
   return D_SUCCESS;
 }

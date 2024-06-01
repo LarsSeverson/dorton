@@ -23,7 +23,9 @@ typedef _Bool b8;
 // Results
 typedef enum DResult {
   D_SUCCESS = 0,
-  D_ERROR = 1
+  D_IGNORED,
+  D_ERROR,
+  D_FATAL
 } DResult;
 
 #define true 1

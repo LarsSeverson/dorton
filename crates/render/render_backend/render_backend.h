@@ -1,16 +1,23 @@
 #pragma once
 
 #include "../render_types.inl"
+#include "../window/window.h"
+
+#include "./render_backend_device/render_backend_device.h"
 
 typedef struct RenderBackendCreateInfo
 {
-  const char *app_name;
-  VulkanContext vulkan_context;
+  const char *app_title;
+  Window *window;
 } RenderBackendCreateInfo;
 
 typedef struct RenderBackend
 {
-  const char *app_name;
+  const char *app_title;
+  Window *window;
+
+  RenderBackendDevice device;
+
   VulkanContext vulkan_context;
 } RenderBackend;
 
