@@ -41,6 +41,18 @@ DResult _darray_destroy(DArray *array)
 
 DResult _darray_resize(DArray *array, u64 size)
 {
+  if (size > array->capacity)
+  {
+    darray_resize_capacity(array, size * DARRAY_RESIZE_FACTOR);
+  }
+
+  array->size = size;
+
+  return D_SUCCESS;
+}
+
+DResult _darray_resize_capacity(DArray *array, u64 size)
+{
   void *new_raw_array = realloc(array->raw_array, array->stride * size);
   if (!new_raw_array)
   {
@@ -62,7 +74,7 @@ DResult _darray_push(DArray *array, const void *val)
 {
   if (array->size == array->capacity)
   {
-    DResult result = darray_resize(array, array->capacity * DARRAY_RESIZE_FACTOR);
+    DResult result = darray_resize_capacity(array, array->capacity * DARRAY_RESIZE_FACTOR);
     if (result != D_SUCCESS)
     {
       return result;
@@ -84,7 +96,7 @@ DResult _darray_push_at(DArray *array, const void *val, u64 index)
 
   if (array->size == array->capacity)
   {
-    DResult result = darray_resize(array, array->size * DARRAY_RESIZE_FACTOR);
+    DResult result = darray_resize_capacity(array, array->size * DARRAY_RESIZE_FACTOR);
     if (result != D_SUCCESS)
     {
       return result;
@@ -110,7 +122,7 @@ DResult _darray_pop(DArray *array)
   array->size--;
   if (array->size <= array->capacity / DARRAY_RESIZE_FACTOR)
   {
-    darray_resize(array, array->size + 1);
+    darray_resize_capacity(array, array->size + 1);
   }
 
   return D_SUCCESS;
@@ -136,7 +148,7 @@ DResult _darray_pop_at(DArray *array, u64 index)
 
   if (array->size <= array->capacity / DARRAY_RESIZE_FACTOR)
   {
-    darray_resize(array, array->size + 1);
+    darray_resize_capacity(array, array->size + 1);
   }
 
   return D_SUCCESS;

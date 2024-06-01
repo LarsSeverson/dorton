@@ -16,6 +16,7 @@ DAPI DResult _darray_reserve(DArray *array, u64 size, u64 stride);
 DAPI DResult _darray_destroy(DArray *array);
 
 DAPI DResult _darray_resize(DArray *array, u64 size);
+DAPI DResult _darray_resize_capacity(DArray *array, u64 size);
 
 DAPI DResult _darray_push(DArray *array, const void *val);
 DAPI DResult _darray_pop(DArray *array);
@@ -45,6 +46,9 @@ DAPI u8 _darray_empty(DArray *array);
 
 #define darray_resize(array, size) \
   _darray_resize(array, size)
+
+#define darray_resize_capacity(array, size) \
+  _darray_resize_capacity(array, size)
 
 #define darray_push(array, val) \
   {                             \
