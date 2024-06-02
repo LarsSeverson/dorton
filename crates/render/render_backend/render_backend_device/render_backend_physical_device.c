@@ -112,7 +112,7 @@ u8 is_physical_device_suitable(const VkPhysicalDevice *physical_device, RenderBa
     swap_chain_support_details_create(&swap_chain_support);
 
     query_swap_chain_support(&swap_chain_support, physical_device, &backend->vulkan_context.surface);
-    swap_chain_adequate = swap_chain_support_details_empty(&swap_chain_support);
+    swap_chain_adequate = !swap_chain_support_details_empty(&swap_chain_support);
 
     swap_chain_support_details_destroy(&swap_chain_support);
   }

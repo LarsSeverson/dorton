@@ -1,7 +1,6 @@
 #include <app.h>
 #include <stdio.h>
 
-#include "../crates/dorton_utils/darray/darray.h"
 int main(void)
 {
   App app;
