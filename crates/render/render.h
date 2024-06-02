@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render_types.inl"
+#include "render_types.h"
 
 #include "./render_backend/render_backend.h"
 

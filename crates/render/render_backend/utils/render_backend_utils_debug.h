@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../render_types.inl"
+#include "../../render_types.h"
 
 #include "darray/darray.h"
 #include "dset/dset.h"

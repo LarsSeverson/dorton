@@ -52,3 +52,8 @@ void window_poll_events(Window *window)
 {
   glfwPollEvents();
 }
+
+void window_get_frame_buffer_size(Window *window, i32 *width, i32 *height)
+{
+  glfwGetFramebufferSize(window->window, width, height);
+}

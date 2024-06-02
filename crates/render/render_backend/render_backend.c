@@ -103,6 +103,13 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
 
   DINFO("\tBackend device created.");
 
+  if (render_backend_create_swap_chain(backend) != D_SUCCESS)
+  {
+    return D_FATAL;
+  }
+
+  DINFO("\tBackend swap chain created.");
+
   return D_SUCCESS;
 }
 
@@ -114,14 +121,17 @@ DResult render_backend_destroy(RenderBackend *backend)
     vk_debugger_destroy_func(backend->vulkan_context.instance, backend->vulkan_context.debug_messenger, backend->vulkan_context.allocator);
   }
 
+  // Swap chain
+  render_backend_destroy_swap_chain(backend);
+
   // Device (Physical / Logical)
   render_backend_destroy_device(backend);
 
   // Surface
-  vkDestroySurfaceKHR(backend->vulkan_context.instance, backend->vulkan_context.surface, NULL);
+  vkDestroySurfaceKHR(backend->vulkan_context.instance, backend->vulkan_context.surface, backend->vulkan_context.allocator);
 
   // Instance
-  vkDestroyInstance(backend->vulkan_context.instance, NULL);
+  vkDestroyInstance(backend->vulkan_context.instance, backend->vulkan_context.allocator);
 
   return D_SUCCESS;
 }

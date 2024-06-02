@@ -13,6 +13,5 @@ int main(void)
   app_run(&app);
   app_destroy(&app);
 
-  getchar();
   return 0;
 }

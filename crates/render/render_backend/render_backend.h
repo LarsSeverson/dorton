@@ -1,9 +1,11 @@
 #pragma once
 
-#include "../render_types.inl"
-#include "../window/window.h"
+#include "../render_types.h"
+
+#include "window/window.h"
 
 #include "./render_backend_device/render_backend_device.h"
+#include "./render_backend_swap_chain/render_backend_swap_chain.h"
 
 typedef struct RenderBackendCreateInfo
 {
@@ -17,6 +19,7 @@ typedef struct RenderBackend
   Window *window;
 
   RenderBackendDevice device;
+  RenderBackendSwapChain swap_chain;
 
   VulkanContext vulkan_context;
 } RenderBackend;

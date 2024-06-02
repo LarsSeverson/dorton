@@ -1,7 +1,7 @@
 #include "render_backend_physical_device.h"
 
 #include "../render_backend.h"
-#include "../render_backend_swap_chain.h"
+#include "../render_backend_swap_chain/utils/render_backend_swap_chain_utils.h"
 
 #include "logger.h"
 
@@ -134,7 +134,6 @@ DResult render_backend_pick_physical_device(struct RenderBackend *backend)
   DArray physical_devices;
   darray_reserve(&physical_devices, VkPhysicalDevice, physical_device_count);
   vkEnumeratePhysicalDevices(backend->vulkan_context.instance, &physical_device_count, (VkPhysicalDevice *)darray_data(&physical_devices));
-  physical_devices.size = physical_device_count;
 
   for (u32 i = 0; i < physical_device_count; ++i)
   {
