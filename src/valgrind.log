@@ -1,22 +1,22 @@
-==4802== Memcheck, a memory error detector
-==4802== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
-==4802== Using Valgrind-3.21.0 and LibVEX; rerun with -h for copyright info
-==4802== Command: ../bin/dorton
-==4802== Parent PID: 4789
-==4802== 
-==4802== 
-==4802== HEAP SUMMARY:
-==4802==     in use at exit: 291,194 bytes in 2,990 blocks
-==4802==   total heap usage: 10,937 allocs, 7,947 frees, 15,748,908 bytes allocated
-==4802== 
-==4802== LEAK SUMMARY:
-==4802==    definitely lost: 0 bytes in 0 blocks
-==4802==    indirectly lost: 0 bytes in 0 blocks
-==4802==      possibly lost: 0 bytes in 0 blocks
-==4802==    still reachable: 291,194 bytes in 2,990 blocks
-==4802==         suppressed: 0 bytes in 0 blocks
-==4802== Reachable blocks (those to which a pointer was found) are not shown.
-==4802== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==4802== 
-==4802== For lists of detected and suppressed errors, rerun with: -s
-==4802== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==6786== Memcheck, a memory error detector
+==6786== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==6786== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
+==6786== Command: ../bin/dorton
+==6786== Parent PID: 6773
+==6786== 
+==6786== 
+==6786== HEAP SUMMARY:
+==6786==     in use at exit: 291,194 bytes in 2,990 blocks
+==6786==   total heap usage: 402,949 allocs, 395,855 frees, 61,553,393 bytes allocated
+==6786== 
+==6786== LEAK SUMMARY:
+==6786==    definitely lost: 0 bytes in 0 blocks
+==6786==    indirectly lost: 0 bytes in 0 blocks
+==6786==      possibly lost: 0 bytes in 0 blocks
+==6786==    still reachable: 291,162 bytes in 2,989 blocks
+==6786==         suppressed: 32 bytes in 1 blocks
+==6786== Reachable blocks (those to which a pointer was found) are not shown.
+==6786== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==6786== 
+==6786== For lists of detected and suppressed errors, rerun with: -s
+==6786== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

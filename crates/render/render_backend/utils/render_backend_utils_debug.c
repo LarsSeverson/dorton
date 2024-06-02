@@ -66,6 +66,8 @@ DResult get_debug_layers(DArray *required_validation_layers, u32 *required_valid
     }
   }
 
+  darray_destroy(&available_layers);
+
   return D_SUCCESS;
 }
 

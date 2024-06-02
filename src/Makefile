@@ -2,7 +2,7 @@ CC = clang
 CFLAGS = -g -fPIC
 INCLUDES = -I../crates/app/ -I../crates/internal/ -I$(VULKAN_SDK)/include -I$(GLFW)/include
 LFLAGS = -L../bin/ -lcrates -Wl,-rpath,$(shell pwd)/../bin/
-DEFINES = -DDIMPORT
+DEFINES = -DDIMPORT -D_DEBUG
 
 ASSEMBLY = dorton 
 BINDIR = ../bin/

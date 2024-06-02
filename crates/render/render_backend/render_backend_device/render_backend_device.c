@@ -9,10 +9,10 @@ DResult render_backend_create_device(struct RenderBackend *backend)
     return D_FATAL;
   }
 
-  // if (render_backend_create_logical_device(backend) != D_SUCCESS)
-  // {
-  //   return D_FATAL;
-  // }
+  if (render_backend_create_logical_device(backend) != D_SUCCESS)
+  {
+    return D_FATAL;
+  }
 
   return D_SUCCESS;
 }

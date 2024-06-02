@@ -33,39 +33,41 @@ DResult renderer_backend_create_instance(RenderBackend *backend)
   }
 
 #if defined(_DEBUG)
-  // get_debug_extensions(&required_extensions, &extensions_count);
+  get_debug_extensions(&required_extensions, &extensions_count);
 #endif
 
   inst_create_info.enabledExtensionCount = extensions_count;
-  inst_create_info.ppEnabledExtensionNames = glfw_extensions;
+  inst_create_info.ppEnabledExtensionNames = darray_data(&required_extensions);
 
-  // DArray required_validation_layers;
-  // u32 required_validation_layers_count = 0;
+  DArray required_validation_layers;
+  u32 required_validation_layers_count = 0;
 
 #if defined(_DEBUG)
-  // get_debug_layers(&required_validation_layers, &required_validation_layers_count);
+  get_debug_layers(&required_validation_layers, &required_validation_layers_count);
 #endif
 
-  inst_create_info.enabledLayerCount = 0;
-  inst_create_info.ppEnabledLayerNames = 0;
+  inst_create_info.enabledLayerCount = required_validation_layers_count;
+  inst_create_info.ppEnabledLayerNames = darray_data(&required_validation_layers);
 
-  if (vkCreateInstance(&inst_create_info, NULL, &backend->vulkan_context.instance) != VK_SUCCESS)
-  {
-    darray_destroy(&required_extensions);
-    // darray_destroy(&required_validation_layers);
-    DFATAL("Unable to create render instance.");
-    return D_ERROR;
-  }
-  
+  VkResult result = vkCreateInstance(&inst_create_info, backend->vulkan_context.allocator, &backend->vulkan_context.instance);
+
   darray_destroy(&required_extensions);
-  // darray_destroy(&required_validation_layers);
+#if defined(_DEBUG)
+  darray_destroy(&required_validation_layers);
+#endif
+
+  if (result != D_SUCCESS)
+  {
+    DFATAL("Unable to create render instance.");
+    return D_FATAL;
+  }
 
   return D_SUCCESS;
 }
 
 DResult render_backend_create_surface(RenderBackend *backend)
 {
-  if (glfwCreateWindowSurface(backend->vulkan_context.instance, backend->window->window, NULL, &backend->vulkan_context.surface) != D_SUCCESS)
+  if (glfwCreateWindowSurface(backend->vulkan_context.instance, backend->window->window, backend->vulkan_context.allocator, &backend->vulkan_context.surface) != D_SUCCESS)
   {
     DFATAL("Unable to create render surface.");
     return D_ERROR;
@@ -106,14 +108,14 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
 
 DResult render_backend_destroy(RenderBackend *backend)
 {
-  // if (backend->vulkan_context.debug_messenger)
-  // {
-  //   PFN_vkDestroyDebugUtilsMessengerEXT vk_debugger_destroy_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(backend->vulkan_context.instance, "vkDestroyDebugUtilsMessengerEXT");
-  //   vk_debugger_destroy_func(backend->vulkan_context.instance, backend->vulkan_context.debug_messenger, backend->vulkan_context.allocator);
-  // }
+  if (backend->vulkan_context.debug_messenger)
+  {
+    PFN_vkDestroyDebugUtilsMessengerEXT vk_debugger_destroy_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(backend->vulkan_context.instance, "vkDestroyDebugUtilsMessengerEXT");
+    vk_debugger_destroy_func(backend->vulkan_context.instance, backend->vulkan_context.debug_messenger, backend->vulkan_context.allocator);
+  }
 
   // Device (Physical / Logical)
-  // render_backend_destroy_device(backend);
+  render_backend_destroy_device(backend);
 
   // Surface
   vkDestroySurfaceKHR(backend->vulkan_context.instance, backend->vulkan_context.surface, NULL);

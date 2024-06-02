@@ -20,7 +20,6 @@ DResult render_backend_create_logical_device(RenderBackend *backend)
   dset_push(&unique_queue_families, indices.graphics_family);
   dset_push(&unique_queue_families, indices.present_family);
 
-
   f32 queue_priority = 1.f;
   for (u32 i = 0; i < dset_size(&unique_queue_families); ++i)
   {
@@ -46,7 +45,7 @@ DResult render_backend_create_logical_device(RenderBackend *backend)
   logical_device_create_info.enabledLayerCount = 0;
   logical_device_create_info.ppEnabledLayerNames = 0;
 
-  if (vkCreateDevice(backend->device.physical_device, &logical_device_create_info, NULL, &backend->device.logical_device) != D_SUCCESS)
+  if (vkCreateDevice(backend->device.physical_device, &logical_device_create_info, backend->vulkan_context.allocator, &backend->device.logical_device) != D_SUCCESS)
   {
     DFATAL("Could not create a logical device.");
 
@@ -56,8 +55,8 @@ DResult render_backend_create_logical_device(RenderBackend *backend)
     return D_FATAL;
   }
 
-  // darray_destroy(&queue_create_infos);
-  // dset_destroy(&unique_queue_families);
+  darray_destroy(&queue_create_infos);
+  dset_destroy(&unique_queue_families);
 
   vkGetDeviceQueue(backend->device.logical_device, indices.graphics_family, 0, &backend->device.graphics_queue);
   vkGetDeviceQueue(backend->device.logical_device, indices.present_family, 0, &backend->device.present_queue);
@@ -67,7 +66,6 @@ DResult render_backend_create_logical_device(RenderBackend *backend)
 
 DResult render_backend_destroy_logical_device(RenderBackend *backend)
 {
-  DINFO("%p", &backend->vulkan_context.allocator);
-  vkDestroyDevice(backend->device.logical_device, NULL);
+  vkDestroyDevice(backend->device.logical_device, backend->vulkan_context.allocator);
   return D_SUCCESS;
 }
