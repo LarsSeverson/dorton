@@ -13,7 +13,7 @@ REM echo "Files:" %cFileNames%
 SET assembly=dorton
 SET compilerFlags=-g 
 REM -Wall -Werror
-SET includeFlags=-I../crates/app/ -I../crates/internal/ -I%GLFW%\include -I%VULKAN_SDK%/Include
+SET includeFlags=-I../crates/ -I../crates/dorton_utils/ -I../crates/app/ -I../crates/internal/ -I%GLFW%\include -I%VULKAN_SDK%/Include
 SET linkerFlags=-L../bin/ -lcrates.lib
 SET defines=-D_DEBUG -DDIMPORT
 
