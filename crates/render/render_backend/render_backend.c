@@ -87,28 +87,31 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
     return D_FATAL;
   }
 
-  DINFO("\tBackend instance created.");
+  DINFO("  Backend instance created.");
 
   if (render_backend_create_surface(backend) != D_SUCCESS)
   {
     return D_FATAL;
   }
 
-  DINFO("\tBackend surface created.");
+  DINFO("  Backend surface created.");
 
   if (render_backend_create_device(backend) != D_SUCCESS)
   {
     return D_FATAL;
   }
 
-  DINFO("\tBackend device created.");
+  DINFO("  Backend device created.");
 
   if (render_backend_create_swap_chain(backend) != D_SUCCESS)
   {
     return D_FATAL;
   }
 
-  DINFO("\tBackend swap chain created.");
+  DINFO("  Backend swap chain created.");
+
+
+  DINFO("Render backend created.");
 
   return D_SUCCESS;
 }

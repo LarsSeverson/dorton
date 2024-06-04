@@ -14,10 +14,10 @@ DResult get_debug_extensions(DArray *required_extensions, u32 *extensions_count)
   darray_push(required_extensions, &VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
   (*extensions_count)++;
 
-  DDEBUG("Required extensions:");
+  DDEBUG("\tRequired extensions:");
   for (int i = 0; i < *extensions_count; ++i)
   {
-    DDEBUG("\t%s", *((const char **)darray_get(required_extensions, i)))
+    DDEBUG("\t\t%s", *((const char **)darray_get(required_extensions, i)))
   }
 
   return D_SUCCESS;
@@ -25,13 +25,13 @@ DResult get_debug_extensions(DArray *required_extensions, u32 *extensions_count)
 
 DResult get_debug_layers(DArray *required_validation_layers, u32 *required_validation_layers_count)
 {
-  DDEBUG("Required layers:");
+  DDEBUG("\tRequired layers:");
 
   darray_create(required_validation_layers, const char *);
 
   for (u32 i = 0; i < validation_layers_size; ++i)
   {
-    DDEBUG("\t%s", validation_layers[i]);
+    DDEBUG("\t\t%s", validation_layers[i]);
     darray_push(required_validation_layers, validation_layers[i]);
   }
 

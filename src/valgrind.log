@@ -1,22 +1,22 @@
-==19856== Memcheck, a memory error detector
-==19856== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==19856== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
-==19856== Command: ../bin/dorton
-==19856== Parent PID: 19843
-==19856== 
-==19856== 
-==19856== HEAP SUMMARY:
-==19856==     in use at exit: 291,194 bytes in 2,990 blocks
-==19856==   total heap usage: 403,021 allocs, 395,927 frees, 61,704,097 bytes allocated
-==19856== 
-==19856== LEAK SUMMARY:
-==19856==    definitely lost: 0 bytes in 0 blocks
-==19856==    indirectly lost: 0 bytes in 0 blocks
-==19856==      possibly lost: 0 bytes in 0 blocks
-==19856==    still reachable: 291,162 bytes in 2,989 blocks
-==19856==         suppressed: 32 bytes in 1 blocks
-==19856== Reachable blocks (those to which a pointer was found) are not shown.
-==19856== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==19856== 
-==19856== For lists of detected and suppressed errors, rerun with: -s
-==19856== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==42395== Memcheck, a memory error detector
+==42395== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==42395== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
+==42395== Command: ../bin/dorton
+==42395== Parent PID: 42382
+==42395== 
+==42395== 
+==42395== HEAP SUMMARY:
+==42395==     in use at exit: 291,194 bytes in 2,990 blocks
+==42395==   total heap usage: 404,254 allocs, 397,160 frees, 61,760,288 bytes allocated
+==42395== 
+==42395== LEAK SUMMARY:
+==42395==    definitely lost: 0 bytes in 0 blocks
+==42395==    indirectly lost: 0 bytes in 0 blocks
+==42395==      possibly lost: 0 bytes in 0 blocks
+==42395==    still reachable: 291,162 bytes in 2,989 blocks
+==42395==         suppressed: 32 bytes in 1 blocks
+==42395== Reachable blocks (those to which a pointer was found) are not shown.
+==42395== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==42395== 
+==42395== For lists of detected and suppressed errors, rerun with: -s
+==42395== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

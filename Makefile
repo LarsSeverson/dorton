@@ -1,6 +1,7 @@
 .PHONY: all crates src
 
-all: crates src
+all: 
+	$(MAKE) build 
 
 crates:
 	$(MAKE) -C crates
