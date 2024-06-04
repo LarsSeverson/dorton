@@ -2,6 +2,8 @@
 #include "render_backend_physical_device.h"
 #include "render_backend_logical_device.h"
 
+#include "logger.h"
+
 DResult render_backend_create_device(struct RenderBackend *backend)
 {
   if (render_backend_pick_physical_device(backend) != D_SUCCESS)

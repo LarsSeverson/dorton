@@ -110,6 +110,12 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
 
   DINFO("  Backend swap chain created.");
 
+  if (render_backend_destroy_render_pass(backend) != D_SUCCESS)
+  {
+    return D_FATAL;
+  }
+
+  DINFO("  Backend render pass created.");
 
   DINFO("Render backend created.");
 
@@ -123,6 +129,9 @@ DResult render_backend_destroy(RenderBackend *backend)
     PFN_vkDestroyDebugUtilsMessengerEXT vk_debugger_destroy_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(backend->vulkan_context.instance, "vkDestroyDebugUtilsMessengerEXT");
     vk_debugger_destroy_func(backend->vulkan_context.instance, backend->vulkan_context.debug_messenger, backend->vulkan_context.allocator);
   }
+
+  // Render pass
+  render_backend_destroy_render_pass(backend);
 
   // Swap chain
   render_backend_destroy_swap_chain(backend);
