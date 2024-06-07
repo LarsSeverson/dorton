@@ -87,7 +87,7 @@ DResult vk_debug_create(VkInstance *instance, VkAllocationCallbacks *allocator, 
   debug_create_info.pfnUserCallback = vk_debug_callback;
 
   PFN_vkCreateDebugUtilsMessengerEXT vk_debug_create_func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(*instance, "vkCreateDebugUtilsMessengerEXT");
-  DASSERT_MSG(vk_debug_create_func, "Failed to create debug messenger.");
+  DASSERT_MSG(vk_debug_create_func, "Failed to create debug func.");
 
   if (vk_debug_create_func(*instance, &debug_create_info, allocator, debug_messenger) != VK_SUCCESS)
   {

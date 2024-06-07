@@ -7,6 +7,8 @@
 #include "./render_backend_device/render_backend_device.h"
 #include "./render_backend_swap_chain/render_backend_swap_chain.h"
 #include "./render_backend_render_pass/render_backend_render_pass.h"
+#include "./render_backend_command/render_backend_command_pool.h"
+#include "./render_backend_command/render_backend_command_buffer/render_backend_command_buffers.h"
 
 typedef struct RenderBackendCreateInfo
 {
@@ -22,6 +24,8 @@ typedef struct RenderBackend
   RenderBackendDevice device;
   RenderBackendSwapChain swap_chain;
   RenderBackendRenderPass render_pass;
+  RenderBackendCommandPool command_pool;
+  RenderBackendCommandBuffers command_buffers;
 
   VulkanContext vulkan_context;
 } RenderBackend;

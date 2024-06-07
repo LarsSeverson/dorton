@@ -32,20 +32,20 @@ DResult swap_chain_support_details_destroy(SwapChainSupportDetails *details)
   return D_SUCCESS;
 }
 
-DResult query_swap_chain_support(SwapChainSupportDetails *details, const VkPhysicalDevice *physical_device, VkSurfaceKHR *surface)
+DResult query_swap_chain_support(SwapChainSupportDetails *details, const VkPhysicalDevice physical_device, VkSurfaceKHR surface)
 {
-  if (details == NULL || surface == NULL || physical_device == NULL)
+  if (details == NULL)
   {
     return D_ERROR;
   }
 
-  if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(*physical_device, *surface, &details->capabilites) != D_SUCCESS)
+  if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface, &details->capabilites) != D_SUCCESS)
   {
     return D_ERROR;
   }
 
   u32 format_count;
-  if (vkGetPhysicalDeviceSurfaceFormatsKHR(*physical_device, *surface, &format_count, NULL) != D_SUCCESS)
+  if (vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface, &format_count, NULL) != D_SUCCESS)
   {
     DERROR("Error getting physical device surface formats.");
     return D_ERROR;
@@ -54,11 +54,11 @@ DResult query_swap_chain_support(SwapChainSupportDetails *details, const VkPhysi
   if (format_count != 0)
   {
     darray_resize(&details->formats, format_count);
-    vkGetPhysicalDeviceSurfaceFormatsKHR(*physical_device, *surface, &format_count, (VkSurfaceFormatKHR *)darray_data(&details->formats));
+    vkGetPhysicalDeviceSurfaceFormatsKHR(physical_device, surface, &format_count, (VkSurfaceFormatKHR *)darray_data(&details->formats));
   }
 
   u32 present_mode_count;
-  if (vkGetPhysicalDeviceSurfacePresentModesKHR(*physical_device, *surface, &present_mode_count, NULL) != D_SUCCESS)
+  if (vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface, &present_mode_count, NULL) != D_SUCCESS)
   {
     DERROR("Error getting physical device present modes.");
     return D_ERROR;
@@ -67,7 +67,7 @@ DResult query_swap_chain_support(SwapChainSupportDetails *details, const VkPhysi
   if (present_mode_count != 0)
   {
     darray_resize(&details->present_modes, present_mode_count);
-    vkGetPhysicalDeviceSurfacePresentModesKHR(*physical_device, *surface, &present_mode_count, (VkPresentModeKHR *)darray_data(&details->present_modes));
+    vkGetPhysicalDeviceSurfacePresentModesKHR(physical_device, surface, &present_mode_count, (VkPresentModeKHR *)darray_data(&details->present_modes));
   }
 
   return D_SUCCESS;

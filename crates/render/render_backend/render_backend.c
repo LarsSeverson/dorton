@@ -117,6 +117,20 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
 
   DINFO("  Backend render pass created.");
 
+  if (render_backend_create_command_pool(backend) != D_SUCCESS)
+  {
+    return D_FATAL;
+  }
+
+  DINFO("  Backend command pool created.");
+
+  if (render_backend_create_command_buffers(backend) != D_SUCCESS)
+  {
+    return D_FATAL;
+  }
+
+  DINFO("  Backend command buffers created.");
+
   DINFO("Render backend created.");
 
   return D_SUCCESS;
@@ -129,6 +143,12 @@ DResult render_backend_destroy(RenderBackend *backend)
     PFN_vkDestroyDebugUtilsMessengerEXT vk_debugger_destroy_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(backend->vulkan_context.instance, "vkDestroyDebugUtilsMessengerEXT");
     vk_debugger_destroy_func(backend->vulkan_context.instance, backend->vulkan_context.debug_messenger, backend->vulkan_context.allocator);
   }
+
+  // Command buffers
+  render_backend_destroy_command_buffers(backend);
+
+  // Command pool
+  render_backend_destroy_command_pool(backend);
 
   // Render pass
   render_backend_destroy_render_pass(backend);

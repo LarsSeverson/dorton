@@ -20,6 +20,8 @@ typedef struct RenderBackendSwapChain
   VkFormat swap_chain_image_format;
   VkExtent2D swap_chain_extent;
 
+  u32 swap_chain_images_count;
+
 } RenderBackendSwapChain;
 
 DResult render_backend_create_swap_chain(struct RenderBackend *backend);

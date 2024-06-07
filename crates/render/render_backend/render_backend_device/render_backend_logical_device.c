@@ -9,7 +9,7 @@
 DResult render_backend_create_logical_device(RenderBackend *backend)
 {
   QueueFamilyIndices indices = {0};
-  find_queue_families(&indices, &backend->device.physical_device, &backend->vulkan_context.surface);
+  find_queue_families(&indices, backend->device.physical_device, backend->vulkan_context.surface);
 
   DArray queue_create_infos;
   DSet unique_queue_families;

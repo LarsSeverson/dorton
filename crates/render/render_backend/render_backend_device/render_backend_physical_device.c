@@ -21,14 +21,14 @@ const u32 get_physical_device_extensions_count()
   return physical_device_extensions_count;
 }
 
-u8 check_physical_device_extension_support(const VkPhysicalDevice *physical_device)
+u8 check_physical_device_extension_support(const VkPhysicalDevice physical_device)
 {
   u32 extension_count = 0;
-  vkEnumerateDeviceExtensionProperties(*physical_device, NULL, &extension_count, NULL);
+  vkEnumerateDeviceExtensionProperties(physical_device, NULL, &extension_count, NULL);
 
   DArray available_extensions;
   darray_reserve(&available_extensions, VkExtensionProperties, extension_count);
-  vkEnumerateDeviceExtensionProperties(*physical_device, NULL, &extension_count, (VkExtensionProperties *)darray_data(&available_extensions));
+  vkEnumerateDeviceExtensionProperties(physical_device, NULL, &extension_count, (VkExtensionProperties *)darray_data(&available_extensions));
 
   DSet required_extensions;
   dset_create(&required_extensions, const char *, DSET_DEFAULT_STR_COMP_FUNC);
@@ -51,14 +51,14 @@ u8 check_physical_device_extension_support(const VkPhysicalDevice *physical_devi
   return required_extensions_empty == 0;
 }
 
-DResult find_queue_families(QueueFamilyIndices *indices, const VkPhysicalDevice *physical_device, VkSurfaceKHR *surface)
+DResult find_queue_families(QueueFamilyIndices *indices, const VkPhysicalDevice physical_device, VkSurfaceKHR surface)
 {
   u32 queue_family_count;
-  vkGetPhysicalDeviceQueueFamilyProperties(*physical_device, &queue_family_count, NULL);
+  vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &queue_family_count, NULL);
 
   DArray queue_families;
   darray_reserve(&queue_families, VkQueueFamilyProperties, queue_family_count);
-  vkGetPhysicalDeviceQueueFamilyProperties(*physical_device, &queue_family_count, (VkQueueFamilyProperties *)darray_data(&queue_families));
+  vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &queue_family_count, (VkQueueFamilyProperties *)darray_data(&queue_families));
 
   u32 index = 0;
   for (u32 i = 0; i < queue_family_count; ++i)
@@ -71,7 +71,7 @@ DResult find_queue_families(QueueFamilyIndices *indices, const VkPhysicalDevice 
     }
 
     VkBool32 present_support = false;
-    vkGetPhysicalDeviceSurfaceSupportKHR(*physical_device, index, *surface, &present_support);
+    vkGetPhysicalDeviceSurfaceSupportKHR(physical_device, index, surface, &present_support);
 
     if (present_support)
     {
@@ -92,16 +92,16 @@ DResult find_queue_families(QueueFamilyIndices *indices, const VkPhysicalDevice 
   return D_SUCCESS;
 }
 
-u8 is_physical_device_suitable(const VkPhysicalDevice *physical_device, RenderBackend *backend)
+u8 is_physical_device_suitable(const VkPhysicalDevice physical_device, RenderBackend *backend)
 {
   VkPhysicalDeviceProperties physical_device_properties;
-  vkGetPhysicalDeviceProperties(*physical_device, &physical_device_properties);
+  vkGetPhysicalDeviceProperties(physical_device, &physical_device_properties);
 
   VkPhysicalDeviceFeatures physical_device_features;
-  vkGetPhysicalDeviceFeatures(*physical_device, &physical_device_features);
+  vkGetPhysicalDeviceFeatures(physical_device, &physical_device_features);
 
   QueueFamilyIndices indices = {0};
-  find_queue_families(&indices, physical_device, &backend->vulkan_context.surface);
+  find_queue_families(&indices, physical_device, backend->vulkan_context.surface);
 
   u8 extensions_supported = check_physical_device_extension_support(physical_device);
   u8 swap_chain_adequate = false;
@@ -111,7 +111,7 @@ u8 is_physical_device_suitable(const VkPhysicalDevice *physical_device, RenderBa
     SwapChainSupportDetails swap_chain_support;
     swap_chain_support_details_create(&swap_chain_support);
 
-    query_swap_chain_support(&swap_chain_support, physical_device, &backend->vulkan_context.surface);
+    query_swap_chain_support(&swap_chain_support, physical_device, backend->vulkan_context.surface);
     swap_chain_adequate = !swap_chain_support_details_empty(&swap_chain_support);
 
     swap_chain_support_details_destroy(&swap_chain_support);
@@ -137,10 +137,10 @@ DResult render_backend_pick_physical_device(struct RenderBackend *backend)
 
   for (u32 i = 0; i < physical_device_count; ++i)
   {
-    VkPhysicalDevice *physical_device = (VkPhysicalDevice *)darray_get(&physical_devices, i);
+    VkPhysicalDevice physical_device = *(VkPhysicalDevice *)darray_get(&physical_devices, i);
     if (is_physical_device_suitable(physical_device, backend))
     {
-      backend->device.physical_device = *physical_device;
+      backend->device.physical_device = physical_device;
       break;
     }
   }

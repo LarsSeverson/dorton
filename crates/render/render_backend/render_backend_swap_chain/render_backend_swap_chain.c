@@ -40,7 +40,7 @@ DResult render_backend_create_swap_chain(RenderBackend *backend)
 {
     SwapChainSupportDetails swap_chain_support_details;
     swap_chain_support_details_create(&swap_chain_support_details);
-    query_swap_chain_support(&swap_chain_support_details, &backend->device.physical_device, &backend->vulkan_context.surface);
+    query_swap_chain_support(&swap_chain_support_details, backend->device.physical_device, backend->vulkan_context.surface);
 
     // TODO: Make the format and present mode based on what the user configures
     VkSurfaceFormatKHR swap_chain_surface_format = choose_swap_chain_surface_format(&swap_chain_support_details.formats, VK_FORMAT_B8G8R8A8_SRGB, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR);
@@ -63,7 +63,7 @@ DResult render_backend_create_swap_chain(RenderBackend *backend)
     swap_chain_create_info.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
     QueueFamilyIndices indices = {0};
-    find_queue_families(&indices, &backend->device.physical_device, &backend->vulkan_context.surface);
+    find_queue_families(&indices, backend->device.physical_device, backend->vulkan_context.surface);
     u32 queue_family_indices[] = {indices.graphics_family, indices.present_family};
 
     if (indices.graphics_family != indices.present_family)
@@ -107,6 +107,7 @@ DResult render_backend_create_swap_chain(RenderBackend *backend)
         return D_ERROR;
     }
 
+    backend->swap_chain.swap_chain_images_count = image_count;
     backend->swap_chain.swap_chain_image_format = swap_chain_surface_format.format;
     backend->swap_chain.swap_chain_extent = swap_chain_extent;
 
