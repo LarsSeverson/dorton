@@ -7,7 +7,7 @@
 DResult render_backend_create_render_pass(RenderBackend *backend)
 {
   VkAttachmentDescription color_attachment = {0};
-  color_attachment.format = backend->swap_chain.swap_chain_image_format;
+  color_attachment.format = backend->swap_chain.image_format;
   color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
   color_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
   color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;

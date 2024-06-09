@@ -6,16 +6,18 @@
 #include "utils/render_backend_swap_chain_utils.h"
 #include "logger.h"
 
+#define MAX_FRAMES_IN_FLIGHT 2
+
 DResult swap_chain_image_views_create(RenderBackendSwapChain *swap_chain, VkDevice logical_device, VkAllocationCallbacks *allocator)
 {
-    darray_reserve(&swap_chain->swap_chain_image_views, VkImageView, darray_size(&swap_chain->swap_chain_images));
+    darray_reserve(&swap_chain->images_views, VkImageView, darray_size(&swap_chain->images));
 
-    for (u32 i = 0; i < darray_size(&swap_chain->swap_chain_image_views); ++i)
+    for (u32 i = 0; i < darray_size(&swap_chain->images_views); ++i)
     {
         VkImageViewCreateInfo image_view_create_info = {VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO};
-        image_view_create_info.image = *(VkImage *)darray_get(&swap_chain->swap_chain_images, i);
+        image_view_create_info.image = *(VkImage *)darray_get(&swap_chain->images, i);
         image_view_create_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-        image_view_create_info.format = swap_chain->swap_chain_image_format;
+        image_view_create_info.format = swap_chain->image_format;
         image_view_create_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
         image_view_create_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
         image_view_create_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -26,7 +28,7 @@ DResult swap_chain_image_views_create(RenderBackendSwapChain *swap_chain, VkDevi
         image_view_create_info.subresourceRange.baseArrayLayer = 0;
         image_view_create_info.subresourceRange.layerCount = 1;
 
-        if (vkCreateImageView(logical_device, &image_view_create_info, allocator, (VkImageView *)darray_get(&swap_chain->swap_chain_image_views, i)) != VK_SUCCESS)
+        if (vkCreateImageView(logical_device, &image_view_create_info, allocator, (VkImageView *)darray_get(&swap_chain->images_views, i)) != VK_SUCCESS)
         {
             DFATAL("Swap chain image views could not be created.");
             return D_FATAL;
@@ -100,36 +102,37 @@ DResult render_backend_create_swap_chain(RenderBackend *backend)
         DERROR("Error getting swap chain image count.");
         return D_ERROR;
     }
-    darray_reserve(&backend->swap_chain.swap_chain_images, VkImage, image_count);
-    if (vkGetSwapchainImagesKHR(backend->device.logical_device, backend->swap_chain.swap_chain_inner, &image_count, (VkImage *)darray_data(&backend->swap_chain.swap_chain_images)) != D_SUCCESS)
+    darray_reserve(&backend->swap_chain.images, VkImage, image_count);
+    if (vkGetSwapchainImagesKHR(backend->device.logical_device, backend->swap_chain.swap_chain_inner, &image_count, (VkImage *)darray_data(&backend->swap_chain.images)) != D_SUCCESS)
     {
         DERROR("Error getting swap chain images.");
         return D_ERROR;
     }
 
-    backend->swap_chain.swap_chain_images_count = image_count;
-    backend->swap_chain.swap_chain_image_format = swap_chain_surface_format.format;
-    backend->swap_chain.swap_chain_extent = swap_chain_extent;
+    backend->swap_chain.images_count = image_count;
+    backend->swap_chain.image_format = swap_chain_surface_format.format;
+    backend->swap_chain.extent = swap_chain_extent;
+    backend->swap_chain.max_frames_in_flight = MAX_FRAMES_IN_FLIGHT;
 
     return swap_chain_image_views_create(&backend->swap_chain, backend->device.logical_device, backend->vulkan_context.allocator);
 }
 
 DResult render_backend_destroy_swap_chain(struct RenderBackend *backend)
 {
-    for (u32 i = 0; i < darray_size(&backend->swap_chain.swap_chain_image_views); ++i)
+    for (u32 i = 0; i < darray_size(&backend->swap_chain.images_views); ++i)
     {
-        vkDestroyImageView(backend->device.logical_device, *(VkImageView *)darray_get(&backend->swap_chain.swap_chain_image_views, i), backend->vulkan_context.allocator);
+        vkDestroyImageView(backend->device.logical_device, *(VkImageView *)darray_get(&backend->swap_chain.images_views, i), backend->vulkan_context.allocator);
     }
 
     vkDestroySwapchainKHR(backend->device.logical_device, backend->swap_chain.swap_chain_inner, backend->vulkan_context.allocator);
 
-    if (darray_destroy(&backend->swap_chain.swap_chain_image_views) != D_SUCCESS)
+    if (darray_destroy(&backend->swap_chain.images_views) != D_SUCCESS)
     {
         DERROR("Error destroying swap chain image views.");
         return D_ERROR;
     }
 
-    if (darray_destroy(&backend->swap_chain.swap_chain_images) != D_SUCCESS)
+    if (darray_destroy(&backend->swap_chain.images) != D_SUCCESS)
     {
         DERROR("Error destroying swap chain images.");
         return D_ERROR;

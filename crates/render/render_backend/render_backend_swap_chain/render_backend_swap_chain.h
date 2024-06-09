@@ -11,16 +11,15 @@ typedef struct RenderBackendSwapChain
   VkSwapchainKHR swap_chain_inner;
 
   // VkImage
-  DArray swap_chain_images;
+  DArray images;
   // VkImageView
-  DArray swap_chain_image_views;
-  // VkFrameBuffer
-  DArray swap_chain_frame_buffer;
+  DArray images_views;
 
-  VkFormat swap_chain_image_format;
-  VkExtent2D swap_chain_extent;
+  VkFormat image_format;
+  VkExtent2D extent;
 
-  u32 swap_chain_images_count;
+  u32 images_count;
+  u8 max_frames_in_flight;
 
 } RenderBackendSwapChain;
 

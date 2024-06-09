@@ -7,19 +7,19 @@
 
 DResult render_backend_create_framebuffers(RenderBackend *backend)
 {
-    u32 size = darray_size(&backend->swap_chain.swap_chain_image_views);
+    u32 size = darray_size(&backend->swap_chain.images_views);
     darray_reserve(&backend->framebuffers.framebuffers_inner, RenderBackendFramebuffer, size);
 
     for (u32 i = 0; i < size; ++i)
     {
-        VkImageView swap_chain_image_view = *(VkImageView *)darray_get(&backend->swap_chain.swap_chain_image_views, i);
+        VkImageView swap_chain_image_view = *(VkImageView *)darray_get(&backend->swap_chain.images_views, i);
         VkImageView attachments[] = {swap_chain_image_view};
 
         FramebufferInfo framebuffer_info = {0};
         framebuffer_info.attachment_count = 1;
         framebuffer_info.attachments = attachments;
-        framebuffer_info.width = backend->swap_chain.swap_chain_extent.width;
-        framebuffer_info.height = backend->swap_chain.swap_chain_extent.height;
+        framebuffer_info.width = backend->swap_chain.extent.width;
+        framebuffer_info.height = backend->swap_chain.extent.height;
         framebuffer_info.render_pass = backend->render_pass.render_pass_inner;
 
         RenderBackendFramebuffer *framebuffer = (RenderBackendFramebuffer *)darray_get(&backend->framebuffers.framebuffers_inner, i);

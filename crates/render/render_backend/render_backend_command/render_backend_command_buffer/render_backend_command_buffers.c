@@ -6,7 +6,7 @@
 
 DResult render_backend_create_command_buffers(RenderBackend *backend)
 {
-    u32 size = backend->swap_chain.swap_chain_images_count;
+    u32 size = backend->swap_chain.images_count;
     if (size != darray_size(&backend->command_buffers.graphics_command_buffers))
     {
         if (darray_reserve(&backend->command_buffers.graphics_command_buffers, RenderBackendCommandBuffer, size) != D_SUCCESS)

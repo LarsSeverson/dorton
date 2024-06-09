@@ -10,6 +10,7 @@
 #include "./render_backend_command/render_backend_command_pool.h"
 #include "./render_backend_command/render_backend_command_buffer/render_backend_command_buffers.h"
 #include "./render_backend_framebuffer/render_backend_framebuffers.h"
+#include "./render_backend_sync/render_backend_fence/render_backend_fences.h"
 
 typedef struct RenderBackendCreateInfo
 {
@@ -28,6 +29,7 @@ typedef struct RenderBackend
   RenderBackendCommandPool command_pool;
   RenderBackendCommandBuffers command_buffers;
   RenderBackendFramebuffers framebuffers;
+  RenderBackendFences fences;
 
   VulkanContext vulkan_context;
 } RenderBackend;

@@ -138,6 +138,13 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
 
   DINFO("  Backend framebuffers created.");
 
+  if (render_backend_create_fences(backend) != D_SUCCESS)
+  {
+    return D_FATAL;
+  }
+
+  DINFO("  Backend fences created.");
+
   DINFO("Render backend created.");
 
   return D_SUCCESS;
@@ -150,6 +157,9 @@ DResult render_backend_destroy(RenderBackend *backend)
     PFN_vkDestroyDebugUtilsMessengerEXT vk_debugger_destroy_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(backend->vulkan_context.instance, "vkDestroyDebugUtilsMessengerEXT");
     vk_debugger_destroy_func(backend->vulkan_context.instance, backend->vulkan_context.debug_messenger, backend->vulkan_context.allocator);
   }
+
+  // Fences
+  render_backend_destroy_fences(backend);
 
   // Framebuffers
   render_backend_destroy_framebuffers(backend);
