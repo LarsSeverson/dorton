@@ -9,6 +9,7 @@
 #include "./render_backend_render_pass/render_backend_render_pass.h"
 #include "./render_backend_command/render_backend_command_pool.h"
 #include "./render_backend_command/render_backend_command_buffer/render_backend_command_buffers.h"
+#include "./render_backend_framebuffer/render_backend_framebuffers.h"
 
 typedef struct RenderBackendCreateInfo
 {
@@ -26,6 +27,7 @@ typedef struct RenderBackend
   RenderBackendRenderPass render_pass;
   RenderBackendCommandPool command_pool;
   RenderBackendCommandBuffers command_buffers;
+  RenderBackendFramebuffers framebuffers;
 
   VulkanContext vulkan_context;
 } RenderBackend;
