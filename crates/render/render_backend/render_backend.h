@@ -11,6 +11,7 @@
 #include "./render_backend_command/render_backend_command_buffer/render_backend_command_buffers.h"
 #include "./render_backend_framebuffer/render_backend_framebuffers.h"
 #include "./render_backend_sync/render_backend_fence/render_backend_fences.h"
+#include "./render_backend_sync/render_backend_semaphore/render_backend_semaphores.h"
 
 typedef struct RenderBackendCreateInfo
 {
@@ -30,6 +31,7 @@ typedef struct RenderBackend
   RenderBackendCommandBuffers command_buffers;
   RenderBackendFramebuffers framebuffers;
   RenderBackendFences fences;
+  RenderBackendSemaphores semaphores;
 
   VulkanContext vulkan_context;
 } RenderBackend;
