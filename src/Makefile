@@ -1,7 +1,7 @@
 CC = clang
 CFLAGS = -g -fPIC
-INCLUDES = -I../crates/ -I../crates/dorton_utils/ -I../crates/app/ -I../crates/internal/ -I$(VULKAN_SDK)/include -I$(GLFW)/include -I${cglm}/include
-LFLAGS = -L../bin/ -lcrates -Wl,-rpath,$(shell pwd)/../bin/
+INCLUDES = -I../crates/ -I../crates/dorton_utils/ -I../crates/app/ -I../crates/internal/ -I${GLFW}/include -I${cglm}/include 
+LFLAGS = -L../bin -lcrates -Wl,-rpath,../bin
 DEFINES = -DDIMPORT -D_DEBUG
 
 ASSEMBLY = dorton 

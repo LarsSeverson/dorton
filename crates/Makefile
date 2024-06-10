@@ -1,11 +1,15 @@
 CC = clang
 CFLAGS = -g -fPIC
-INCLUDES = -I. -Iinternal -Idorton_utils -Ilogger -I$(VULKAN_SDK)/include -I$(GLFW)/include -I${cglm}/include
-LFLAGS = -shared -lvulkan -lglfw -lcglm -lm -lxcb -lX11 -lX11-xcb -lxkbcommon -L/usr/X11R6/lib -L$(VULKAN_SDK)/lib -L${GLFW}/lib -L${cglm}/lib 
+INCLUDES = -I. -Iinternal -Idorton_utils -Ilogger -I$(VULKAN_SDK)/include -I$(GLFW)/include -I${cglm}/include 
+LFLAGS = -shared $(LIBVULKAN) $(LIBGLFW) $(LIBCGLM) -lm -lxcb -lX11 -lX11-xcb -lxkbcommon -L/usr/X11R6/lib
 DEFINES = -DDEXPORT -D_DEBUG 
 
 ASSEMBLY = crates
 BINDIR = ../bin/
+
+LIBVULKAN = -L${VULKAN_SDK}/lib -Wl,-rpath,${VULKAN_SDK}/lib -lvulkan
+LIBGLFW = -L${GLFW}/lib -Wl,-rpath,${GLFW}/lib -lglfw
+LIBCGLM = -L$(cglm)/lib -Wl,-rpath,${cglm}/lib -lcglm
 
 TARGET = $(BINDIR)lib$(ASSEMBLY).so
 SRC = $(shell find . -name '*.c')
@@ -18,7 +22,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJ)
 	echo "Building crates"
-	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) -o $@ $(BIN_OBJ) $(LFLAGS)
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) -o $@ $(BIN_OBJ) $(LFLAGS) -Wl,--verbose
 
 $(BINDIR)%.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $(BINDIR)$(notdir $@)

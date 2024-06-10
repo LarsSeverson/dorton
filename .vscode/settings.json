@@ -1,6 +1,6 @@
 {
-  "C_Cpp.errorSquiggles": "disabled",
   "files.associations": {
-    "dset.h": "c"
+    "dset.h": "c",
+    "glfw3.h": "c"
   }
 }
