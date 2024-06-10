@@ -1,48 +1,50 @@
 {
-    "configurations": [
-        {
-          "name": "Linux",
-          "includePath": [
-            "${workspaceFolder}/crates/**",
-            "${workspaceFolder}/crates/internal/**",
-            "${workspaceFolder}/crates/dorton_utils/**",
-            "${workspaceFolder}/crates/logger/**",
-            "${VULKAN_SDK}/include",
-            "${GLFW}/include"
-          ],
-          "defines": [
-            "_DEBUG",
-            "UNICODE",
-            "_UNICODE",
-            "DEXPORT"
-          ],
-          "compilerPath": "/usr/bin/clang",
-          "cStandard": "c17",
-          "cppStandard": "c++17",
-          "intelliSenseMode": "clang-x64"
-        },
-        { 
-            "name": "Win32",
-            "includePath": [
-              "${workspaceFolder}/crates/**",
-              "${workspaceFolder}/crates/internal/**",
-              "${workspaceFolder}/crates/dorton_utils/**",
-              "${workspaceFolder}/crates/logger/**",
-              "${VULKAN_SDK}/include",
-              "${GLFW}/include"
-            ],
-            "defines": [
-              "_NDEBUG",
-              "UNICODE",
-              "_UNICODE",
-              "DEXPORT"
-            ],
-            "windowsSdkVersion": "10.0.18362.0",
-            "compilerPath": "C:\\Program Files\\LLVM\\bin\\clang.exe",
-            "cStandard": "c17",
-            "cppStandard": "c++17", 
-            "intelliSenseMode": "clang-x64"
-        }
-    ],
-    "version": 4
+  "configurations": [
+    {
+      "name": "Linux",
+      "includePath": [
+        "${workspaceFolder}/crates/**",
+        "${workspaceFolder}/crates/internal/**",
+        "${workspaceFolder}/crates/dorton_utils/**",
+        "${workspaceFolder}/crates/logger/**",
+        "${VULKAN_SDK}/include",
+        "${GLFW}/include",
+        "${cglm}/include"
+      ],
+      "defines": [
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE",
+        "DEXPORT"
+      ],
+      "compilerPath": "/usr/bin/clang",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "clang-x64"
+    },
+    {
+      "name": "Win32",
+      "includePath": [
+        "${workspaceFolder}/crates/**",
+        "${workspaceFolder}/crates/internal/**",
+        "${workspaceFolder}/crates/dorton_utils/**",
+        "${workspaceFolder}/crates/logger/**",
+        "${VULKAN_SDK}/include",
+        "${GLFW}/include",
+        "${cglm}/include"
+      ],
+      "defines": [
+        "_NDEBUG",
+        "UNICODE",
+        "_UNICODE",
+        "DEXPORT"
+      ],
+      "windowsSdkVersion": "10.0.18362.0",
+      "compilerPath": "C:\\Program Files\\LLVM\\bin\\clang.exe",
+      "cStandard": "c17",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "clang-x64"
+    }
+  ],
+  "version": 4
 }

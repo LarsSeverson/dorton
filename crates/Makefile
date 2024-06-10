@@ -1,7 +1,7 @@
 CC = clang
 CFLAGS = -g -fPIC
-INCLUDES = -I. -Iinternal -Idorton_utils -Ilogger -I$(VULKAN_SDK)/include -I$(GLFW)/include
-LFLAGS = -shared -lvulkan -lxcb -lX11 -lX11-xcb -lxkbcommon -L$(VULKAN_SDK)/lib -L/usr/X11R6/lib -L%GLFW%/lib -lglfw
+INCLUDES = -I. -Iinternal -Idorton_utils -Ilogger -I$(VULKAN_SDK)/include -I$(GLFW)/include -I${cglm}/include
+LFLAGS = -shared -lvulkan -lglfw -lcglm -lm -lxcb -lX11 -lX11-xcb -lxkbcommon -L/usr/X11R6/lib -L$(VULKAN_SDK)/lib -L${GLFW}/lib -L${cglm}/lib 
 DEFINES = -DDEXPORT -D_DEBUG 
 
 ASSEMBLY = crates
