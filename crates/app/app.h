@@ -2,9 +2,10 @@
 
 #include "defines.h"
 
-#include "../window/window.h"
-#include "../render/render.h"
-#include "../clock/clock.h"
+#include "window/window.h"
+#include "render/render.h"
+#include "clock/clock.h"
+#include "event/event.h"
 
 #define MAX_APP_TITLE_LENGTH 100
 
@@ -29,3 +30,5 @@ DAPI DResult app_create(App *app, AppCreateInfo *app_info);
 DAPI DResult app_destroy(App *app);
 
 DAPI DResult app_run(App *app); 
+
+DResult app_resize(App *app, WindowEvent window_resize_event);

@@ -22,7 +22,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJ)
 	echo "Building crates"
-	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) -o $@ $(BIN_OBJ) $(LFLAGS) -Wl,--verbose
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) -o $@ $(BIN_OBJ) $(LFLAGS) 
 
 $(BINDIR)%.o: %.c
 	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $(BINDIR)$(notdir $@)

@@ -16,10 +16,12 @@ typedef struct WindowCreateInfo
 typedef struct Window
 {
   WindowProperties props;
-  GLFWwindow *window;
+  GLFWwindow *window_inner;
 } Window;
 
-DResult window_create(Window *window, WindowCreateInfo *create_info);
+struct App;
+
+DResult window_create(struct App* app, Window *window, WindowCreateInfo *create_info);
 DResult window_destroy(Window *window);
 
 b8 window_running(Window *window);

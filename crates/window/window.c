@@ -1,11 +1,13 @@
 #include "window.h"
 
-#include "../logger/logger.h"
-#include "../event/event.h"
+#include "logger.h"
+
+#include "event/event.h"
+#include "app/app.h"
 
 #include <stdlib.h>
 
-DResult window_create(Window *window, WindowCreateInfo *create_info)
+DResult window_create(App *app, Window *window, WindowCreateInfo *create_info)
 {
   if (window == NULL || create_info == NULL)
   {
@@ -22,14 +24,17 @@ DResult window_create(Window *window, WindowCreateInfo *create_info)
   glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
   glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-  window->window = glfwCreateWindow(window->props.width, window->props.height, window->props.title, NULL, NULL);
+  window->window_inner = glfwCreateWindow(window->props.width, window->props.height, window->props.title, NULL, NULL);
 
-  if (!window->window)
+  if (!window->window_inner)
   {
     return D_ERROR;
   }
 
-  glfwSetMouseButtonCallback(window->window, mouse_event_fn);
+  glfwSetWindowUserPointer(window->window_inner, app);
+
+  glfwSetMouseButtonCallback(window->window_inner, mouse_event_fn);
+  glfwSetWindowSizeCallback(window->window_inner, window_resize_event_fn);
 
   DINFO("Window created successfully.");
   return D_SUCCESS;
@@ -37,7 +42,7 @@ DResult window_create(Window *window, WindowCreateInfo *create_info)
 
 DResult window_destroy(Window *window)
 {
-  glfwDestroyWindow(window->window);
+  glfwDestroyWindow(window->window_inner);
   glfwTerminate();
 
   return D_SUCCESS;
@@ -45,7 +50,7 @@ DResult window_destroy(Window *window)
 
 b8 window_running(Window *window)
 {
-  return !glfwWindowShouldClose(window->window);
+  return !glfwWindowShouldClose(window->window_inner);
 }
 
 void window_poll_events(Window *window)
@@ -55,5 +60,5 @@ void window_poll_events(Window *window)
 
 void window_get_frame_buffer_size(Window *window, i32 *width, i32 *height)
 {
-  glfwGetFramebufferSize(window->window, width, height);
+  glfwGetFramebufferSize(window->window_inner, width, height);
 }

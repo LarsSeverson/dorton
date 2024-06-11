@@ -30,11 +30,11 @@ DResult app_create(App *app, AppCreateInfo *app_info)
   window_create_info.height = 720;
   window_create_info.width = 1250;
 
-  if (window_create(&app->window, &window_create_info) != D_SUCCESS)
+  if (window_create(app, &app->window, &window_create_info) != D_SUCCESS)
   {
     DFATAL("Error creating window");
     return D_ERROR;
-  } 
+  }
 
   RendererCreateInfo renderer_create_info;
   renderer_create_info.app_title = app_info->title;
@@ -108,7 +108,12 @@ DResult app_run(App *app)
       }
     }
   }
-  
+
+  return D_SUCCESS;
+}
+
+DResult app_resize(App *app, WindowEvent window_resize_event)
+{
   return D_SUCCESS;
 }
 
@@ -128,7 +133,7 @@ DResult app_destroy(App *app)
 
   DINFO("Window destroyed successfully.");
 
-  DINFO("App destroyed successfully.");  
+  DINFO("App destroyed successfully.");
 
   return D_SUCCESS;
 }

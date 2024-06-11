@@ -67,7 +67,7 @@ DResult renderer_backend_create_instance(RenderBackend *backend)
 
 DResult render_backend_create_surface(RenderBackend *backend)
 {
-  if (glfwCreateWindowSurface(backend->vulkan_context.instance, backend->window->window, backend->vulkan_context.allocator, &backend->vulkan_context.surface) != D_SUCCESS)
+  if (glfwCreateWindowSurface(backend->vulkan_context.instance, backend->window->window_inner, backend->vulkan_context.allocator, &backend->vulkan_context.surface) != D_SUCCESS)
   {
     DFATAL("Unable to create render surface.");
     return D_ERROR;
