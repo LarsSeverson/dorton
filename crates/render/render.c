@@ -9,7 +9,7 @@ DResult renderer_create(Renderer *renderer, RendererCreateInfo *create_info)
   RenderBackendCreateInfo render_backend_create_info;
   render_backend_create_info.app_title = create_info->app_title;
   render_backend_create_info.window = create_info->window;
-  
+
   if (render_backend_create(&renderer->backend, &render_backend_create_info) != D_SUCCESS)
   {
     DFATAL("Renderer failed to create backend.");
@@ -53,6 +53,16 @@ DResult renderer_draw(Renderer *renderer, RenderPacket packet)
   {
     DERROR("Renderer unable to end frame.");
     return D_ERROR;
+  }
+
+  return D_SUCCESS;
+}
+
+DResult renderer_resize(Renderer *renderer, i32 width, i32 height)
+{
+  if (render_backend_resize(&renderer->backend, width, height) != D_SUCCESS)
+  {
+    return D_FATAL;
   }
 
   return D_SUCCESS;

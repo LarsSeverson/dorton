@@ -1,10 +1,12 @@
 #include "render_backend_swap_chain.h"
 
+#include "logger.h"
+
 #include "../render_backend.h"
 #include "../render_backend_device/render_backend_physical_device.h"
 
+#include "../utils/render_backend_utils.h"
 #include "utils/render_backend_swap_chain_utils.h"
-#include "logger.h"
 
 #define MAX_FRAMES_IN_FLIGHT 2
 
@@ -117,7 +119,7 @@ DResult render_backend_create_swap_chain(RenderBackend *backend)
     return swap_chain_image_views_create(&backend->swap_chain, backend->device.logical_device, backend->vulkan_context.allocator);
 }
 
-DResult render_backend_destroy_swap_chain(struct RenderBackend *backend)
+DResult render_backend_destroy_swap_chain(RenderBackend *backend)
 {
     for (u32 i = 0; i < darray_size(&backend->swap_chain.images_views); ++i)
     {
@@ -135,6 +137,49 @@ DResult render_backend_destroy_swap_chain(struct RenderBackend *backend)
     if (darray_destroy(&backend->swap_chain.images) != D_SUCCESS)
     {
         DERROR("Error destroying swap chain images.");
+        return D_ERROR;
+    }
+
+    return D_SUCCESS;
+}
+
+DResult render_backend_recreate_swap_chain(RenderBackend *backend)
+{
+    i32 width = 0, height = 0;
+    window_get_frame_buffer_size(backend->window, &width, &height);
+    while (width == 0 || height == 0)
+    {
+        window_get_frame_buffer_size(backend->window, &width, &height);
+        glfwWaitEvents();
+    }
+
+    if (vk_is_success(vkDeviceWaitIdle(backend->device.logical_device)) != D_SUCCESS)
+    {
+        DERROR("Could not wait for device to idle on swapchain recreate.");
+        return D_ERROR;
+    }
+
+    if (render_backend_destroy_framebuffers(backend) != D_SUCCESS)
+    {
+        DERROR("Could not destroy framebuffers on swapchain recreate.");
+        return D_ERROR;
+    }
+
+    if (render_backend_destroy_swap_chain(backend) != D_SUCCESS)
+    {
+        DERROR("Could not destroy swapchain on recreate.");
+        return D_ERROR;
+    }
+
+    if (render_backend_create_swap_chain(backend) != D_SUCCESS)
+    {
+        DERROR("Could not create swapchain on recreate.");
+        return D_ERROR;
+    }
+
+    if (render_backend_create_framebuffers(backend) != D_SUCCESS)
+    {
+        DERROR("Could not create framebuffers on swapchain recreate.");
         return D_ERROR;
     }
 

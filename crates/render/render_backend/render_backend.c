@@ -207,3 +207,12 @@ DResult render_backend_end_frame(RenderBackend *backend, f32 delta_time)
 {
   return D_SUCCESS;
 }
+
+DResult render_backend_resize(RenderBackend *backend, i32 width, i32 height)
+{
+  if (render_backend_recreate_swap_chain(backend) != D_SUCCESS)
+  {
+    return D_FATAL;
+  }
+  return D_SUCCESS;
+}

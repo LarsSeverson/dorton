@@ -7,7 +7,7 @@ DResult window_resize_event(App *app, WindowEvent event)
 {
     app_resize(app, event);
 
-    DINFO("Window Resize Event: [%d, %d]", event.info.width, event.info.height);
+    // DINFO("Window Resize Event: [%d, %d]", event.info.width, event.info.height);
 
     return D_SUCCESS;
 }

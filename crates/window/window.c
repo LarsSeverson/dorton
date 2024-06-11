@@ -62,3 +62,9 @@ void window_get_frame_buffer_size(Window *window, i32 *width, i32 *height)
 {
   glfwGetFramebufferSize(window->window_inner, width, height);
 }
+
+DResult window_resize(Window *window, i32 width, i32 height)
+{
+
+  return D_SUCCESS;
+}

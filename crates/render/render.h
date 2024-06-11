@@ -22,3 +22,4 @@ DResult renderer_create(Renderer *renderer, RendererCreateInfo *create_info);
 DResult renderer_destroy(Renderer *renderer);
 
 DResult renderer_draw(Renderer *renderer, RenderPacket packet);
+DResult renderer_resize(Renderer *renderer, i32 width, i32 height);

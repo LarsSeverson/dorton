@@ -25,3 +25,4 @@ typedef struct RenderBackendSwapChain
 
 DResult render_backend_create_swap_chain(struct RenderBackend *backend);
 DResult render_backend_destroy_swap_chain(struct RenderBackend *backend);
+DResult render_backend_recreate_swap_chain(struct RenderBackend *backend);

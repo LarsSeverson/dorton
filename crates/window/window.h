@@ -28,3 +28,5 @@ b8 window_running(Window *window);
 
 void window_poll_events(Window *window);
 void window_get_frame_buffer_size(Window *window, i32 *width, i32 *height);
+
+DResult window_resize(Window *window, i32 width, i32 height);

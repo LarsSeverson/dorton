@@ -112,11 +112,6 @@ DResult app_run(App *app)
   return D_SUCCESS;
 }
 
-DResult app_resize(App *app, WindowEvent window_resize_event)
-{
-  return D_SUCCESS;
-}
-
 DResult app_destroy(App *app)
 {
   if (renderer_destroy(&app->renderer) != D_SUCCESS)
@@ -134,6 +129,26 @@ DResult app_destroy(App *app)
   DINFO("Window destroyed successfully.");
 
   DINFO("App destroyed successfully.");
+
+  return D_SUCCESS;
+}
+
+DResult app_resize(App *app, WindowEvent window_resize_event)
+{
+  i32 width = window_resize_event.info.width;
+  i32 height = window_resize_event.info.height;
+
+  if (window_resize(&app->window, width, height) != D_SUCCESS)
+  {
+    DFATAL("Error resizing window.");
+    return D_FATAL;
+  }
+
+  if (renderer_resize(&app->renderer, width, height) != D_SUCCESS)
+  {
+    DFATAL("Error resizing renderer.");
+    return D_FATAL;
+  }
 
   return D_SUCCESS;
 }

@@ -41,3 +41,5 @@ DResult render_backend_destroy(RenderBackend *backend);
 
 DResult render_backend_begin_frame(RenderBackend *backend, f32 delta_time);
 DResult render_backend_end_frame(RenderBackend *backend, f32 delta_time);
+
+DResult render_backend_resize(RenderBackend *backend, i32 width, i32 height);
