@@ -1,7 +1,6 @@
 .PHONY: all crates src
 
-all: 
-	$(MAKE) build 
+all: crates src
 
 crates:
 	$(MAKE) -C crates
@@ -13,12 +12,11 @@ clean:
 	$(MAKE) -C crates clean
 	$(MAKE) -C src clean
 
-build:
+rebuild:
 	$(MAKE) -C crates rebuild
 	$(MAKE) -C src rebuild
 
-run:
-	$(MAKE) -C crates rebuild
+run: crates src
 	$(MAKE) -C src run
 
 vrun:

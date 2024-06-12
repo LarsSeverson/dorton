@@ -9,34 +9,32 @@ BINDIR = ../bin/
 
 TARGET = $(BINDIR)$(ASSEMBLY)
 SRC = $(shell find . -name '*.c')
-OBJ = $(patsubst %.c,$(BINDIR)%.o,$(SRC))
-BIN_OBJ = $(addprefix $(BINDIR),$(notdir $(OBJ)))
+OBJ = $(SRC:%.c=$(BINDIR)%.o)
 
-.PHONY: all clean
-
-all: $(TARGET)
+$(BINDIR)%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $@
 
 $(TARGET): $(OBJ)
 	echo "Building src"
-	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) -o $@ $^ $(LFLAGS)
+	$(CC) $(OBJ) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LFLAGS) -o $@ 
 
-$(BINDIR)%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $(BINDIR)$(notdir $@)
+.PHONY: all clean rebuild run vrun
+
+all: $(TARGET)
 
 clean: 
-	rm -f $(BIN_OBJ) $(TARGET)
+	rm -f $(OBJ) $(TARGET)
 
 rebuild:
 	make clean
 	make
 
-run: $(TARGET)
-	make clean
+run:
 	make
 	$(TARGET)
 
 vrun:
-	make clean
 	make
 	valgrind --leak-check=full --gen-suppressions=all --log-file=valgrind.log --suppressions=valgrind.supp $(TARGET)
 

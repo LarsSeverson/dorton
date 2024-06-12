@@ -13,22 +13,22 @@ LIBCGLM = -L$(cglm)/lib -Wl,-rpath,${cglm}/lib -lcglm
 
 TARGET = $(BINDIR)lib$(ASSEMBLY).so
 SRC = $(shell find . -name '*.c')
-OBJ = $(patsubst %.c,$(BINDIR)%.o,$(SRC))
-BIN_OBJ = $(addprefix $(BINDIR),$(notdir $(OBJ)))
+OBJ = $(SRC:%.c=$(BINDIR)%.o)
 
-.PHONY: all clean
-
-all: $(TARGET)
+$(BINDIR)%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $@
 
 $(TARGET): $(OBJ)
 	echo "Building crates"
-	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) -o $@ $(BIN_OBJ) $(LFLAGS) 
+	$(CC) $(OBJ) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LFLAGS) -o $@ 
 
-$(BINDIR)%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $(BINDIR)$(notdir $@)
+.PHONY: all
+
+all: $(TARGET)
 
 clean: 
-	rm -f $(BIN_OBJ) $(TARGET)
+	rm -f $(OBJ) $(TARGET)
 
 rebuild:
 	make clean
