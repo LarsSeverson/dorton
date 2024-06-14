@@ -11,7 +11,6 @@ DResult render(App *app, f32 delta_time);
 
 DResult app_create(App *app, AppCreateInfo *app_info)
 {
-  DINFO("TEST");
   if (initialized)
   {
     DFATAL("Only 1 app can exist.");

@@ -1,0 +1,42 @@
+CC = clang
+CFLAGS = -g
+INCLUDES = -I$(CRATES_DIR). -I$(CRATES_DIR)\dorton_utils -I$(CRATES_DIR)\app -I$(CRATES_DIR)\internal -I$(VULKAN_SDK)\include -I$(GLFW)\include -I(cglm)\include 
+LFLAGS = -L$(BINDIR) -lcrates
+DEFINES = -DDIMPORT -D_DEBUG
+
+ASSEMBLY = dorton
+BINDIR = ..\..\bin
+CRATES_DIR = ..\..\crates
+SRC_DIR = ..\..\src
+OBJ_DIR = $(BINDIR)\src
+
+RWILDCARD = $(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call RWILDCARD,$d/,$2))
+
+TARGET = $(BINDIR)\$(ASSEMBLY).exe
+SRC = $(call RWILDCARD,$(SRC_DIR)/,*.c)
+OBJ = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@if not exist "$(dir $@)" mkdir "$(dir $@)"
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $@
+
+$(TARGET): $(OBJ)
+	@echo "Building src"
+	$(CC) $(OBJ) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LFLAGS) -o $@ 
+
+.PHONY: all
+all: $(TARGET)
+
+clean: 
+	-if exist $(OBJ_DIR) rmdir /S /Q $(OBJ_DIR)
+	-if exist $(subst /,\,$(BINDIR)\$(ASSEMBLY).*) cmd /c del $(subst /,\,$(BINDIR)\$(ASSEMBLY).*)
+
+rebuild:
+	make clean
+	make
+
+.PHONY: run
+run: 
+	make
+	$(TARGET)
+

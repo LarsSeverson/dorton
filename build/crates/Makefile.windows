@@ -1,0 +1,40 @@
+CC = clang
+CFLAGS = -g -shared -Wvarargs -Wall -Werror -w
+INCLUDES = -I$(CRATES_DIR). -I$(CRATES_DIR)\internal -I$(CRATES_DIR)\dorton_utils -I$(CRATES_DIR)\logger -I$(VULKAN_SDK)\include -I$(GLFW)\include -I$(cglm)\include 
+LFLAGS = -luser32 $(LIBVULKAN) $(LIBGLFW) $(LIBCGLM) -lshell32 -lgdi32
+DEFINES = -DDEXPORT -D_DEBUG -D_CRT_SECURE_NO_WARNINGS
+
+LIBVULKAN = -L${VULKAN_SDK}\lib -lvulkan-1
+LIBGLFW = -L${GLFW}\lib -lglfw3_mt -lopengl32 
+LIBCGLM = -L$(cglm)\lib -lcglm
+
+ASSEMBLY = crates
+BINDIR = ..\..\bin
+CRATES_DIR = ..\..\crates
+OBJ_DIR = $(BINDIR)\$(ASSEMBLY)
+
+RWILDCARD = $(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call RWILDCARD,$d/,$2))
+
+TARGET = $(BINDIR)\$(ASSEMBLY).dll
+SRC = $(call RWILDCARD,$(CRATES_DIR)/,*.c)
+OBJ = $(patsubst $(CRATES_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
+
+$(OBJ_DIR)/%.o: $(CRATES_DIR)/%.c
+	@if not exist "$(dir $@)" mkdir "$(dir $@)"
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $@
+
+$(TARGET): $(OBJ)
+	@echo "Building crates"
+	$(CC) $(OBJ) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LFLAGS) -o $@ 
+
+.PHONY: all
+
+all: $(TARGET)
+
+clean: 
+	-if exist $(OBJ_DIR) rmdir /S /Q $(OBJ_DIR)
+	-if exist $(subst /,\,$(BINDIR)\$(ASSEMBLY).*) cmd /c del $(subst /,\,$(BINDIR)\$(ASSEMBLY).*)
+
+rebuild:
+	make clean
+	make
