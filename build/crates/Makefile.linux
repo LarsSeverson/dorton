@@ -1,0 +1,39 @@
+CC = clang
+CFLAGS = -g -fPIC
+INCLUDES = -I$(CRATES_DIR) -I$(CRATES_DIR)/internal -I$(CRATES_DIR)/dorton_utils -I$(CRATES_DIR)/logger -I$(VULKAN_SDK)/include -I$(GLFW)/include -I$(cglm)/include 
+LFLAGS = -shared $(LIBVULKAN) $(LIBGLFW) $(LIBCGLM) -lm -lxcb -lX11 -lX11-xcb -lxkbcommon -L/usr/X11R6/lib
+DEFINES = -DDEXPORT -D_DEBUG 
+
+ASSEMBLY = crates
+BINDIR = ../../bin
+CRATES_DIR = ../../crates
+OBJ_DIR = $(BINDIR)/$(ASSEMBLY)
+
+LIBVULKAN = -L${VULKAN_SDK}/lib -Wl,-rpath,${VULKAN_SDK}/lib -lvulkan
+LIBGLFW = -L${GLFW}/lib -Wl,-rpath,${GLFW}/lib -lglfw
+LIBCGLM = -L$(cglm)/lib -Wl,-rpath,${cglm}/lib -lcglm
+
+TARGET = $(BINDIR)/lib$(ASSEMBLY).so
+SRC = $(shell find $(CRATES_DIR) -name '*.c')
+OBJ = $(patsubst $(CRATES_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
+
+$(OBJ_DIR)/%.o: $(CRATES_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $@
+
+$(TARGET): $(OBJ)
+	echo "Building crates"
+	$(CC) $(OBJ) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LFLAGS) -o $@ 
+
+.PHONY: all
+all: $(TARGET)
+
+.PHONY: clean
+clean: 
+	rm -rf $(OBJ_DIR)
+	rm -f $(TARGET)
+
+.PHONY: rebuild
+rebuild:
+	$(MAKE) clean -f Makefile.linux 	
+	$(MAKE) -f Makefile.linux

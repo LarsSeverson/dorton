@@ -1,0 +1,44 @@
+CC = clang
+CFLAGS = -g -fPIC
+INCLUDES = -I$(CRATES_DIR) -I$(CRATES_DIR)/dorton_utils/ -I$(CRATES_DIR)/app/ -I$(CRATES_DIR)/internal/ -I$(GLFW)/include -I$(cglm)/include 
+LFLAGS = -L$(BINDIR) -lcrates -Wl,-rpath,$(BINDIR)
+DEFINES = -DDIMPORT -D_DEBUG
+
+ASSEMBLY = dorton
+BINDIR = ../../bin
+CRATES_DIR = ../../crates
+SRC_DIR = ../../src
+OBJ_DIR = $(BINDIR)/src
+
+TARGET = $(BINDIR)/$(ASSEMBLY)
+SRC = $(shell find $(SRC_DIR) -name '*.c')
+OBJ = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $@
+
+$(TARGET): $(OBJ)
+	echo "Building src"
+	$(CC) $(OBJ) $(CFLAGS) $(DEFINES) $(INCLUDES) $(LFLAGS) -o $@
+
+.PHONY: all 
+all: $(TARGET)
+
+.PHONY: clean
+clean: 
+	rm -rf $(OBJ_DIR)
+	rm -f $(TARGET)
+	
+.PHONY: rebuild
+rebuild:
+	$(MAKE) -f Makefile.linux clean
+	$(MAKE) -f Makefile.linux
+
+.PHONY: run
+run: $(TARGET)
+	$(TARGET)
+
+.PHONY: vrun
+vrun: $(TARGET)
+	valgrind --leak-check=full --gen-suppressions=all --log-file=valgrind.log --suppressions=valgrind.supp $(TARGET)

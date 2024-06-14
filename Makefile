@@ -11,7 +11,6 @@ all: crates src
 
 .PHONY: crates
 crates:
-	-echo $(TARGET_EXTENSION)
 	$(MAKE) -C build/crates -f Makefile.$(TARGET_EXTENSION)
 
 .PHONY: src

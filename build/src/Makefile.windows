@@ -36,6 +36,7 @@ clean:
 rebuild:
 	$(MAKE) -f Makefile.windows clean
 	$(MAKE) -f Makefile.windows
+	
 .PHONY: run
 run: $(TARGET)
 	$(TARGET)
