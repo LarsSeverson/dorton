@@ -27,16 +27,16 @@ $(TARGET): $(OBJ)
 .PHONY: all
 all: $(TARGET)
 
+.PHONY: clean
 clean: 
 	-if exist $(OBJ_DIR) rmdir /S /Q $(OBJ_DIR)
 	-if exist $(subst /,\,$(BINDIR)\$(ASSEMBLY).*) cmd /c del $(subst /,\,$(BINDIR)\$(ASSEMBLY).*)
 
+.PHONY: rebuild
 rebuild:
-	make clean
-	make
-
+	$(MAKE) -f Makefile.windows clean
+	$(MAKE) -f Makefile.windows
 .PHONY: run
-run: 
-	make
+run: $(TARGET)
 	$(TARGET)
 

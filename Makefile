@@ -1,24 +1,39 @@
-.PHONY: all crates src
+TARGET_EXTENSION=
 
+ifeq ($(OS),Windows_NT)
+	TARGET_EXTENSION=windows
+else
+	TARGET_EXTENSION=linux
+endif
+
+.PHONY: all
 all: crates src
 
+.PHONY: crates
 crates:
-	$(MAKE) -C crates
+	-echo $(TARGET_EXTENSION)
+	$(MAKE) -C build/crates -f Makefile.$(TARGET_EXTENSION)
 
+.PHONY: src
 src:
-	$(MAKE) -C src
+	$(MAKE) -C build/src -f Makefile.$(TARGET_EXTENSION)
 
+.PHONY: clean
 clean:
-	$(MAKE) -C crates clean
-	$(MAKE) -C src clean
+	$(MAKE) -C build/crates clean -f Makefile.$(TARGET_EXTENSION)
+	$(MAKE) -C build/src clean -f Makefile.$(TARGET_EXTENSION)
 
+.PHONY: rebuild
 rebuild:
-	$(MAKE) -C crates rebuild
-	$(MAKE) -C src rebuild
+	$(MAKE) -C build/crates rebuild -f Makefile.$(TARGET_EXTENSION)
+	$(MAKE) -C build/src rebuild -f Makefile.$(TARGET_EXTENSION)
 
-run: crates src
-	$(MAKE) -C src run
+.PHONY: run 
+run:
+	$(MAKE) -C build/src run -f Makefile.$(TARGET_EXTENSION)
 
-vrun:
-	$(MAKE) -C crates rebuild
-	$(MAKE) -C src vrun
+ifeq ($(TARGET_EXTENSION),linux)
+.PHONY: vrun
+vrun: crates src
+	$(MAKE) -C build/src vrun -f Makefile.linux
+endif
