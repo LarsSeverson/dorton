@@ -82,3 +82,6 @@ STATIC_ASSERT(sizeof(f64) == 8, "Expected f64 to be 8 byte.");
 #endif
 
 #define DCLAMP(val, min, max) ((val <= (min)) ? (min) : ((val >= (max)) ? (max) : (val)))
+
+#define ROOT_DIR PROJECT_DIR
+#define SHADERS_DIR ROOT_DIR "/bin/assets/shaders"

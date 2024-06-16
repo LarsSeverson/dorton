@@ -47,6 +47,13 @@ DResult dstring_destroy(DString *dstring)
   return D_SUCCESS;
 }
 
+DResult dstring_reserve(DString *dstring, u32 size)
+{
+  dstring->length = size;
+  dstring->string = (char *)calloc(size, sizeof(char));
+  return D_SUCCESS;
+}
+
 DResult dstring_dup(DString *src, DString *dest)
 {
   if (src == NULL || dest == NULL)
@@ -87,4 +94,21 @@ char *dstring_data(DString *dstring)
 u64 dstring_length(DString *dstring)
 {
   return dstring->length;
+}
+
+DResult dstring_format(DString *dest, const char *format, ...)
+{
+  __builtin_va_list arg_ptr;
+
+  va_start(arg_ptr, format);
+  i32 length = vsnprintf(NULL, 0, format, arg_ptr);
+  va_end(arg_ptr);
+  
+  dstring_reserve(dest, length + 1);
+
+  va_start(arg_ptr, format);
+  vsnprintf(dest->string, length + 1, format, arg_ptr);
+  va_end(arg_ptr);
+
+  return D_SUCCESS;
 }

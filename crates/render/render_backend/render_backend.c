@@ -9,7 +9,7 @@
 
 #include <GLFW/glfw3.h>
 
-DResult renderer_backend_create_instance(RenderBackend *backend)
+DResult render_backend_create_instance(RenderBackend *backend)
 {
   VkApplicationInfo app_info = {VK_STRUCTURE_TYPE_APPLICATION_INFO};
   app_info.pApplicationName = backend->app_title;
@@ -82,7 +82,7 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
   backend->window = create_info->window;
 
   DINFO("Creating render backend:");
-  if (renderer_backend_create_instance(backend) != D_SUCCESS)
+  if (render_backend_create_instance(backend) != D_SUCCESS)
   {
     return D_FATAL;
   }

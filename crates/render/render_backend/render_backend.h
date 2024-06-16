@@ -12,6 +12,7 @@
 #include "./render_backend_framebuffer/render_backend_framebuffers.h"
 #include "./render_backend_sync/render_backend_fence/render_backend_fences.h"
 #include "./render_backend_sync/render_backend_semaphore/render_backend_semaphores.h"
+#include "./render_backend_shaders/render_backend_shaders.h"
 
 typedef struct RenderBackendCreateInfo
 {
@@ -32,6 +33,7 @@ typedef struct RenderBackend
   RenderBackendFramebuffers framebuffers;
   RenderBackendFences fences;
   RenderBackendSemaphores semaphores;
+  RenderBackendShaders shaders;
 
   VulkanContext vulkan_context;
 } RenderBackend;

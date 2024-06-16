@@ -1,16 +1,18 @@
 CC = clang
 CFLAGS = -g -fPIC
 INCLUDES = -I$(CRATES_DIR) -I$(CRATES_DIR)/dorton_utils/ -I$(CRATES_DIR)/app/ -I$(CRATES_DIR)/internal/ -I$(GLFW)/include -I$(cglm)/include 
-LFLAGS = -L$(BINDIR) -lcrates -Wl,-rpath,$(BINDIR)
-DEFINES = -DDIMPORT -D_DEBUG
+LFLAGS = -L$(BIN_DIR) -lcrates -Wl,-rpath,$(BIN_DIR)
+DEFINES = -DDIMPORT -D_DEBUG -DPROJECT_DIR='"$(realpath $(PROJECT_DIR))"'
 
 ASSEMBLY = dorton
-BINDIR = ../../bin
+
+PROJECT_DIR = $(CURDIR)/../..
+BIN_DIR = ../../bin
 CRATES_DIR = ../../crates
 SRC_DIR = ../../src
-OBJ_DIR = $(BINDIR)/src
+OBJ_DIR = $(BIN_DIR)/src
 
-TARGET = $(BINDIR)/$(ASSEMBLY)
+TARGET = $(BIN_DIR)/$(ASSEMBLY)
 SRC = $(shell find $(SRC_DIR) -name '*.c')
 OBJ = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC))
 
