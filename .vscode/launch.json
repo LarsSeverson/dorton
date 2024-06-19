@@ -19,19 +19,16 @@
     },
     {
       "name": "(Windows) Launch",
-      "type": "cppdbg",
+      "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/bin/dorton.exe",
+      "program": "${workspaceFolder}\\bin\\dorton.exe",
       "args": [],
       "preLaunchTask": "Build",
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [
-        {
-          "name": "LD_LIBRARY_PATH",
-          "value": "${workspaceFolder}/bin"
-        }
-      ]
+      ],
+      "externalConsole": true
     }
   ]
 }

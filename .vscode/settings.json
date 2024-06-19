@@ -1,7 +1,18 @@
 {
   "files.associations": {
     "dset.h": "c",
-    "glfw3.h": "c"
+    "glfw3.h": "c",
+    "atomic": "c",
+    "charconv": "c",
+    "cstring": "c",
+    "format": "c",
+    "system_error": "c",
+    "xlocale": "c",
+    "xlocbuf": "c",
+    "xlocinfo": "c",
+    "xlocmon": "c",
+    "xmemory": "c",
+    "xstring": "c"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

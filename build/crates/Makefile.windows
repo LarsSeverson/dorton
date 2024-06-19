@@ -2,13 +2,15 @@ CC = clang
 CFLAGS = -g -shared -Wvarargs -Wall -Werror -w
 INCLUDES = -I$(CRATES_DIR). -I$(CRATES_DIR)\internal -I$(CRATES_DIR)\dorton_utils -I$(CRATES_DIR)\logger -I$(VULKAN_SDK)\include -I$(GLFW)\include -I$(cglm)\include 
 LFLAGS = -luser32 $(LIBVULKAN) $(LIBGLFW) $(LIBCGLM) -lshell32 -lgdi32
-DEFINES = -DDEXPORT -D_DEBUG -D_CRT_SECURE_NO_WARNINGS
+DEFINES = -DDEXPORT -D_DEBUG -D_CRT_SECURE_NO_WARNINGS -DPROJECT_DIR='"$(realpath $(PROJECT_DIR))"'
 
 LIBVULKAN = -L${VULKAN_SDK}\lib -lvulkan-1
 LIBGLFW = -L${GLFW}\lib -lglfw3_mt -lopengl32 
 LIBCGLM = -L$(cglm)\lib -lcglm
 
 ASSEMBLY = crates
+
+PROJECT_DIR = $(CURDIR)\..\..
 BINDIR = ..\..\bin
 CRATES_DIR = ..\..\crates
 OBJ_DIR = $(BINDIR)\$(ASSEMBLY)

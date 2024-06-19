@@ -3,6 +3,13 @@
 #include "render/render_types.h"
 #include "darray/darray.h"
 
+typedef u32 ShaderFlagBits;
+typedef enum ShaderFlags
+{
+    SHADER_FLAG_NONE = 0x0,
+    SHADER_FLAG_OUTLINE = 0x1
+} ShaderFlags;
+
 typedef enum ShaderType
 {
     SHADER_TYPE_VERTEX = 0,

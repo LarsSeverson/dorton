@@ -1,0 +1,49 @@
+BIN_DIR = ..\..\bin
+ASSETS_DIR = ..\..\assets
+SHADERS_DIR = $(ASSETS_DIR)\shaders
+
+ASSETS_OUT = $(BIN_DIR)\assets
+SHADERS_OUT = $(ASSETS_OUT)\shaders
+
+SHADERS_COMP = $(VULKAN_SDK)\bin\glslc.exe
+
+RWILDCARD = $(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call RWILDCARD,$d/,$2))
+
+VERT_SHADERS = $(call RWILDCARD,$(SHADERS_DIR)/,*.vert)
+VERT_OUTPUTS = $(patsubst $(SHADERS_DIR)/%.vert,$(SHADERS_OUT)/%_vert.spv,$(VERT_SHADERS))
+
+FRAG_SHADERS = $(call RWILDCARD,$(SHADERS_DIR)/,*.frag)
+FRAG_OUTPUTS = $(patsubst $(SHADERS_DIR)/%.frag,$(SHADERS_OUT)/%_frag.spv,$(FRAG_SHADERS))
+
+$(SHADERS_OUT)/%_vert.spv: $(SHADERS_DIR)/%.vert
+	@echo Compiling $< 
+	@if not exist $(dir $@) mkdir $(dir $@)
+	@$(SHADERS_COMP) -fshader-stage=vert $< -o $@ || (echo Error compiling shader. Error: $$?; exit 1)
+	@echo Shader vert compiled
+
+$(SHADERS_OUT)/%_frag.spv: $(SHADERS_DIR)/%.frag
+	@echo Compiling $<
+	@if not exist $(dir $@) mkdir $(dir $@)
+	@$(SHADERS_COMP) -fshader-stage=frag $< -o $@ || (echo "Error compiling shader. Error: $$?"; exit 1)
+	@echo Shader frag compiled
+
+.PHONY: all
+all: prep $(VERT_OUTPUTS) $(FRAG_OUTPUTS)
+
+prep:
+ifeq ($(strip $(VERT_OUTPUTS)),)
+	@echo No vert shaders found
+endif
+ifeq ($(strip $(FRAG_OUTPUTS)),)
+	@echo No frag shaders found 
+endif
+	@if not exist $(SHADERS_OUT) mkdir $(SHADERS_OUT)
+	@if not exist $(SHADERS_DIR) mkdir $(SHADERS_DIR)
+
+.PHONY: rebuild
+rebuild: clean all
+
+.PHONY: clean
+clean:
+	@echo Cleaning shaders
+	@if exist $(ASSETS_OUT) rmdir /S /Q $(ASSETS_OUT)
