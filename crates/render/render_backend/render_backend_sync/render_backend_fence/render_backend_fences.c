@@ -1,8 +1,9 @@
 #include "render_backend_fences.h"
 #include "render_backend_fence.h"
-#include "render/render_backend/render_backend.h"
 
 #include "logger.h"
+
+#include "render/render_backend/render_backend.h"
 
 DResult render_backend_create_fences(RenderBackend *backend)
 {

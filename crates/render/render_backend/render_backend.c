@@ -1,13 +1,10 @@
 #include "render_backend.h"
 
 #include "logger.h"
-
 #include "darray/darray.h"
 #include "dstring/dstring.h"
 
 #include "./utils/render_backend_utils_debug.h"
-
-#include <GLFW/glfw3.h>
 
 DResult render_backend_create_instance(RenderBackend *backend)
 {

@@ -2,7 +2,6 @@
 #include "render_backend_physical_device.h"
 
 #include "logger.h"
-
 #include "darray/darray.h"
 #include "dset/dset.h"
 

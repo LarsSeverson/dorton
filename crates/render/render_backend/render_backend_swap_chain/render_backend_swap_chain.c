@@ -2,11 +2,11 @@
 
 #include "logger.h"
 
-#include "../render_backend.h"
-#include "../render_backend_device/render_backend_physical_device.h"
+#include "./utils/render_backend_swap_chain_utils.h"
 
-#include "../utils/render_backend_utils.h"
-#include "utils/render_backend_swap_chain_utils.h"
+#include "render/render_backend/render_backend.h"
+#include "render/render_backend/render_backend_device/render_backend_physical_device.h"
+#include "render/render_backend/utils/render_backend_utils.h"
 
 #define MAX_FRAMES_IN_FLIGHT 2
 

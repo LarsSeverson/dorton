@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render/render_types.h"
+#include "render/render_backend/render_backend_core.h"
 
 #include <cglm/cglm.h>
 

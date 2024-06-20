@@ -1,20 +1,22 @@
 #pragma once
 
-#include "../render_backend_vertex_core.h"
-
 #include "darray/darray.h"
+
+#include "render/render_backend/render_backend_vertex/render_backend_vertex_core.h"
+#include "render/render_backend/render_backend_buffer/render_backend_buffer.h"
 
 typedef struct VertexBufferInfo
 {
   DArray vertices;
   
   u32 binding;
+  u32 offset;
+  VkMemoryMapFlags flags;
 } VertexBufferInfo;
 
 typedef struct RenderBackendVertexBuffer
 {
-  VkBuffer buffer_inner;
-  VkDeviceMemory buffer_memory;
+  RenderBackendBuffer buffer;
 
   // Vertex
   DArray vertices;

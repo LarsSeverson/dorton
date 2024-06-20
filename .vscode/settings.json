@@ -12,7 +12,8 @@
     "xlocinfo": "c",
     "xlocmon": "c",
     "xmemory": "c",
-    "xstring": "c"
+    "xstring": "c",
+    "vulkan.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

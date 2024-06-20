@@ -4,8 +4,6 @@
 #include "./render_backend_vertex_2D/render_backend_vertex_2D.h"
 #include "./render_backend_vertex_3D/render_backend_vertex_3D.h"
 
-struct RenderBackend;
-
 typedef struct Vertex
 {
   VertexType type;

@@ -1,5 +1,6 @@
 #include "render_backend_command_buffers.h"
 #include "render_backend_command_buffer.h"
+
 #include "logger.h"
 
 #include "render/render_backend/render_backend.h"
@@ -17,8 +18,11 @@ DResult render_backend_create_command_buffers(RenderBackend *backend)
 
     for (u32 i = 0; i < size; ++i)
     {
-        CommandBufferInfo command_buffer_info = {0};
+        CommandBufferInfo command_buffer_info = {COMMAND_BUFFER_TYPE_PRIMARY};
+        command_buffer_info.queue = backend->device.graphics_queue;
+
         RenderBackendCommandBuffer *command_buffer = (RenderBackendCommandBuffer *)darray_get(&backend->command_buffers.graphics_command_buffers, i);
+        
         if (command_buffer->command_buffer_inner != NULL)
         {
             render_backend_destroy_command_buffer(backend, command_buffer);

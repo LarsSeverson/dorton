@@ -1,4 +1,5 @@
 #include "render_backend_vertex.h"
+
 #include "logger.h"
 
 DResult vertex_create(Vertex *vertex, VertexType vertex_type)

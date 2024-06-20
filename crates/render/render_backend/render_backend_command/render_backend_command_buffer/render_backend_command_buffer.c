@@ -2,8 +2,6 @@
 
 #include "logger.h"
 
-#include "render/render_backend/render_backend.h"
-
 DResult render_backend_create_command_buffer(RenderBackend *backend, RenderBackendCommandBuffer *command_buffer, CommandBufferInfo *command_buffer_info)
 {
     command_buffer->state = COMMAND_BUFFER_STATE_INVALID;
@@ -22,6 +20,7 @@ DResult render_backend_create_command_buffer(RenderBackend *backend, RenderBacke
     command_buffer->state = COMMAND_BUFFER_STATE_INITIAL;
     command_buffer->use = command_buffer_info->use;
     command_buffer->type = command_buffer_info->type;
+    command_buffer->queue = command_buffer_info->queue;
 
     return D_SUCCESS;
 }
@@ -94,9 +93,10 @@ DResult command_buffer_reset(RenderBackendCommandBuffer *command_buffer)
 
 DResult command_buffer_begin_lazy(RenderBackend *backend, RenderBackendCommandBuffer *command_buffer)
 {
-    CommandBufferInfo command_buffer_info = {};
+    CommandBufferInfo command_buffer_info = {COMMAND_BUFFER_TYPE_PRIMARY};
     command_buffer_info.use = COMMAND_BUFFER_USE_SINGLE;
-    command_buffer_info.type = COMMAND_BUFFER_TYPE_PRIMARY;
+    // TODO: Transfer queue?
+    command_buffer_info.queue = backend->device.graphics_queue;
 
     if (render_backend_create_command_buffer(backend, command_buffer, &command_buffer_info) != D_SUCCESS)
     {

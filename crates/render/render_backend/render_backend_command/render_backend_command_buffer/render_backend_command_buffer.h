@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render/render_types.h"
+#include "render/render_backend/render_backend_core.h"
 #include "render/render_backend/render_backend.h"
 
 typedef enum CommandBufferState
@@ -27,8 +27,8 @@ typedef enum CommandBufferUse
 
 typedef struct CommandBufferInfo
 {
-    CommandBufferState state;
     CommandBufferType type;
+    CommandBufferState state;
     CommandBufferUse use;
 
     VkQueue queue;

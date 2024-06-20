@@ -1,9 +1,7 @@
 #include "render_backend_utils_debug.h"
 
 #include "asserts.h"
-
-#include "../../../logger/logger.h"
-
+#include "logger.h"
 #include "dstring/dstring.h"
 
 const char *validation_layers[] = {"VK_LAYER_KHRONOS_validation"};

@@ -1,10 +1,8 @@
 #pragma once
 
-#include "render/render_types.h"
 #include "darray/darray.h"
 
-// "../render_backend.h"
-struct RenderBackend;
+#include "render/render_backend/render_backend_core.h"
 
 typedef struct RenderBackendSwapChain
 {
@@ -22,6 +20,8 @@ typedef struct RenderBackendSwapChain
   u8 max_frames_in_flight;
 
 } RenderBackendSwapChain;
+
+struct RenderBackend;
 
 DResult render_backend_create_swap_chain(struct RenderBackend *backend);
 DResult render_backend_destroy_swap_chain(struct RenderBackend *backend);

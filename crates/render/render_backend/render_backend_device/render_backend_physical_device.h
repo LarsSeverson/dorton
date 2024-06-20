@@ -1,8 +1,7 @@
 #pragma once
 
-#include "render/render_types.h"
-
-#include "../render_backend.h"
+#include "render/render_backend/render_backend_core.h"
+#include "render/render_backend/render_backend.h"
 
 typedef struct QueueFamilyIndices
 {

@@ -1,4 +1,4 @@
-#include "./render_backend_vertex_2D.h"
+#include "render_backend_vertex_2D.h"
 
 #define VERTEX_2D_ATTRIBUTES_SIZE 2
 
