@@ -2,12 +2,12 @@
 
 #include "darray/darray.h"
 
-#include "render/render_backend/render_backend_vertex/render_backend_vertex_core.h"
+#include "render/render_backend/render_backend_vertex/render_backend_vertices.h"
 #include "render/render_backend/render_backend_buffer/render_backend_buffer.h"
 
 typedef struct VertexBufferInfo
 {
-  DArray vertices;
+  RenderBackendVertices vertices;
   
   u32 binding;
   u32 offset;
@@ -18,9 +18,8 @@ typedef struct RenderBackendVertexBuffer
 {
   RenderBackendBuffer buffer;
 
-  // Vertex
-  DArray vertices;
   VertexType type;
+  RenderBackendVertices vertices;
 
   u32 binding;
 } RenderBackendVertexBuffer;

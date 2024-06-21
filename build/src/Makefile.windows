@@ -1,6 +1,6 @@
 CC = clang
 CFLAGS = -g
-INCLUDES = -I$(CRATES_DIR). -I$(CRATES_DIR)\dorton_utils -I$(CRATES_DIR)\app -I$(CRATES_DIR)\internal -I$(VULKAN_SDK)\include -I$(GLFW)\include -I(cglm)\include 
+INCLUDES = -I$(CRATES_DIR). -I$(CRATES_DIR)\dorton_utils -I$(CRATES_DIR)\app -I$(CRATES_DIR)\internal -I$(VULKAN_SDK)\include -I$(GLFW)\include -I$(cglm)\include 
 LFLAGS = -L$(BINDIR) -lcrates
 DEFINES = -DDIMPORT -D_DEBUG
 

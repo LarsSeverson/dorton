@@ -1,23 +1,17 @@
 #pragma once
 
 #include "./render_backend_vertex_core.h"
-#include "./render_backend_vertex_2D/render_backend_vertex_2D.h"
-#include "./render_backend_vertex_3D/render_backend_vertex_3D.h"
 
-typedef struct Vertex
+typedef struct RenderBackendVertex
 {
   VertexType type;
-  union {
-    RenderBackendVertex2D vertex_2D;
-    RenderBackendVertex3D vertex_3D;
-  } data;
+  void *vertex_inner;
 
-  u64 size;
-  
+  u64 byte_size;
+
   VertexInputBindingDescription (*get_binding_description)(u32 binding, VertexInputRate input_rate);
   VertexInputAttributeDescription *(*get_attribute_descriptions)(u32 binding);
-} Vertex;
+} RenderBackendVertex;
 
-DResult vertex_create(Vertex *vertex, VertexType vertex_type);
-DResult vertex_destroy(Vertex *vertex);
-
+DResult render_backend_create_vertex(RenderBackendVertex *vertex, VertexType vertex_type, void *vertex_data);
+DResult render_backend_destroy_vertex(RenderBackendVertex *vertex);

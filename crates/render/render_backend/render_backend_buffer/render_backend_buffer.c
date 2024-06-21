@@ -52,6 +52,11 @@ DResult render_backend_create_buffer(RenderBackend *backend, RenderBackendBuffer
 
 DResult render_backend_destroy_buffer(RenderBackend *backend, RenderBackendBuffer *buffer)
 {
+  vkDestroyBuffer(backend->device.logical_device, buffer->buffer_inner, backend->vulkan_context.allocator);
+  vkFreeMemory(backend->device.logical_device, buffer->memory, backend->vulkan_context.allocator);
+
+  *buffer = (RenderBackendBuffer){0};
+
   return D_SUCCESS;
 }
 

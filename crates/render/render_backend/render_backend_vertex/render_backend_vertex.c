@@ -2,27 +2,37 @@
 
 #include "logger.h"
 
-DResult vertex_create(Vertex *vertex, VertexType vertex_type)
+#include "./render_backend_vertex_2D/render_backend_vertex_2D.h"
+#include "./render_backend_vertex_3D/render_backend_vertex_3D.h"
+
+#include <string.h>
+
+DResult render_backend_create_vertex(RenderBackendVertex *vertex, VertexType vertex_type, void *vertex_data)
 {
-  if (vertex_type > VERTEX_TYPE_3D)
+  switch (vertex_type)
   {
+  case VERTEX_TYPE_2D:
+    vertex->vertex_inner = render_backend_create_vertex_2D(vertex, vertex_data);
+    break;
+
+  case VERTEX_TYPE_3D:
+    // vertex->vertex_inner = render_backend_create_vertex_3D(vertex, vertex_data);
+    break;
+
+  default:
     DERROR("Unknown vertex type.");
     return D_ERROR;
   }
 
-  if (vertex_type == VERTEX_TYPE_2D)
-  {
-    vertex->type = VERTEX_TYPE_2D;
-    vertex->data.vertex_2D = vertex_2D_create();
-    vertex->size = sizeof(RenderBackendVertex2D);
-    vertex->get_binding_description = vertex->data.vertex_2D.get_binding_description;
-    vertex->get_attribute_descriptions = vertex->data.vertex_2D.get_attribute_descriptions;
-  }
+  vertex->type = vertex_type;
 
   return D_SUCCESS;
 }
 
-DResult vertex_destroy(Vertex *vertex)
+DResult render_backend_destroy_vertex(RenderBackendVertex *vertex)
 {
+  free(vertex->vertex_inner);
+  *vertex = (RenderBackendVertex){0};
+  
   return D_SUCCESS;
 }
