@@ -9,8 +9,8 @@ typedef struct RenderBackendVertex
 
   u64 byte_size;
 
-  VertexInputBindingDescription (*get_binding_description)(u32 binding, VertexInputRate input_rate);
-  VertexInputAttributeDescription *(*get_attribute_descriptions)(u32 binding);
+  VkVertexInputBindingDescription (*get_binding_description)(u32 binding, VertexInputRate input_rate);
+  VkVertexInputAttributeDescription *(*get_attribute_descriptions)(u32 binding);
 } RenderBackendVertex;
 
 DResult render_backend_create_vertex(RenderBackendVertex *vertex, VertexType vertex_type, void *vertex_data);

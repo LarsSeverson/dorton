@@ -7,19 +7,19 @@
 
 #define VERTEX_2D_ATTRIBUTES_SIZE 2
 
-VertexInputBindingDescription get_vertex_2D_binding_description(u32 binding, VertexInputRate input_rate)
+VkVertexInputBindingDescription get_vertex_2D_binding_description(u32 binding, VertexInputRate input_rate)
 {
-  VertexInputBindingDescription binding_description = {0};
+  VkVertexInputBindingDescription binding_description = {0};
   binding_description.binding = binding;
   binding_description.stride = sizeof(RenderBackendVertex2D);
-  binding_description.input_rate = input_rate;
+  binding_description.inputRate = input_rate;
 
   return binding_description;
 }
 
-VertexInputAttributeDescription *get_vertex_2D_attribute_descriptions(u32 binding)
+VkVertexInputAttributeDescription *get_vertex_2D_attribute_descriptions(u32 binding)
 {
-  VertexInputAttributeDescription *attribute_descriptions = (VertexInputAttributeDescription *)calloc(VERTEX_2D_ATTRIBUTES_SIZE, sizeof(VertexInputAttributeDescription));
+  VkVertexInputAttributeDescription *attribute_descriptions = (VkVertexInputAttributeDescription *)calloc(VERTEX_2D_ATTRIBUTES_SIZE, sizeof(VkVertexInputAttributeDescription));
 
   attribute_descriptions[0].binding = binding;
   attribute_descriptions[0].location = 0;

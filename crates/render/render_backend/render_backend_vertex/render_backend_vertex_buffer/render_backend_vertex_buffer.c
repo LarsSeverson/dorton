@@ -91,3 +91,13 @@ DResult render_backend_destroy_vertex_buffer(RenderBackend *backend, RenderBacke
 
   return D_SUCCESS;
 }
+
+VkVertexInputBindingDescription render_backend_vertex_buffer_get_binding_description(RenderBackendVertexBuffer *vertex_buffer)
+{
+  return render_backend_vertices_get_binding_description(&vertex_buffer->vertices, vertex_buffer->binding, vertex_buffer->input_rate);
+}
+
+VkVertexInputAttributeDescription *render_backend_vertex_buffer_get_attribute_descriptions(RenderBackendVertexBuffer *vertex_buffer)
+{
+  return render_backend_vertices_get_attribute_descriptions(&vertex_buffer->vertices, vertex_buffer->binding);
+}

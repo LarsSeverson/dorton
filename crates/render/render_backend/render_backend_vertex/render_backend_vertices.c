@@ -72,3 +72,13 @@ u32 render_backend_vertices_size(RenderBackendVertices *vertices)
 {
   return darray_size(&vertices->vertices_inner);
 }
+
+VkVertexInputBindingDescription render_backend_vertices_get_binding_description(RenderBackendVertices *vertices, u32 binding, VertexInputRate input_rate)
+{
+  return render_backend_vertices_get(vertices, 0)->get_binding_description(binding, input_rate);
+}
+
+VkVertexInputAttributeDescription *render_backend_vertices_get_attribute_descriptions(RenderBackendVertices *vertices, u32 binding)
+{
+  return render_backend_vertices_get(vertices, 0)->get_attribute_descriptions(binding);
+}
