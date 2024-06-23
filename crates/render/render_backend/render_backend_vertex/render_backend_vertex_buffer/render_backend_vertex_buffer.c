@@ -20,9 +20,9 @@ DResult render_backend_create_vertex_buffer(RenderBackend *backend, RenderBacken
   }
 
   VertexType type = vertex->type;
-  u64 size = render_backend_vertices_size(&vertex_buffer_info->vertices);
+  u64 verices_size = render_backend_vertices_size(&vertex_buffer_info->vertices);
 
-  for (u32 i = 1; i < size; ++i)
+  for (u32 i = 1; i < verices_size; ++i)
   {
     RenderBackendVertex *vertex = render_backend_vertices_get(&vertex_buffer_info->vertices, i);
     if (vertex->type != type)
@@ -32,7 +32,7 @@ DResult render_backend_create_vertex_buffer(RenderBackend *backend, RenderBacken
     }
   }
 
-  u64 vertex_buffer_size = vertex->byte_size * size;
+  u64 vertex_buffer_size = vertex->byte_size * verices_size;
 
   BufferInfo staging_buffer_info = {VK_BUFFER_USAGE_TRANSFER_SRC_BIT};
   staging_buffer_info.properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
@@ -41,7 +41,7 @@ DResult render_backend_create_vertex_buffer(RenderBackend *backend, RenderBacken
   staging_buffer_info.offset = 0;
 
   RenderBackendBuffer staging_buffer;
-  if (render_backend_create_buffer(backend, &staging_buffer, staging_buffer_info) != D_SUCCESS)
+  if (render_backend_create_buffer(backend, &staging_buffer, &staging_buffer_info) != D_SUCCESS)
   {
     DERROR("Could not create vertex buffer.");
     return D_ERROR;
@@ -50,17 +50,17 @@ DResult render_backend_create_vertex_buffer(RenderBackend *backend, RenderBacken
   RenderBackendVertex *vertices_data = render_backend_vertices_data(&vertex_buffer_info->vertices);
 
   void *data;
-  vkMapMemory(backend->device.logical_device, staging_buffer.memory, vertex_buffer_info->offset, vertex_buffer_size, vertex_buffer_info->flags, &data);
+  vkMapMemory(backend->device.logical_device, staging_buffer.memory, 0, vertex_buffer_size, 0, &data);
   memcpy(data, vertices_data, (size_t)vertex_buffer_size);
   vkUnmapMemory(backend->device.logical_device, staging_buffer.memory);
 
   BufferInfo vertex_buffer_create_info = {VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT};
   vertex_buffer_create_info.properties = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-  vertex_buffer_create_info.sharing_mode = VK_SHARING_MODE_EXCLUSIVE;
+  vertex_buffer_create_info.sharing_mode = vertex_buffer_info->sharing_mode;
   vertex_buffer_create_info.size = vertex_buffer_size;
-  vertex_buffer_create_info.offset = 0;
+  vertex_buffer_create_info.offset = vertex_buffer_info->offset;
 
-  if (render_backend_create_buffer(backend, &vertex_buffer->buffer, vertex_buffer_create_info) != D_SUCCESS)
+  if (render_backend_create_buffer(backend, &vertex_buffer->buffer, &vertex_buffer_create_info) != D_SUCCESS)
   {
     DERROR("Could not create vertex buffer.");
     return D_ERROR;
@@ -72,8 +72,7 @@ DResult render_backend_create_vertex_buffer(RenderBackend *backend, RenderBacken
     return D_ERROR;
   }
 
-  vkDestroyBuffer(backend->device.logical_device, staging_buffer.buffer_inner, backend->vulkan_context.allocator);
-  vkFreeMemory(backend->device.logical_device, staging_buffer.memory, backend->vulkan_context.allocator);
+  render_backend_destroy_buffer(backend, &staging_buffer);
 
   vertex_buffer->vertices = vertex_buffer_info->vertices;
   vertex_buffer->binding = vertex_buffer_info->binding;

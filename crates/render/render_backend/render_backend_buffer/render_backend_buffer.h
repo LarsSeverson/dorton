@@ -23,7 +23,7 @@ typedef struct RenderBackendBuffer
 
 struct RenderBackend;
 
-DResult render_backend_create_buffer(struct RenderBackend *backend, RenderBackendBuffer *buffer, BufferInfo buffer_info);
+DResult render_backend_create_buffer(struct RenderBackend *backend, RenderBackendBuffer *buffer, BufferInfo *buffer_info);
 DResult render_backend_destroy_buffer(struct RenderBackend *backend, RenderBackendBuffer *buffer);
 
 DResult render_backend_copy_buffer(struct RenderBackend *backend, RenderBackendBuffer *source, RenderBackendBuffer *destination, u64 size);

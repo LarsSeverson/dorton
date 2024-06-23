@@ -8,28 +8,7 @@
 DResult render_backend_create_shaders(RenderBackend *backend, RenderBackendShaders *shaders)
 {
     darray_create(&shaders->shaders_inner, RenderBackendShader);
-
-    ShaderInfo vert_shader_info = {SHADER_TYPE_VERTEX};
-    vert_shader_info.main = "main";
-    vert_shader_info.src = "shader";
-
-    RenderBackendShader vert_shader = {0};
-    if (render_backend_add_shader(backend, shaders, &vert_shader, &vert_shader_info) != D_SUCCESS)
-    {
-        DFATAL("Could not create backend shaders.");
-        return D_FATAL;
-    }
-
-    ShaderInfo frag_shader_info = {SHADER_TYPE_FRAGMENT};
-    frag_shader_info.main = "main";
-    frag_shader_info.src = "shader";
-
-    RenderBackendShader frag_shader = {0};
-    if (render_backend_add_shader(backend, shaders, &frag_shader, &frag_shader_info) != D_SUCCESS)
-    {
-        DFATAL("Could not create backend shaders.");
-        return D_FATAL;
-    }
+    darray_create(&shaders->shader_stages, VkPipelineShaderStageCreateInfo);
 
     return D_SUCCESS;
 }
@@ -43,11 +22,34 @@ DResult render_backend_destroy_shaders(RenderBackend *backend, RenderBackendShad
     }
 
     darray_destroy(&shaders->shaders_inner);
+    darray_destroy(&shaders->shader_stages);
 
     return D_SUCCESS;
 }
 
-DResult render_backend_add_shader(RenderBackend *backend, RenderBackendShaders *shaders, RenderBackendShader *shader, ShaderInfo *shader_info)
+// ShaderInfo vert_shader_info = {SHADER_TYPE_VERTEX};
+// vert_shader_info.main = "main";
+// vert_shader_info.src = "shader";
+
+// RenderBackendShader vert_shader = {0};
+// if (render_backend_shaders_push(backend, shaders, &vert_shader, &vert_shader_info) != D_SUCCESS)
+// {
+//     DFATAL("Could not create backend shaders.");
+//     return D_FATAL;
+// }
+
+// ShaderInfo frag_shader_info = {SHADER_TYPE_FRAGMENT};
+// frag_shader_info.main = "main";
+// frag_shader_info.src = "shader";
+
+// RenderBackendShader frag_shader = {0};
+// if (render_backend_shaders_push(backend, shaders, &frag_shader, &frag_shader_info) != D_SUCCESS)
+// {
+//     DFATAL("Could not create backend shaders.");
+//     return D_FATAL;
+// }
+
+DResult render_backend_shaders_push(RenderBackend *backend, RenderBackendShaders *shaders, RenderBackendShader *shader, ShaderInfo *shader_info)
 {
     if (render_backend_create_shader(backend, shader, shader_info) != VK_SUCCESS)
     {
@@ -56,6 +58,12 @@ DResult render_backend_add_shader(RenderBackend *backend, RenderBackendShaders *
     }
 
     darray_push(&shaders->shaders_inner, *shader);
+    darray_push(&shaders->shader_stages, shader->shader_stage);
 
     return D_SUCCESS;
+}
+
+VkPipelineShaderStageCreateInfo *render_backend_shaders_get_stages(RenderBackendShaders *shaders)
+{
+    return (VkPipelineShaderStageCreateInfo *)darray_data(&shaders->shader_stages);
 }

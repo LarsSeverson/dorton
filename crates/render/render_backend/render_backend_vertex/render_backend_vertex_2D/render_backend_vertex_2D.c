@@ -12,7 +12,7 @@ VkVertexInputBindingDescription get_vertex_2D_binding_description(u32 binding, V
   VkVertexInputBindingDescription binding_description = {0};
   binding_description.binding = binding;
   binding_description.stride = sizeof(RenderBackendVertex2D);
-  binding_description.inputRate = input_rate;
+  binding_description.inputRate = (VkVertexInputRate)input_rate;
 
   return binding_description;
 }

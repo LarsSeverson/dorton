@@ -35,7 +35,9 @@ DResult _darray_destroy(DArray *array)
   {
     free(array->raw_array);
     array->raw_array = NULL;
+    *array = (DArray){0};
   }
+
   return D_SUCCESS;
 }
 

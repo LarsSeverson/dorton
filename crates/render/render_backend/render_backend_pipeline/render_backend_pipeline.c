@@ -20,8 +20,15 @@ VkPipelineVertexInputStateCreateInfo pipeline_create_vertex_input_info(PipelineI
     return vertex_input_info;
 }
 
+VkPipelineShaderStageCreateInfo *pipeline_create_shader_stage_info(PipelineInfo *pipeline_info)
+{
+    return render_backend_shaders_get_stages(&pipeline_info->shaders);
+}
+
 DResult render_backend_create_pipeline(RenderBackend *backend, RenderBackendPipeline *pipeline, PipelineInfo *pipeline_info)
 {
+    VkPipelineShaderStageCreateInfo *shader_stages_info = pipeline_create_shader_stage_info(pipeline_info);
+    
     VkPipelineVertexInputStateCreateInfo vertex_input_info = pipeline_create_vertex_input_info(pipeline_info);
 
     return D_SUCCESS;

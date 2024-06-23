@@ -14,6 +14,7 @@ typedef struct VertexBufferInfo
   u32 binding;
   u32 offset;
   VkMemoryMapFlags flags;
+  VkSharingMode sharing_mode;
 } VertexBufferInfo;
 
 typedef struct RenderBackendVertexBuffer

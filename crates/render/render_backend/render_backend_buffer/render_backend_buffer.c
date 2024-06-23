@@ -7,12 +7,12 @@
 #include "render/render_backend/render_backend.h"
 #include "render/render_backend/render_backend_command/render_backend_command_buffer/render_backend_command_buffer.h"
 
-DResult render_backend_create_buffer(RenderBackend *backend, RenderBackendBuffer *buffer, BufferInfo buffer_info)
+DResult render_backend_create_buffer(RenderBackend *backend, RenderBackendBuffer *buffer, BufferInfo *buffer_info)
 {
   VkBufferCreateInfo buffer_create_info = {VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO};
-  buffer_create_info.size = buffer_info.size;
-  buffer_create_info.usage = buffer_info.usage;
-  buffer_create_info.sharingMode = buffer_info.sharing_mode;
+  buffer_create_info.size = buffer_info->size;
+  buffer_create_info.usage = buffer_info->usage;
+  buffer_create_info.sharingMode = buffer_info->sharing_mode;
 
   if (vkCreateBuffer(backend->device.logical_device, &buffer_create_info, backend->vulkan_context.allocator, &buffer->buffer_inner) != VK_SUCCESS)
   {
@@ -25,7 +25,7 @@ DResult render_backend_create_buffer(RenderBackend *backend, RenderBackendBuffer
 
   VkMemoryAllocateInfo allocate_info = {VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO};
   allocate_info.allocationSize = memory_requirements.size;
-  allocate_info.memoryTypeIndex = find_buffer_memory_type(backend, memory_requirements.memoryTypeBits, buffer_info.properties);
+  allocate_info.memoryTypeIndex = find_buffer_memory_type(backend, memory_requirements.memoryTypeBits, buffer_info->properties);
   if (allocate_info.memoryTypeIndex == UINT32_MAX)
   {
     DERROR("Could not create buffer memory. memoryTypeIndex was U32MAX");
@@ -38,14 +38,14 @@ DResult render_backend_create_buffer(RenderBackend *backend, RenderBackendBuffer
     return D_ERROR;
   }
 
-  if (vkBindBufferMemory(backend->device.logical_device, buffer->buffer_inner, buffer->memory, buffer_info.offset) != VK_SUCCESS)
+  if (vkBindBufferMemory(backend->device.logical_device, buffer->buffer_inner, buffer->memory, buffer_info->offset) != VK_SUCCESS)
   {
     DERROR("Could not bind buffer memory.");
     return D_ERROR;
   }
 
-  buffer->size = buffer_info.size;
-  buffer->offset = buffer_info.offset;
+  buffer->size = buffer_info->size;
+  buffer->offset = buffer_info->offset;
 
   return D_SUCCESS;
 }
