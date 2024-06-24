@@ -17,5 +17,5 @@ typedef struct RenderBackendSemaphore
 DResult render_backend_create_semaphore(RenderBackend *backend, RenderBackendSemaphore *semaphore);
 DResult render_backend_destroy_semaphore(RenderBackend *backend, RenderBackendSemaphore *semaphore);
 
-b8 render_backend_wait_semaphore(RenderBackend *backend, RenderBackendSemaphore *semaphore, u64 timeout_ns);
+dbool render_backend_wait_semaphore(RenderBackend *backend, RenderBackendSemaphore *semaphore, u64 timeout_ns);
 DResult render_backend_reset_semaphore(RenderBackend *backend, RenderBackendSemaphore *semaphore);

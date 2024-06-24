@@ -44,7 +44,7 @@ DResult get_debug_layers(DArray *required_validation_layers, u32 *required_valid
 
   for (u32 i = 0; i < *required_validation_layers_count; ++i)
   {
-    b8 found = false;
+    dbool found = false;
     const char *required_string = *(const char **)darray_get(required_validation_layers, i);
     for (u32 j = 0; j < available_layers_count; ++j)
     {

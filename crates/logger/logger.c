@@ -24,7 +24,7 @@ void quit_logging()
 void log_print(LOG_LEVEL level, const char *message, ...)
 {
   const char *log_levels[6] = {"[FATAL]: ", "[ERROR]: ", "[WARN]: ", "[INFO]: ", "[DEBUG]: ", "[TRACE]: "};
-  // b8 is_error = level < 2;
+  // dbool is_error = level < 2;
 
   // TODO: change this 32000 limit
   const i32 out_limit = 32000;

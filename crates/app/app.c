@@ -4,7 +4,7 @@
 
 #include "../logger/logger.h"
 
-static b8 initialized = false; // TODO: [Temp] no more than 1 app at a time
+static dbool initialized = false; // TODO: [Temp] no more than 1 app at a time
 
 DResult update(App *app, f32 delta_time);
 DResult render(App *app, f32 delta_time);

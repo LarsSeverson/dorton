@@ -3,7 +3,9 @@
 #include "darray/darray.h"
 
 #include "./render_backend_pipeline_core.h"
-#include "./render_backend_pipeline_rasterizer/render_backend_rasterizer.h"
+#include "./render_backend_pipeline_rasterizer/render_backend_pipeline_rasterizer.h"
+#include "./render_backend_pipeline_multisample/render_backend_pipeline_multisample.h"
+#include "./render_backend_pipeline_color_blend/render_backend_pipeline_color_blend.h"
 
 #include "render/render_backend/render_backend_shader/render_backend_shader_lib.h"
 #include "render/render_backend/render_backend_render_pass/render_backend_render_pass.h"
@@ -21,6 +23,8 @@ typedef struct PipelineInfo
   Topology topology;
 
   RenderBackendRasterizerInfo rasterizer_info;
+  RenderBackendMultisampleInfo multisample_info;
+  RenderBackendColorBlendInfo color_blend_info;
 
   VkViewport viewport; // TODO: Multiple viewports
   VkRect2D scissor;    // TODO: Multiple scissors

@@ -18,5 +18,5 @@ typedef struct RenderBackendFence
 DResult render_backend_create_fence(RenderBackend *backend, RenderBackendFence *fence);
 DResult render_backend_destroy_fence(RenderBackend *backend, RenderBackendFence *fence);
 
-b8 render_backend_wait_fence(RenderBackend *backend, RenderBackendFence *fence, u64 timeout_ns);
+dbool render_backend_wait_fence(RenderBackend *backend, RenderBackendFence *fence, u64 timeout_ns);
 DResult render_backend_reset_fence(RenderBackend *backend, RenderBackendFence *fence);

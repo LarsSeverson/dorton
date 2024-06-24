@@ -21,7 +21,7 @@ DResult render_backend_destroy_semaphore(RenderBackend *backend, RenderBackendSe
     return D_SUCCESS;
 }
 
-b8 render_backend_wait_semaphore(RenderBackend *backend, RenderBackendSemaphore *semaphore, u64 timeout_ns)
+dbool render_backend_wait_semaphore(RenderBackend *backend, RenderBackendSemaphore *semaphore, u64 timeout_ns)
 {
     return false;
 }

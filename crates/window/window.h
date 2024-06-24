@@ -24,7 +24,7 @@ struct App;
 DResult window_create(struct App* app, Window *window, WindowCreateInfo *create_info);
 DResult window_destroy(Window *window);
 
-b8 window_running(Window *window);
+dbool window_running(Window *window);
 
 void window_poll_events(Window *window);
 void window_get_frame_buffer_size(Window *window, i32 *width, i32 *height);

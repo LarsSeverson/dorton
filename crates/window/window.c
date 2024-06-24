@@ -48,7 +48,7 @@ DResult window_destroy(Window *window)
   return D_SUCCESS;
 }
 
-b8 window_running(Window *window)
+dbool window_running(Window *window)
 {
   return !glfwWindowShouldClose(window->window_inner);
 }

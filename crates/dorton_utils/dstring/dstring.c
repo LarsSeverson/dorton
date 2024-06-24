@@ -76,12 +76,12 @@ DResult dstring_dup(DString *src, DString *dest)
   return D_SUCCESS;
 }
 
-b8 dstring_equal(DString *str1, DString *str2)
+dbool dstring_equal(DString *str1, DString *str2)
 {
   return strcmp(str1->string, str2->string) == 0;
 }
 
-b8 dstring_equal_raw(const char *str1, const char *str2)
+dbool dstring_equal_raw(const char *str1, const char *str2)
 {
   return strcmp(str1, str2) == 0;
 }

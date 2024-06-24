@@ -188,7 +188,7 @@ void *dset_data(DSet *set)
   return set->raw_set;
 }
 
-u8 dset_empty(DSet *set)
+dbool dset_empty(DSet *set)
 {
   return set->size == 0;
 }

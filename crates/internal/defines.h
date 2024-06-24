@@ -16,9 +16,8 @@ typedef signed long long i64;
 typedef float f32;
 typedef double f64;
 
-// Boolean types
-typedef int b32;
-typedef _Bool b8;
+// Boolean
+typedef u32 dbool;
 
 // Results
 typedef enum DResult {
@@ -28,8 +27,8 @@ typedef enum DResult {
   D_FATAL
 } DResult;
 
-#define true 1
-#define false 0
+#define true 1U
+#define false 0U
 
 // Properly define static assertions
 #if defined(__clang__) || defined(__gcc__)

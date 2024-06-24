@@ -191,7 +191,7 @@ u64 darray_size(DArray *array)
   return array->size;
 }
 
-u8 _darray_empty(DArray *array)
+dbool _darray_empty(DArray *array)
 {
   return array->size == 0;
 }

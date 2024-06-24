@@ -4,6 +4,8 @@
 
 #include "render/render_backend/render_backend.h"
 
+#include <string.h>
+
 // TODO: Any create info values that are hard coded (e.g. input_assembly_info.primitiveRestardEnable = VK_FALSE), make configurable
 
 VkPipelineVertexInputStateCreateInfo pipeline_create_vertex_input_info(PipelineInfo *pipeline_info)
@@ -61,6 +63,34 @@ VkPipelineRasterizationStateCreateInfo pipeline_create_rasterization_info(Pipeli
     return rasterizer_info;
 }
 
+VkPipelineMultisampleStateCreateInfo pipeline_create_multisample_info(PipelineInfo *pipeline_info)
+{
+    VkPipelineMultisampleStateCreateInfo multisample_info = {VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO};
+    multisample_info.flags = pipeline_info->multisample_info.flags;
+    multisample_info.rasterizationSamples = pipeline_info->multisample_info.rasterization_samples;
+    multisample_info.sampleShadingEnable = pipeline_info->multisample_info.sample_shading_enable;
+    multisample_info.minSampleShading = pipeline_info->multisample_info.min_sample_shading;
+    multisample_info.pSampleMask = pipeline_info->multisample_info.sample_mask;
+    multisample_info.alphaToCoverageEnable = pipeline_info->multisample_info.alpha_to_coverage_enable;
+    multisample_info.alphaToOneEnable = pipeline_info->multisample_info.alpha_to_one_enable;
+
+    return multisample_info;
+}
+
+VkPipelineColorBlendStateCreateInfo pipeline_create_color_blend_info(PipelineInfo *pipeline_info)
+{
+    VkPipelineColorBlendStateCreateInfo color_blend_info = {VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO};
+    color_blend_info.flags = pipeline_info->color_blend_info.flags;
+    color_blend_info.logicOpEnable = pipeline_info->color_blend_info.logic_operation_enable;
+    color_blend_info.logicOp = pipeline_info->color_blend_info.logic_operation;
+    color_blend_info.attachmentCount = (u32)darray_size(&pipeline_info->color_blend_info.attachments);
+    color_blend_info.pAttachments = (VkPipelineColorBlendAttachmentState *)darray_data(&pipeline_info->color_blend_info.attachments);
+
+    memcpy(color_blend_info.blendConstants, pipeline_info->color_blend_info.blend_constants, sizeof(color_blend_info.blendConstants));
+
+    return color_blend_info;
+}
+
 DResult render_backend_create_pipeline(RenderBackend *backend, RenderBackendPipeline *pipeline, PipelineInfo *pipeline_info)
 {
     VkPipelineShaderStageCreateInfo *shader_stages_info = pipeline_create_shader_stage_info(pipeline_info);
@@ -72,6 +102,12 @@ DResult render_backend_create_pipeline(RenderBackend *backend, RenderBackendPipe
     VkPipelineViewportStateCreateInfo viewport_info = pipeline_create_viewport_info(pipeline_info);
 
     VkPipelineRasterizationStateCreateInfo rasterizer_info = pipeline_create_rasterization_info(pipeline_info);
+
+    VkPipelineMultisampleStateCreateInfo multisample_info = pipeline_create_multisample_info(pipeline_info);
+
+    // TODO: Depth and stencil infos
+
+    VkPipelineColorBlendStateCreateInfo color_blend_info = pipeline_create_color_blend_info(pipeline_info);
 
     return D_SUCCESS;
 }

@@ -30,7 +30,7 @@ DAPI DResult _darray_set(DArray *array, const void *val, u64 index);
 DAPI void *_darray_data(DArray *array);
 
 DAPI u64 darray_size(DArray *array);
-DAPI u8 _darray_empty(DArray *array);
+DAPI dbool _darray_empty(DArray *array);
 
 #define DARRAY_DEFAULT_SIZE 1
 #define DARRAY_RESIZE_FACTOR 2

@@ -36,7 +36,7 @@ DAPI const void *_dset_get(DSet *set, u64 index);
 DAPI i32 _dset_find(DSet *set, const void *val);
 
 DAPI void *dset_data(DSet *set);
-DAPI u8 dset_empty(DSet *set);
+DAPI dbool dset_empty(DSet *set);
 
 DAPI u64 dset_size(DSet *set);
 
