@@ -4,18 +4,14 @@
 
 #include "render/render_backend/render_backend_pipeline/render_backend_pipeline_core.h"
 
-typedef VkPipelineColorBlendAttachmentState ColorBlendAttachment;
-typedef VkPipelineColorBlendStateCreateFlags BlendFlags;
-typedef VkLogicOp LogicOperation;
-
 typedef struct RenderBackendColorBlendInfo
 {
-  BlendFlags flags;
+  VkPipelineColorBlendStateCreateFlags flags;
 
   dbool logic_operation_enable;
-  LogicOperation logic_operation;
+  VkLogicOp logic_operation;
 
-  // ColorBlendAttachment
+  // VkPipelineColorBlendAttachmentState
   DArray attachments;
 
   f32 blend_constants[4];

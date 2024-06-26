@@ -4,9 +4,9 @@
 
 typedef struct RenderBackendRasterizerInfo
 {
-    CullModeFlagBits cull_mode;
-    FrontFace front_face;
-    PolygonMode polygon_mode;
+    VkCullModeFlagBits cull_mode;
+    VkFrontFace front_face;
+    VkPolygonMode polygon_mode;
 } RenderBackendRasterizerInfo;
 
 RenderBackendRasterizerInfo render_backend_create_default_rasterizer_info();
