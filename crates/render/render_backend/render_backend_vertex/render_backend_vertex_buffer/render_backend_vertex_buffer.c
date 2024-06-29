@@ -96,7 +96,7 @@ VkVertexInputBindingDescription render_backend_vertex_buffer_get_binding_descrip
   return render_backend_vertices_get_binding_description(&vertex_buffer->vertices, vertex_buffer->binding, vertex_buffer->input_rate);
 }
 
-VkVertexInputAttributeDescription *render_backend_vertex_buffer_get_attribute_descriptions(RenderBackendVertexBuffer *vertex_buffer)
+DArray render_backend_vertex_buffer_get_attribute_descriptions(RenderBackendVertexBuffer *vertex_buffer)
 {
   return render_backend_vertices_get_attribute_descriptions(&vertex_buffer->vertices, vertex_buffer->binding);
 }

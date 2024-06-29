@@ -17,19 +17,22 @@ VkVertexInputBindingDescription get_vertex_2D_binding_description(u32 binding, V
   return binding_description;
 }
 
-VkVertexInputAttributeDescription *get_vertex_2D_attribute_descriptions(u32 binding)
+DArray get_vertex_2D_attribute_descriptions(u32 binding)
 {
-  VkVertexInputAttributeDescription *attribute_descriptions = (VkVertexInputAttributeDescription *)calloc(VERTEX_2D_ATTRIBUTES_SIZE, sizeof(VkVertexInputAttributeDescription));
+  DArray attribute_descriptions;
+  darray_reserve(&attribute_descriptions, VkVertexInputAttributeDescription, VERTEX_2D_ATTRIBUTES_SIZE);
 
-  attribute_descriptions[0].binding = binding;
-  attribute_descriptions[0].location = 0;
-  attribute_descriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
-  attribute_descriptions[0].offset = offsetof(RenderBackendVertex2D, position);
+  VkVertexInputAttributeDescription *attribute_descriptions_data = (VkVertexInputAttributeDescription *)darray_data(&attribute_descriptions);
 
-  attribute_descriptions[1].binding = binding;
-  attribute_descriptions[1].location = 1;
-  attribute_descriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-  attribute_descriptions[1].offset = offsetof(RenderBackendVertex2D, color);
+  attribute_descriptions_data[0].binding = binding;
+  attribute_descriptions_data[0].location = 0;
+  attribute_descriptions_data[0].format = VK_FORMAT_R32G32_SFLOAT;
+  attribute_descriptions_data[0].offset = offsetof(RenderBackendVertex2D, position);
+
+  attribute_descriptions_data[1].binding = binding;
+  attribute_descriptions_data[1].location = 1;
+  attribute_descriptions_data[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+  attribute_descriptions_data[1].offset = offsetof(RenderBackendVertex2D, color);
 
   return attribute_descriptions;
 }

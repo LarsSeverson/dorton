@@ -24,4 +24,4 @@ RenderBackendVertex *render_backend_vertices_data(RenderBackendVertices *vertice
 u32 render_backend_vertices_size(RenderBackendVertices *vertices);
 
 VkVertexInputBindingDescription render_backend_vertices_get_binding_description(RenderBackendVertices *vertices, u32 binding, VertexInputRate input_rate);
-VkVertexInputAttributeDescription *render_backend_vertices_get_attribute_descriptions(RenderBackendVertices *vertices, u32 binding);
+DArray render_backend_vertices_get_attribute_descriptions(RenderBackendVertices *vertices, u32 binding);

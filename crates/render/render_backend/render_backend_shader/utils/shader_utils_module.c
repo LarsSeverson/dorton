@@ -9,7 +9,7 @@ DResult read_shader_file(DArray *shader_code, DString *file_path)
     FILE *file = fopen(file_path->string, "rb");
     if (file == NULL)
     {
-        DERROR("Failed to open file at: %s", file_path);
+        DERROR("Failed to open file at: %s", file_path->string);
         return D_ERROR;
     }
 

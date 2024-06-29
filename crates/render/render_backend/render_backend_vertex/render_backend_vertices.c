@@ -78,7 +78,7 @@ VkVertexInputBindingDescription render_backend_vertices_get_binding_description(
   return render_backend_vertices_get(vertices, 0)->get_binding_description(binding, input_rate);
 }
 
-VkVertexInputAttributeDescription *render_backend_vertices_get_attribute_descriptions(RenderBackendVertices *vertices, u32 binding)
+DArray render_backend_vertices_get_attribute_descriptions(RenderBackendVertices *vertices, u32 binding)
 {
   return render_backend_vertices_get(vertices, 0)->get_attribute_descriptions(binding);
 }

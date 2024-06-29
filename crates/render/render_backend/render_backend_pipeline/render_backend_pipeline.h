@@ -48,3 +48,4 @@ typedef struct RenderBackendPipeline
 struct RenderBackend;
 
 DResult render_backend_create_pipeline(struct RenderBackend *backend, RenderBackendPipeline *pipeline, PipelineInfo *pipeline_info);
+DResult render_backend_destroy_pipeline(struct RenderBackend *backend, RenderBackendPipeline *pipeline);

@@ -8,6 +8,12 @@
 
 // TODO: Any create info values that are hard coded (e.g. input_assembly_info.primitiveRestardEnable = VK_FALSE), make configurable
 
+VkPipelineShaderStageCreateInfo *pipeline_create_shader_stage_info(PipelineInfo *pipeline_info)
+{
+    VkPipelineShaderStageCreateInfo *info = render_backend_shaders_get_stages(&pipeline_info->shaders);
+    return info;
+}
+
 VkPipelineVertexInputStateCreateInfo pipeline_create_vertex_input_info(PipelineInfo *pipeline_info)
 {
     u32 binding_description_count = darray_size(&pipeline_info->binding_descriptions);
@@ -22,11 +28,6 @@ VkPipelineVertexInputStateCreateInfo pipeline_create_vertex_input_info(PipelineI
     vertex_input_info.pVertexAttributeDescriptions = attribute_descriptions;
 
     return vertex_input_info;
-}
-
-VkPipelineShaderStageCreateInfo *pipeline_create_shader_stage_info(PipelineInfo *pipeline_info)
-{
-    return render_backend_shaders_get_stages(&pipeline_info->shaders.shader_stages);
 }
 
 VkPipelineInputAssemblyStateCreateInfo pipeline_create_input_assembly_info(PipelineInfo *pipeline_info)
@@ -157,7 +158,7 @@ DResult render_backend_create_pipeline(RenderBackend *backend, RenderBackendPipe
     pipeline_create_info.subpass = 0;
     pipeline_create_info.basePipelineHandle = NULL;
 
-    if (vkCreateGraphicsPipelines(backend->device.logical_device, NULL, 1, &pipeline_create_info, backend->vulkan_context.allocator, pipeline->pipeline_inner) != VK_SUCCESS)
+    if (vkCreateGraphicsPipelines(backend->device.logical_device, NULL, 1, &pipeline_create_info, backend->vulkan_context.allocator, &pipeline->pipeline_inner) != VK_SUCCESS)
     {
         DERROR("Unable to create graphics pipeline.");
         return D_ERROR;
@@ -165,6 +166,13 @@ DResult render_backend_create_pipeline(RenderBackend *backend, RenderBackendPipe
 
     render_backend_destroy_pipeline_info(pipeline_info);
 
+    return D_SUCCESS;
+}
+
+DResult render_backend_destroy_pipeline(RenderBackend *backend, RenderBackendPipeline *pipeline)
+{
+    vkDestroyPipeline(backend->device.logical_device, pipeline->pipeline_inner, backend->vulkan_context.allocator);
+    vkDestroyPipelineLayout(backend->device.logical_device, pipeline->layout, backend->vulkan_context.allocator);
     return D_SUCCESS;
 }
 

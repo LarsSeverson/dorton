@@ -13,6 +13,7 @@
 #include "./render_backend_sync/render_backend_fence/render_backend_fences.h"
 #include "./render_backend_sync/render_backend_semaphore/render_backend_semaphores.h"
 #include "./render_backend_vertex/render_backend_vertex_lib.h"
+#include "./render_backend_index/render_backend_index_lib.h"
 
 typedef struct RenderBackendCreateInfo
 {

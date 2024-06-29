@@ -149,23 +149,6 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
 
   DINFO("  Backend semaphores created.");
 
-  // test
-  RenderBackendVertex vertex;
-  RenderBackendVertex2D vertex_data = {{-0.5f, -0.5f}, {1.f, 0.f, 0.f}};
-  render_backend_create_vertex(&vertex, VERTEX_TYPE_2D, &vertex_data);
-
-  RenderBackendVertices vertices;
-  render_backend_create_vertices(&vertices, VERTEX_TYPE_2D);
-  render_backend_vertices_push(&vertices, &vertex);
-
-  VertexBufferInfo vertex_buffer_info = {0};
-  vertex_buffer_info.vertices = vertices;
-  
-  RenderBackendVertexBuffer vertex_buffer;
-  render_backend_create_vertex_buffer(backend, &vertex_buffer, &vertex_buffer_info);
-  render_backend_destroy_vertex_buffer(backend, &vertex_buffer);
-  // test
-
   DINFO("Render backend created.");
 
   return D_SUCCESS;
