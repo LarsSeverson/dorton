@@ -75,7 +75,8 @@ u32 render_backend_vertices_size(RenderBackendVertices *vertices)
 
 VkVertexInputBindingDescription render_backend_vertices_get_binding_description(RenderBackendVertices *vertices, u32 binding, VertexInputRate input_rate)
 {
-  return render_backend_vertices_get(vertices, 0)->get_binding_description(binding, input_rate);
+  VkVertexInputBindingDescription binding_description = render_backend_vertices_get(vertices, 0)->get_binding_description(binding, input_rate);
+  return binding_description;
 }
 
 DArray render_backend_vertices_get_attribute_descriptions(RenderBackendVertices *vertices, u32 binding)

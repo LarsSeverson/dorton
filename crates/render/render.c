@@ -105,6 +105,7 @@ DResult renderer_create(Renderer *renderer, RendererCreateInfo *create_info)
   render_backend_destroy_pipeline(&renderer->backend, &pipeline);
   render_backend_destroy_vertex_buffer(&renderer->backend, &vertex_buffer);
   render_backend_destroy_shaders(&renderer->backend, &shaders);
+  render_backend_destroy_indices(&indices);
   // Test
 
   return D_SUCCESS;

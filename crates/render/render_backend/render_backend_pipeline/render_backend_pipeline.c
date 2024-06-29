@@ -186,6 +186,7 @@ DResult render_backend_destroy_pipeline_info(PipelineInfo *pipeline_info)
 
     darray_destroy(&pipeline_info->attribute_descriptions);
     darray_destroy(&pipeline_info->binding_descriptions);
+    darray_destroy(&pipeline_info->dynamic_states);
 
     return D_SUCCESS;
 }

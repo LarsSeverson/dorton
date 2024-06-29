@@ -12,6 +12,8 @@
 
 DResult render_backend_create_vertex_buffer(RenderBackend *backend, RenderBackendVertexBuffer *vertex_buffer, VertexBufferInfo *vertex_buffer_info)
 {
+  *vertex_buffer = (RenderBackendVertexBuffer){0};
+
   RenderBackendVertex *vertex = render_backend_vertices_get(&vertex_buffer_info->vertices, 0);
   if (vertex == NULL)
   {
