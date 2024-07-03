@@ -164,6 +164,8 @@ DResult render_backend_create_pipeline(RenderBackend *backend, RenderBackendPipe
         return D_ERROR;
     }
 
+    pipeline->render_pass = pipeline_info->render_pass;
+
     render_backend_destroy_pipeline_info(pipeline_info);
 
     return D_SUCCESS;

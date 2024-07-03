@@ -104,7 +104,9 @@ DResult render_backend_create_swap_chain(RenderBackend *backend)
         DERROR("Error getting swap chain image count.");
         return D_ERROR;
     }
+
     darray_reserve(&backend->swap_chain.images, VkImage, image_count);
+
     if (vkGetSwapchainImagesKHR(backend->device.logical_device, backend->swap_chain.swap_chain_inner, &image_count, (VkImage *)darray_data(&backend->swap_chain.images)) != D_SUCCESS)
     {
         DERROR("Error getting swap chain images.");
@@ -158,13 +160,7 @@ DResult render_backend_recreate_swap_chain(RenderBackend *backend)
         DERROR("Could not wait for device to idle on swapchain recreate.");
         return D_ERROR;
     }
-
-    if (render_backend_destroy_framebuffers(backend) != D_SUCCESS)
-    {
-        DERROR("Could not destroy framebuffers on swapchain recreate.");
-        return D_ERROR;
-    }
-
+    
     if (render_backend_destroy_swap_chain(backend) != D_SUCCESS)
     {
         DERROR("Could not destroy swapchain on recreate.");
@@ -174,12 +170,6 @@ DResult render_backend_recreate_swap_chain(RenderBackend *backend)
     if (render_backend_create_swap_chain(backend) != D_SUCCESS)
     {
         DERROR("Could not create swapchain on recreate.");
-        return D_ERROR;
-    }
-
-    if (render_backend_create_framebuffers(backend) != D_SUCCESS)
-    {
-        DERROR("Could not create framebuffers on swapchain recreate.");
         return D_ERROR;
     }
 

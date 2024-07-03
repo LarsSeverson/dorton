@@ -2,6 +2,8 @@
 
 #include "logger.h"
 
+#include "render/render_backend/render_backend.h"
+
 DResult render_backend_create_semaphore(RenderBackend *backend, RenderBackendSemaphore *semaphore)
 {
     VkSemaphoreCreateInfo semaphore_create_info = {VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO};

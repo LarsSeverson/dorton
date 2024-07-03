@@ -2,6 +2,8 @@
 
 #include "logger.h"
 
+#include "render/render_backend/render_backend.h"
+
 DResult render_backend_create_framebuffer(RenderBackend *backend, RenderBackendFramebuffer *framebuffer, FramebufferInfo *framebuffer_info)
 {
     VkFramebufferCreateInfo framebuffer_create_info = {VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO};

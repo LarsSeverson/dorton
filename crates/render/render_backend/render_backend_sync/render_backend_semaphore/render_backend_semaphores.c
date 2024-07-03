@@ -1,52 +1,43 @@
 #include "render_backend_semaphores.h"
-#include "render_backend_semaphore.h"
 
 #include "logger.h"
 
 #include "render/render_backend/render_backend.h"
 
-DResult render_backend_create_semaphores(RenderBackend *backend)
+DResult render_backend_create_semaphores(RenderBackend *backend, RenderBackendSemaphores *semaphores, u32 size)
 {
-    u8 size = backend->swap_chain.max_frames_in_flight;
-    darray_reserve(&backend->semaphores.image_available_semaphores, RenderBackendSemaphore, size);
-    darray_reserve(&backend->semaphores.render_finished_semaphores, RenderBackendSemaphore, size);
+    darray_reserve(&semaphores->semaphores_inner, RenderBackendSemaphore, size);
 
-    for (u8 i = 0; i < size; ++i)
+    for (u32 i = 0; i < size; ++i)
     {
-        RenderBackendSemaphore *image_available_semaphore = (RenderBackendSemaphore *)darray_get(&backend->semaphores.image_available_semaphores, i);
-        RenderBackendSemaphore *render_finished_semaphore = (RenderBackendSemaphore *)darray_get(&backend->semaphores.render_finished_semaphores, i);
+        RenderBackendSemaphore *semaphore = (RenderBackendSemaphore *)darray_get(&semaphores->semaphores_inner, i);
 
-        if (render_backend_create_semaphore(backend, image_available_semaphore) != D_SUCCESS)
+        if (render_backend_create_semaphore(backend, semaphore) != D_SUCCESS)
         {
-            DFATAL("Could not create image available semaphores.");
-            return D_FATAL;
-        }
-
-        if (render_backend_create_semaphore(backend, render_finished_semaphore) != D_SUCCESS)
-        {
-            DFATAL("Could not create render finished semaphores.");
-            return D_FATAL;
+            DERROR("Could not create semaphores.");
+            return D_ERROR;
         }
     }
-
-    backend->semaphores.image_available_semaphores_size = size;
-    backend->semaphores.render_finished_semaphores_size = size;
 
     return D_SUCCESS;
 }
 
-DResult render_backend_destroy_semaphores(RenderBackend *backend)
+DResult render_backend_destroy_semaphores(RenderBackend *backend, RenderBackendSemaphores *semaphores)
 {
-    for (u32 i = 0; i < backend->semaphores.image_available_semaphores_size; ++i)
+    u32 size = (u32)darray_size(&semaphores->semaphores_inner);
+    for (u32 i = 0; i < size; ++i)
     {
-        RenderBackendSemaphore *image_available_semaphore = (RenderBackendSemaphore *)darray_get(&backend->semaphores.image_available_semaphores, i);
-        RenderBackendSemaphore *render_finished_semaphore = (RenderBackendSemaphore *)darray_get(&backend->semaphores.render_finished_semaphores, i);
-        render_backend_destroy_semaphore(backend, image_available_semaphore);
-        render_backend_destroy_semaphore(backend, render_finished_semaphore);
+        RenderBackendSemaphore *semaphore = (RenderBackendSemaphore *)darray_get(&semaphores->semaphores_inner, i);
+        render_backend_destroy_semaphore(backend, semaphore);
     }
 
-    darray_destroy(&backend->semaphores.image_available_semaphores);
-    darray_destroy(&backend->semaphores.render_finished_semaphores);
+    darray_destroy(&semaphores->semaphores_inner);
 
     return D_SUCCESS;
+}
+
+RenderBackendSemaphore *semaphores_get(RenderBackendSemaphores *semaphores, u32 index)
+{
+    RenderBackendSemaphore *semaphore = (RenderBackendSemaphore *)darray_get(&semaphores->semaphores_inner, index);
+    return semaphore;
 }

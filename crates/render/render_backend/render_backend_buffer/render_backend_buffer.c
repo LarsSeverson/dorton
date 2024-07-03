@@ -73,7 +73,7 @@ DResult render_backend_copy_buffer(RenderBackend *backend, RenderBackendBuffer *
   copy_region.size = size;
   vkCmdCopyBuffer(command_buffer.command_buffer_inner, source->buffer_inner, destination->buffer_inner, 1, &copy_region);
 
-  if (command_buffer_end_lazy(backend, &command_buffer) != D_SUCCESS)
+  if (command_buffer_end_lazy(backend, &command_buffer, backend->device.graphics_queue) != D_SUCCESS)
   {
     DERROR("Could not copy buffer.");
     return D_ERROR;

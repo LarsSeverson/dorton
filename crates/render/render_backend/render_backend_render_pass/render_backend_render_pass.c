@@ -4,7 +4,7 @@
 
 #include "render/render_backend/render_backend.h"
 
-DResult render_backend_create_render_pass(RenderBackend *backend)
+DResult render_backend_create_render_pass(RenderBackend *backend, RenderBackendRenderPass *render_pass, RenderPassInfo *render_pass_info)
 {
   VkAttachmentDescription color_attachment = {0};
   color_attachment.format = backend->swap_chain.image_format;
@@ -31,7 +31,7 @@ DResult render_backend_create_render_pass(RenderBackend *backend)
   render_pass_create_info.subpassCount = 1;
   render_pass_create_info.pSubpasses = &sub_pass;
 
-  if (vkCreateRenderPass(backend->device.logical_device, &render_pass_create_info, backend->vulkan_context.allocator, &backend->render_pass.render_pass_inner) != VK_SUCCESS)
+  if (vkCreateRenderPass(backend->device.logical_device, &render_pass_create_info, backend->vulkan_context.allocator, &render_pass->render_pass_inner) != VK_SUCCESS)
   {
     DFATAL("Could not create render pass.");
     return D_FATAL;
@@ -40,8 +40,8 @@ DResult render_backend_create_render_pass(RenderBackend *backend)
   return D_SUCCESS;
 }
 
-DResult render_backend_destroy_render_pass(RenderBackend *backend)
+DResult render_backend_destroy_render_pass(RenderBackend *backend, RenderBackendRenderPass *render_pass)
 {
-  vkDestroyRenderPass(backend->device.logical_device, backend->render_pass.render_pass_inner, backend->vulkan_context.allocator);
+  vkDestroyRenderPass(backend->device.logical_device, render_pass->render_pass_inner, backend->vulkan_context.allocator);
   return D_SUCCESS;
 }

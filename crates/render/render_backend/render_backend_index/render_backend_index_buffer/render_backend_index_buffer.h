@@ -14,3 +14,5 @@ struct RenderBackend;
 
 DResult render_backend_create_index_buffer(struct RenderBackend *backend, RenderBackendIndexBuffer *index_buffer, RenderBackendIndices *indices);
 DResult render_backend_destroy_index_buffer(struct RenderBackend *backend, RenderBackendIndexBuffer *index_buffer);
+
+u32 render_backend_index_count(RenderBackendIndexBuffer *index_buffer);

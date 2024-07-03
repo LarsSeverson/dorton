@@ -1,10 +1,12 @@
 #include "render.h"
 
+#include "logger/logger.h"
+
 #include "./render_backend/render_backend.h"
-
-#include "../logger/logger.h"
-
-#include "./render_backend/render_backend_pipeline/render_backend_pipeline.h"
+#include "./render_backend/render_backend_pipeline/render_backend_pipeline.h" // TEMP
+#include "./render_backend/render_backend_vertex/render_backend_vertex_lib.h" // TEMP
+#include "./render_backend/render_backend_index/render_backend_index_lib.h" // TEMP
+#include "./render_backend/render_backend_render_pass/render_backend_render_pass.h" // TEMP
 
 DResult renderer_create(Renderer *renderer, RendererCreateInfo *create_info)
 {
@@ -21,91 +23,94 @@ DResult renderer_create(Renderer *renderer, RendererCreateInfo *create_info)
   DINFO("Renderer created successfully.");
 
   // Test
-  RenderBackendVertex vertex1;
-  RenderBackendVertex2D vertex_data1 = {{-0.5f, -0.5f}, {1.f, 0.f, 0.f}};
-  render_backend_create_vertex(&vertex1, VERTEX_TYPE_2D, &vertex_data1);
+  // RenderBackendVertex vertex1;
+  // RenderBackendVertex2D vertex_data1 = {{-0.5f, -0.5f}, {1.f, 0.f, 0.f}};
+  // render_backend_create_vertex(&vertex1, VERTEX_TYPE_2D, &vertex_data1);
 
-  RenderBackendVertex vertex2;
-  RenderBackendVertex2D vertex_data2 = {{0.5f, -0.5f}, {0.f, 1.f, 0.f}};
-  render_backend_create_vertex(&vertex2, VERTEX_TYPE_2D, &vertex_data2);
+  // RenderBackendVertex vertex2;
+  // RenderBackendVertex2D vertex_data2 = {{0.5f, -0.5f}, {0.f, 1.f, 0.f}};
+  // render_backend_create_vertex(&vertex2, VERTEX_TYPE_2D, &vertex_data2);
 
-  RenderBackendVertex vertex3;
-  RenderBackendVertex2D vertex_data3 = {{0.5f, 0.5f}, {0.f, 1.f, 0.f}};
-  render_backend_create_vertex(&vertex3, VERTEX_TYPE_2D, &vertex_data3);
+  // RenderBackendVertex vertex3;
+  // RenderBackendVertex2D vertex_data3 = {{0.5f, 0.5f}, {0.f, 1.f, 0.f}};
+  // render_backend_create_vertex(&vertex3, VERTEX_TYPE_2D, &vertex_data3);
 
-  RenderBackendVertices vertices;
-  render_backend_create_vertices(&vertices, VERTEX_TYPE_2D);
-  render_backend_vertices_push(&vertices, &vertex1);
-  render_backend_vertices_push(&vertices, &vertex2);
-  render_backend_vertices_push(&vertices, &vertex3);
+  // RenderBackendVertices vertices;
+  // render_backend_create_vertices(&vertices, VERTEX_TYPE_2D);
+  // render_backend_vertices_push(&vertices, &vertex1);
+  // render_backend_vertices_push(&vertices, &vertex2);
+  // render_backend_vertices_push(&vertices, &vertex3);
 
-  RenderBackendIndices indices;
-  RenderBackendIndex indices_data[3] = {0, 1, 2};
-  render_backend_create_indices(&indices, indices_data, 3);
+  // RenderBackendIndices indices;
+  // RenderBackendIndex indices_data[3] = {0, 1, 2};
+  // render_backend_create_indices(&indices, indices_data, 3);
 
-  VertexBufferInfo vertex_buffer_info = {0};
-  vertex_buffer_info.vertices = vertices;
+  // VertexBufferInfo vertex_buffer_info = {0};
+  // vertex_buffer_info.vertices = vertices;
 
-  RenderBackendVertexBuffer vertex_buffer;
-  render_backend_create_vertex_buffer(&renderer->backend, &vertex_buffer, &vertex_buffer_info);
+  // RenderBackendVertexBuffer vertex_buffer;
+  // render_backend_create_vertex_buffer(&renderer->backend, &vertex_buffer, &vertex_buffer_info);
 
-  ShaderInfo vert_shader_info = {0};
-  vert_shader_info.main = "main";
-  vert_shader_info.src = "test";
-  vert_shader_info.type = SHADER_TYPE_VERTEX;
+  // ShaderInfo vert_shader_info = {0};
+  // vert_shader_info.main = "main";
+  // vert_shader_info.src = "test";
+  // vert_shader_info.type = SHADER_TYPE_VERTEX;
 
-  RenderBackendShader vert_shader;
+  // RenderBackendShader vert_shader;
 
-  ShaderInfo frag_shader_info = {0};
-  frag_shader_info.main = "main";
-  frag_shader_info.src = "test";
-  frag_shader_info.type = SHADER_TYPE_FRAGMENT;
+  // ShaderInfo frag_shader_info = {0};
+  // frag_shader_info.main = "main";
+  // frag_shader_info.src = "test";
+  // frag_shader_info.type = SHADER_TYPE_FRAGMENT;
 
-  RenderBackendShader frag_shader;
+  // RenderBackendShader frag_shader;
 
-  RenderBackendShaders shaders;
-  render_backend_create_shaders(&renderer->backend, &shaders);
-  render_backend_shaders_push(&renderer->backend, &shaders, &vert_shader, &vert_shader_info);
-  render_backend_shaders_push(&renderer->backend, &shaders, &frag_shader, &frag_shader_info);
+  // RenderBackendShaders shaders;
+  // render_backend_create_shaders(&renderer->backend, &shaders);
+  // render_backend_shaders_push(&renderer->backend, &shaders, &vert_shader, &vert_shader_info);
+  // render_backend_shaders_push(&renderer->backend, &shaders, &frag_shader, &frag_shader_info);
 
-  VkVertexInputBindingDescription binding_description = render_backend_vertex_buffer_get_binding_description(&vertex_buffer);
-  DArray attribute_descriptions = render_backend_vertex_buffer_get_attribute_descriptions(&vertex_buffer);
-  DArray binding_descriptions;
-  darray_reserve(&binding_descriptions, VkVertexInputBindingDescription, 1);
-  darray_set(&binding_descriptions, binding_description, 0);
+  // VkVertexInputBindingDescription binding_description = render_backend_vertex_buffer_get_binding_description(&vertex_buffer);
+  // DArray attribute_descriptions = render_backend_vertex_buffer_get_attribute_descriptions(&vertex_buffer);
+  // DArray binding_descriptions;
+  // darray_reserve(&binding_descriptions, VkVertexInputBindingDescription, 1);
+  // darray_set(&binding_descriptions, binding_description, 0);
 
-  VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+  // VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 
-  RenderBackendRasterizerInfo rast_info = render_backend_create_default_rasterizer_info();
-  RenderBackendMultisampleInfo mul_info = render_backend_create_default_multisample_info();
-  RenderBackendColorBlendInfo color_info = render_backend_create_default_color_blend_info();
+  // RenderBackendRasterizerInfo rast_info = render_backend_create_default_rasterizer_info();
+  // RenderBackendMultisampleInfo mul_info = render_backend_create_default_multisample_info();
+  // RenderBackendColorBlendInfo color_info = render_backend_create_default_color_blend_info();
 
-  DArray dynamic_states;
-  darray_reserve(&dynamic_states, VkDynamicState, 2);
-  darray_set(&dynamic_states, VK_DYNAMIC_STATE_VIEWPORT, 0);
-  darray_set(&dynamic_states, VK_DYNAMIC_STATE_SCISSOR, 1);
+  // DArray dynamic_states;
+  // darray_reserve(&dynamic_states, VkDynamicState, 2);
+  // darray_set(&dynamic_states, VK_DYNAMIC_STATE_VIEWPORT, 0);
+  // darray_set(&dynamic_states, VK_DYNAMIC_STATE_SCISSOR, 1);
 
-  RenderBackendPipelineLayout pipe_layout = render_backend_create_default_pipeline_layout();
+  // RenderBackendPipelineLayout pipe_layout = render_backend_create_default_pipeline_layout();
 
-  PipelineInfo pi = {0};
-  pi.shaders = shaders;
-  pi.attribute_descriptions = attribute_descriptions;
-  pi.binding_descriptions = binding_descriptions;
-  pi.topology = topology;
-  pi.rasterizer_info = rast_info;
-  pi.multisample_info = mul_info;
-  pi.color_blend_info = color_info;
-  pi.dynamic_states = dynamic_states;
-  pi.pipeline_layout = pipe_layout;
-  pi.render_pass = renderer->backend.render_pass;
+  // RenderBackendRenderPass render_pass;
+  // render_backend_create_default_render_pass(&renderer->backend, &render_pass);
 
-  RenderBackendPipeline pipeline;
-  render_backend_create_pipeline(&renderer->backend, &pipeline, &pi);
+  // PipelineInfo pi = {0};
+  // pi.shaders = shaders;
+  // pi.attribute_descriptions = attribute_descriptions;
+  // pi.binding_descriptions = binding_descriptions;
+  // pi.topology = topology;
+  // pi.rasterizer_info = rast_info;
+  // pi.multisample_info = mul_info;
+  // pi.color_blend_info = color_info;
+  // pi.dynamic_states = dynamic_states;
+  // pi.pipeline_layout = pipe_layout;
+  // pi.render_pass = render_pass;
 
-  render_backend_destroy_pipeline(&renderer->backend, &pipeline);
-  render_backend_destroy_vertex_buffer(&renderer->backend, &vertex_buffer);
-  render_backend_destroy_shaders(&renderer->backend, &shaders);
-  render_backend_destroy_indices(&indices);
+  // RenderBackendPipeline pipeline;
+  // render_backend_create_pipeline(&renderer->backend, &pipeline, &pi);
+
+  // render_backend_destroy_pipeline(&renderer->backend, &pipeline);
+  // render_backend_destroy_vertex_buffer(&renderer->backend, &vertex_buffer);
+  // render_backend_destroy_shaders(&renderer->backend, &shaders);
+  // render_backend_destroy_indices(&indices);
   // Test
 
   return D_SUCCESS;

@@ -7,10 +7,13 @@
 typedef struct RenderBackendFences
 {
     // RenderBackendFence
-    DArray active_buffer_fences;
+    DArray fences_inner;
 } RenderBackendFences;
 
 struct RenderBackend;
 
-DResult render_backend_create_fences(struct RenderBackend *backend);
-DResult render_backend_destroy_fences(struct RenderBackend *backend);
+DResult render_backend_create_fences(struct RenderBackend *backend, RenderBackendFences *fences, u32 size);
+DResult render_backend_destroy_fences(struct RenderBackend *backend, RenderBackendFences *fences);
+
+DResult render_backend_wait_for_fences(struct RenderBackend *backend, RenderBackendFences *fences, u32 index, u32 count, u64 timeout_ns);
+DResult render_backend_reset_fences(struct RenderBackend *backend, RenderBackendFences *fences, u32 index, u32 count);

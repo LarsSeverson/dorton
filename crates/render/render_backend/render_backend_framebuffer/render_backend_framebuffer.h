@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render/render_backend/render_backend.h"
+#include "render/render_backend/render_backend_core.h"
 
 typedef struct FramebufferInfo
 {
@@ -9,7 +9,7 @@ typedef struct FramebufferInfo
     u32 attachment_count;
 
     VkImageView *attachments;
-    VkRenderPass render_pass;
+    VkRenderPass *render_pass;
 } FramebufferInfo;
 
 typedef struct RenderBackendFramebuffer
@@ -19,5 +19,7 @@ typedef struct RenderBackendFramebuffer
     FramebufferInfo framebuffer_info;
 } RenderBackendFramebuffer;
 
-DResult render_backend_create_framebuffer(RenderBackend *backend, RenderBackendFramebuffer *framebuffer, FramebufferInfo *framebuffer_info);
-DResult render_backend_destroy_framebuffer(RenderBackend *backend, RenderBackendFramebuffer *framebuffer);
+struct RenderBackend;
+
+DResult render_backend_create_framebuffer(struct RenderBackend *backend, RenderBackendFramebuffer *framebuffer, FramebufferInfo *framebuffer_info);
+DResult render_backend_destroy_framebuffer(struct RenderBackend *backend, RenderBackendFramebuffer *framebuffer);

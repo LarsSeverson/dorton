@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render/render_backend/render_backend.h"
+#include "render/render_backend/render_backend_core.h"
 
 // typedef enum SemaphoreState
 // {
@@ -14,8 +14,10 @@ typedef struct RenderBackendSemaphore
     
 } RenderBackendSemaphore;
 
-DResult render_backend_create_semaphore(RenderBackend *backend, RenderBackendSemaphore *semaphore);
-DResult render_backend_destroy_semaphore(RenderBackend *backend, RenderBackendSemaphore *semaphore);
+struct RenderBackend;
 
-dbool render_backend_wait_semaphore(RenderBackend *backend, RenderBackendSemaphore *semaphore, u64 timeout_ns);
-DResult render_backend_reset_semaphore(RenderBackend *backend, RenderBackendSemaphore *semaphore);
+DResult render_backend_create_semaphore(struct RenderBackend *backend, RenderBackendSemaphore *semaphore);
+DResult render_backend_destroy_semaphore(struct RenderBackend *backend, RenderBackendSemaphore *semaphore);
+
+dbool render_backend_wait_semaphore(struct RenderBackend *backend, RenderBackendSemaphore *semaphore, u64 timeout_ns);
+DResult render_backend_reset_semaphore(struct RenderBackend *backend, RenderBackendSemaphore *semaphore);

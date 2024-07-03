@@ -1,29 +1,12 @@
 #pragma once
 
-#include "render/render_backend/render_backend_core.h"
-#include "render/render_backend/render_backend.h"
+#include "./render_backend_command_buffer_core.h"
 
-typedef enum CommandBufferState
-{
-    COMMAND_BUFFER_STATE_INVALID = 0,
-    COMMAND_BUFFER_STATE_INITIAL,
-    COMMAND_BUFFER_STATE_RECORDING,
-    COMMAND_BUFFER_STATE_EXCECUTABLE,
-    COMMAND_BUFFER_STATE_PENDING,
-} CommandBufferState;
-
-typedef enum CommandBufferType
-{
-    COMMAND_BUFFER_TYPE_PRIMARY = 0,
-    COMMAND_BUFFER_TYPE_SECONDARY
-} CommandBufferType;
-
-typedef enum CommandBufferUse
-{
-    COMMAND_BUFFER_USE_SINGLE = 0,
-    COMMAND_BUFFER_USE_CONTINUE,
-    COMMAND_BUFFER_USE_SIMULTANEOUS
-} CommandBufferUse;
+#include "render/render_backend/render_backend_command/render_backend_command_pool/render_backend_command_pool.h"
+#include "render/render_backend/render_backend_pipeline/render_backend_pipeline.h"
+#include "render/render_backend/render_backend_vertex/render_backend_vertex_lib.h"
+#include "render/render_backend/render_backend_index/render_backend_index_lib.h"
+#include "render/render_backend/render_backend_framebuffer/render_backend_framebuffer.h"
 
 typedef struct CommandBufferInfo
 {
@@ -31,7 +14,7 @@ typedef struct CommandBufferInfo
     CommandBufferState state;
     CommandBufferUse use;
 
-    VkQueue queue;
+    RenderBackendCommandPool *command_pool;
 
 } CommandBufferInfo;
 
@@ -43,12 +26,12 @@ typedef struct RenderBackendCommandBuffer
     CommandBufferType type;
     CommandBufferUse use;
 
-    VkQueue queue;
 } RenderBackendCommandBuffer;
 
+struct RenderBackend;
 
-DResult render_backend_create_command_buffer(RenderBackend *backend, RenderBackendCommandBuffer *command_buffer, CommandBufferInfo *command_buffer_info);
-DResult render_backend_destroy_command_buffer(RenderBackend *backend, RenderBackendCommandBuffer *command_buffer);
+DResult render_backend_create_command_buffer(struct RenderBackend *backend, RenderBackendCommandBuffer *command_buffer, CommandBufferInfo *command_buffer_info);
+DResult render_backend_destroy_command_buffer(struct RenderBackend *backend, RenderBackendCommandBuffer *command_buffer);
 
 DResult command_buffer_begin(RenderBackendCommandBuffer *command_buffer);
 DResult command_buffer_end(RenderBackendCommandBuffer *command_buffer);
@@ -56,5 +39,19 @@ DResult command_buffer_end(RenderBackendCommandBuffer *command_buffer);
 DResult command_buffer_submit(RenderBackendCommandBuffer *command_buffer);
 DResult command_buffer_reset(RenderBackendCommandBuffer *command_buffer);
 
-DResult command_buffer_begin_lazy(RenderBackend *backend, RenderBackendCommandBuffer *command_buffer);
-DResult command_buffer_end_lazy(RenderBackend *backend, RenderBackendCommandBuffer *command_buffer);
+DResult command_buffer_begin_lazy(struct RenderBackend *backend, RenderBackendCommandBuffer *command_buffer);
+DResult command_buffer_end_lazy(struct RenderBackend *backend, RenderBackendCommandBuffer *command_buffer, VkQueue queue);
+
+typedef struct CommandBufferRecordInfo
+{
+    RenderBackendCommandBuffer *command_buffer;
+
+    RenderBackendPipeline pipeline;
+    RenderBackendFramebuffer framebuffer;
+    RenderBackendVertexBuffer vertex_buffer;
+    RenderBackendIndexBuffer index_buffer;
+    // TODO: Descriptor set
+
+} CommandBufferRecordInfo;
+
+DResult render_backend_record_command_buffer(struct RenderBackend *backend, CommandBufferRecordInfo *record_info);

@@ -57,3 +57,8 @@ DResult render_backend_destroy_index_buffer(RenderBackend *backend, RenderBacken
 {
     return D_SUCCESS;
 }
+
+u32 render_backend_index_count(RenderBackendIndexBuffer *index_buffer)
+{
+    return (u32)darray_size(&index_buffer->indices);
+}

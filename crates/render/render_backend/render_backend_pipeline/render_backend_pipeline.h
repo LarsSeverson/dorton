@@ -11,6 +11,8 @@
 #include "render/render_backend/render_backend_shader/render_backend_shader_lib.h"
 #include "render/render_backend/render_backend_render_pass/render_backend_render_pass.h"
 
+typedef VkRect2D VkScissor;
+
 typedef struct PipelineInfo
 {
   ShaderFlagBits shader_flags;
@@ -24,7 +26,7 @@ typedef struct PipelineInfo
   VkPrimitiveTopology topology;
   
   VkViewport viewport; // TODO: Multiple viewports
-  VkRect2D scissor;    // TODO: Multiple scissors
+  VkScissor scissor;    // TODO: Multiple scissors
 
   RenderBackendRasterizerInfo rasterizer_info;
   RenderBackendMultisampleInfo multisample_info;
@@ -43,6 +45,11 @@ typedef struct RenderBackendPipeline
 {
   VkPipeline pipeline_inner;
   VkPipelineLayout layout;
+
+  RenderBackendRenderPass render_pass;
+  VkViewport viewport;
+  VkScissor scissor;
+  
 } RenderBackendPipeline;
 
 struct RenderBackend;

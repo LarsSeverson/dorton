@@ -107,47 +107,26 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
 
   DINFO("  Backend swap chain created.");
 
-  if (render_backend_create_render_pass(backend) != D_SUCCESS)
-  {
-    return D_FATAL;
-  }
-
-  DINFO("  Backend render pass created.");
-
-  if (render_backend_create_command_pool(backend) != D_SUCCESS)
-  {
-    return D_FATAL;
-  }
-
-  DINFO("  Backend command pool created.");
-
-  if (render_backend_create_command_buffers(backend) != D_SUCCESS)
-  {
-    return D_FATAL;
-  }
-
-  DINFO("  Backend command buffers created.");
-
-  if (render_backend_create_framebuffers(backend) != D_SUCCESS)
-  {
-    return D_FATAL;
-  }
-
-  DINFO("  Backend framebuffers created.");
-
-  if (render_backend_create_fences(backend) != D_SUCCESS)
+  if (render_backend_create_fences(backend, &backend->in_flight_fences, backend->swap_chain.max_frames_in_flight) != D_SUCCESS)
   {
     return D_FATAL;
   }
 
   DINFO("  Backend fences created.");
 
-  if (render_backend_create_semaphores(backend) != D_SUCCESS)
+  if (render_backend_create_semaphores(backend, &backend->image_available_semaphores, backend->swap_chain.max_frames_in_flight) != D_SUCCESS)
+  {
+    return D_FATAL;
+  }
+
+  if (render_backend_create_semaphores(backend, &backend->render_finished_semaphores, backend->swap_chain.max_frames_in_flight) != D_SUCCESS)
   {
     return D_FATAL;
   }
 
   DINFO("  Backend semaphores created.");
+
+  backend->current_frame = 0;
 
   DINFO("Render backend created.");
 
@@ -163,22 +142,11 @@ DResult render_backend_destroy(RenderBackend *backend)
   }
 
   // Semaphores
-  render_backend_destroy_semaphores(backend);
+  render_backend_destroy_semaphores(backend, &backend->image_available_semaphores);
+  render_backend_destroy_semaphores(backend, &backend->render_finished_semaphores);
 
   // Fences
-  render_backend_destroy_fences(backend);
-
-  // Framebuffers
-  render_backend_destroy_framebuffers(backend);
-
-  // Command buffers
-  render_backend_destroy_command_buffers(backend);
-
-  // Command pool
-  render_backend_destroy_command_pool(backend);
-
-  // Render pass
-  render_backend_destroy_render_pass(backend);
+  render_backend_destroy_fences(backend, &backend->in_flight_fences);
 
   // Swap chain
   render_backend_destroy_swap_chain(backend);
@@ -197,6 +165,31 @@ DResult render_backend_destroy(RenderBackend *backend)
 
 DResult render_backend_begin_frame(RenderBackend *backend, f32 delta_time)
 {
+  if (render_backend_wait_for_fences(backend, &backend->in_flight_fences, backend->current_frame, 1, UINT64_MAX) != D_SUCCESS)
+  {
+    DERROR("Could not begin frame.");
+    return D_ERROR;
+  }
+
+  u32 image_index = 0;
+  RenderBackendSemaphore *image_available_semaphore = semaphores_get(&backend->image_available_semaphores, backend->current_frame);
+  VkResult image_aquire_result = vkAcquireNextImageKHR(backend->device.logical_device, backend->swap_chain.swap_chain_inner, UINT64_MAX, image_available_semaphore->semaphore_inner, NULL, &image_index);
+
+  if (image_aquire_result == VK_ERROR_OUT_OF_DATE_KHR)
+  {
+    return render_backend_recreate_swap_chain(backend);
+  }
+  else if (image_aquire_result != VK_SUCCESS && image_aquire_result != VK_SUBOPTIMAL_KHR)
+  {
+    DERROR("Failed to get swap chain image.");
+    return D_ERROR;
+  }
+
+  // if (render_backend_reset_fences(backend, &backend->in_flight_fences, backend->current_frame, 1) != D_SUCCESS)
+  // {
+  //   return D_ERROR;
+  // }
+
   return D_SUCCESS;
 }
 

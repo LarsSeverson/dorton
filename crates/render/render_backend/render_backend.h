@@ -3,17 +3,13 @@
 #include "./render_backend_core.h"
 
 #include "window/window.h"
+#include "darray/darray.h"
 
 #include "./render_backend_device/render_backend_device.h"
 #include "./render_backend_swap_chain/render_backend_swap_chain.h"
-#include "./render_backend_render_pass/render_backend_render_pass.h"
-#include "./render_backend_command/render_backend_command_pool.h"
-#include "./render_backend_command/render_backend_command_buffer/render_backend_command_buffers.h"
 #include "./render_backend_framebuffer/render_backend_framebuffers.h"
 #include "./render_backend_sync/render_backend_fence/render_backend_fences.h"
 #include "./render_backend_sync/render_backend_semaphore/render_backend_semaphores.h"
-#include "./render_backend_vertex/render_backend_vertex_lib.h"
-#include "./render_backend_index/render_backend_index_lib.h"
 
 typedef struct RenderBackendCreateInfo
 {
@@ -28,14 +24,18 @@ typedef struct RenderBackend
 
   RenderBackendDevice device;
   RenderBackendSwapChain swap_chain;
-  RenderBackendRenderPass render_pass;
-  RenderBackendCommandPool command_pool;
-  RenderBackendCommandBuffers command_buffers;
-  RenderBackendFramebuffers framebuffers;
-  RenderBackendFences fences;
-  RenderBackendSemaphores semaphores;
+
+  RenderBackendFences in_flight_fences;
+  RenderBackendSemaphores image_available_semaphores;
+  RenderBackendSemaphores render_finished_semaphores;
 
   VulkanContext vulkan_context;
+
+  u32 current_frame;
+
+  // RenderBackendComponent
+  DArray components;
+
 } RenderBackend;
 
 DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *create_info);
