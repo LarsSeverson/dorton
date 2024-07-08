@@ -15,6 +15,7 @@ typedef struct VertexBufferInfo
   u32 offset;
   VkMemoryMapFlags flags;
   VkSharingMode sharing_mode;
+
 } VertexBufferInfo;
 
 typedef struct RenderBackendVertexBuffer
@@ -26,10 +27,12 @@ typedef struct RenderBackendVertexBuffer
 
   u32 binding;
   VertexInputRate input_rate;
+  
 } RenderBackendVertexBuffer;
 
 struct RenderBackend;
 
+DResult render_backend_create_empty_vertex_buffer(struct RenderBackend *backend, RenderBackendVertexBuffer *vertex_buffer);
 DResult render_backend_create_vertex_buffer(struct RenderBackend *backend, RenderBackendVertexBuffer *vertex_buffer, VertexBufferInfo *vertex_buffer_info);
 DResult render_backend_destroy_vertex_buffer(struct RenderBackend *backend, RenderBackendVertexBuffer *vertex_buffer);
 

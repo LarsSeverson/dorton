@@ -60,6 +60,9 @@ DResult render_backend_create_logical_device(RenderBackend *backend)
   vkGetDeviceQueue(backend->device.logical_device, indices.graphics_family, 0, &backend->device.graphics_queue);
   vkGetDeviceQueue(backend->device.logical_device, indices.present_family, 0, &backend->device.present_queue);
 
+  backend->device.graphics_family = indices.graphics_family;
+  backend->device.present_family = indices.present_family;
+
   return D_SUCCESS;
 }
 

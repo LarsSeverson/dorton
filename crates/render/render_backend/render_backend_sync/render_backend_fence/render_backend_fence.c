@@ -2,6 +2,8 @@
 
 #include "logger.h"
 
+#include "render/render_backend/render_backend.h"
+
 DResult render_backend_create_fence(RenderBackend *backend, RenderBackendFence *fence)
 {
     VkFenceCreateInfo fence_create_info = {VK_STRUCTURE_TYPE_FENCE_CREATE_INFO};

@@ -3,9 +3,9 @@
 #include "logger/logger.h"
 
 #include "./render_backend/render_backend.h"
-#include "./render_backend/render_backend_pipeline/render_backend_pipeline.h" // TEMP
-#include "./render_backend/render_backend_vertex/render_backend_vertex_lib.h" // TEMP
-#include "./render_backend/render_backend_index/render_backend_index_lib.h" // TEMP
+#include "./render_backend/render_backend_pipeline/render_backend_pipeline.h"       // TEMP
+#include "./render_backend/render_backend_vertex/render_backend_vertex_lib.h"       // TEMP
+#include "./render_backend/render_backend_index/render_backend_index_lib.h"         // TEMP
 #include "./render_backend/render_backend_render_pass/render_backend_render_pass.h" // TEMP
 
 DResult renderer_create(Renderer *renderer, RendererCreateInfo *create_info)
@@ -113,6 +113,8 @@ DResult renderer_create(Renderer *renderer, RendererCreateInfo *create_info)
   // render_backend_destroy_indices(&indices);
   // Test
 
+  render_backend_add_empty_component(&renderer->backend);
+
   return D_SUCCESS;
 }
 
@@ -127,26 +129,10 @@ DResult renderer_destroy(Renderer *renderer)
   return D_SUCCESS;
 }
 
-DResult renderer_begin_frame(Renderer *renderer, f32 delta_time)
+DResult renderer_draw(Renderer *renderer, RenderPacket render_packet)
 {
-  return render_backend_begin_frame(&renderer->backend, delta_time);
-}
-
-DResult renderer_end_frame(Renderer *renderer, f32 delta_time)
-{
-  return render_backend_end_frame(&renderer->backend, delta_time);
-}
-
-DResult renderer_draw(Renderer *renderer, RenderPacket packet)
-{
-  if (renderer_begin_frame(renderer, packet.delta_time) != D_SUCCESS)
+  if (render_backend_draw(&renderer->backend, render_packet) != D_SUCCESS)
   {
-    DERROR("Renderer unable to begin frame.");
-    return D_ERROR;
-  }
-  if (renderer_end_frame(renderer, packet.delta_time) != D_SUCCESS)
-  {
-    DERROR("Renderer unable to end frame.");
     return D_ERROR;
   }
 

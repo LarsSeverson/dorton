@@ -46,10 +46,10 @@ typedef struct CommandBufferRecordInfo
 {
     RenderBackendCommandBuffer *command_buffer;
 
-    RenderBackendPipeline pipeline;
-    RenderBackendFramebuffer framebuffer;
-    RenderBackendVertexBuffer vertex_buffer;
-    RenderBackendIndexBuffer index_buffer;
+    RenderBackendPipeline *pipeline;
+    RenderBackendFramebuffer *framebuffer;
+    RenderBackendVertexBuffer *vertex_buffer;
+    RenderBackendIndexBuffer *index_buffer;
     // TODO: Descriptor set
 
 } CommandBufferRecordInfo;

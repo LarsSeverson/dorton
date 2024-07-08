@@ -1,10 +1,9 @@
 #include "render_backend.h"
 
 #include "logger.h"
-#include "darray/darray.h"
-#include "dstring/dstring.h"
 
 #include "./utils/render_backend_utils_debug.h"
+#include "./utils/render_backend_utils_draw.h"
 
 DResult render_backend_create_instance(RenderBackend *backend)
 {
@@ -107,6 +106,13 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
 
   DINFO("  Backend swap chain created.");
 
+  if (render_backend_create_components(backend, &backend->components) != D_SUCCESS)
+  {
+    return D_FATAL;
+  }
+
+  DINFO("Backend components created.");
+
   if (render_backend_create_fences(backend, &backend->in_flight_fences, backend->swap_chain.max_frames_in_flight) != D_SUCCESS)
   {
     return D_FATAL;
@@ -163,46 +169,152 @@ DResult render_backend_destroy(RenderBackend *backend)
   return D_SUCCESS;
 }
 
-DResult render_backend_begin_frame(RenderBackend *backend, f32 delta_time)
+DResult render_backend_draw(RenderBackend *backend, RenderPacket packet)
+{
+  RenderBackendDrawPacket draw_packet = {0};
+
+  DINFO("Drawing: %d", backend->current_frame);
+
+  if (render_backend_begin_frame(backend, &draw_packet) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  if (render_backend_process_frame(backend, &draw_packet) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  if (render_backend_draw_frame(backend, &draw_packet) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  if (render_backend_end_frame(backend, &draw_packet) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  return D_SUCCESS;
+}
+
+DResult render_backend_begin_frame(RenderBackend *backend, RenderBackendDrawPacket *draw_packet)
 {
   if (render_backend_wait_for_fences(backend, &backend->in_flight_fences, backend->current_frame, 1, UINT64_MAX) != D_SUCCESS)
   {
-    DERROR("Could not begin frame.");
     return D_ERROR;
   }
 
   u32 image_index = 0;
   RenderBackendSemaphore *image_available_semaphore = semaphores_get(&backend->image_available_semaphores, backend->current_frame);
-  VkResult image_aquire_result = vkAcquireNextImageKHR(backend->device.logical_device, backend->swap_chain.swap_chain_inner, UINT64_MAX, image_available_semaphore->semaphore_inner, NULL, &image_index);
+  VkResult result = vkAcquireNextImageKHR(backend->device.logical_device, backend->swap_chain.swap_chain_inner, UINT64_MAX, image_available_semaphore->semaphore_inner, NULL, &image_index);
 
-  if (image_aquire_result == VK_ERROR_OUT_OF_DATE_KHR)
+  if (render_backend_predraw_process_result(backend, result) != D_SUCCESS)
   {
-    return render_backend_recreate_swap_chain(backend);
-  }
-  else if (image_aquire_result != VK_SUCCESS && image_aquire_result != VK_SUBOPTIMAL_KHR)
-  {
-    DERROR("Failed to get swap chain image.");
     return D_ERROR;
   }
 
-  // if (render_backend_reset_fences(backend, &backend->in_flight_fences, backend->current_frame, 1) != D_SUCCESS)
-  // {
-  //   return D_ERROR;
-  // }
+  if (render_backend_reset_fences(backend, &backend->in_flight_fences, backend->current_frame, 1) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  draw_packet->image_index = image_index;
+  draw_packet->current_frame = backend->current_frame;
+  darray_create(&draw_packet->draw_command_buffers, VkCommandBuffer);
 
   return D_SUCCESS;
 }
 
-DResult render_backend_end_frame(RenderBackend *backend, f32 delta_time)
+DResult render_backend_process_frame(RenderBackend *backend, RenderBackendDrawPacket *draw_packet)
 {
+  if (render_backend_process_components(backend, &backend->components, &draw_packet) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  RenderBackendSemaphore *image_available_semaphore = semaphores_get(&backend->image_available_semaphores, draw_packet->current_frame);
+  VkSemaphore wait_semaphores[] = {image_available_semaphore->semaphore_inner};
+
+  VkPipelineStageFlags wait_stages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+
+  RenderBackendSemaphore *render_finished_semaphore = semaphores_get(&backend->render_finished_semaphores, draw_packet->current_frame);
+  VkSemaphore signal_sempahores[] = {render_finished_semaphore->semaphore_inner};
+
+  VkSubmitInfo submit_info = {VK_STRUCTURE_TYPE_SUBMIT_INFO};
+  submit_info.waitSemaphoreCount = 1;
+  submit_info.pWaitSemaphores = wait_semaphores;
+  submit_info.pWaitDstStageMask = wait_stages;
+  submit_info.commandBufferCount = (u32)darray_size(&draw_packet->draw_command_buffers);
+  submit_info.pCommandBuffers = (VkCommandBuffer *)darray_data(&draw_packet->draw_command_buffers);
+  submit_info.signalSemaphoreCount = 1;
+  submit_info.pSignalSemaphores = signal_sempahores;
+
+  VkFence in_flight_fence = fences_get(&backend->in_flight_fences, draw_packet->current_frame)->fence_inner;
+  if (vkQueueSubmit(backend->device.graphics_queue, 1, &submit_info, in_flight_fence) != VK_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  return D_SUCCESS;
+}
+
+DResult render_backend_draw_frame(RenderBackend *backend, RenderBackendDrawPacket *draw_packet)
+{
+  RenderBackendSemaphore *render_finished_semaphore = semaphores_get(&backend->render_finished_semaphores, draw_packet->current_frame);
+  VkSemaphore signal_sempahores[] = {render_finished_semaphore->semaphore_inner};
+
+  VkSwapchainKHR swap_chains[] = {backend->swap_chain.swap_chain_inner};
+
+  VkPresentInfoKHR present_info = {VK_STRUCTURE_TYPE_PRESENT_INFO_KHR};
+  present_info.waitSemaphoreCount = 1;
+  present_info.pWaitSemaphores = signal_sempahores;
+  present_info.swapchainCount = 1;
+  present_info.pSwapchains = swap_chains;
+  present_info.pImageIndices = &draw_packet->image_index;
+
+  VkResult result = vkQueuePresentKHR(backend->device.present_queue, &present_info);
+
+  if (render_backend_postdraw_process_result(backend, result) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  return D_SUCCESS;
+}
+
+DResult render_backend_end_frame(RenderBackend *backend, RenderBackendDrawPacket *draw_packet)
+{
+  darray_destroy(&draw_packet->draw_command_buffers);
+
+  backend->current_frame = (backend->current_frame + 1) % backend->swap_chain.max_frames_in_flight;
+
+  return D_SUCCESS;
+}
+
+DResult render_backend_add_component(RenderBackend *backend, RenderBackendComponentInfo *component_info)
+{
+  if (render_backend_components_push(backend, &backend->components, component_info) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  return D_SUCCESS;
+}
+
+DResult render_backend_add_empty_component(RenderBackend *backend)
+{
+  if (render_backend_components_push_empty(backend, &backend->components) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
   return D_SUCCESS;
 }
 
 DResult render_backend_resize(RenderBackend *backend, i32 width, i32 height)
 {
-  if (render_backend_recreate_swap_chain(backend) != D_SUCCESS)
-  {
-    return D_FATAL;
-  }
+  backend->resized = true;
+
   return D_SUCCESS;
 }

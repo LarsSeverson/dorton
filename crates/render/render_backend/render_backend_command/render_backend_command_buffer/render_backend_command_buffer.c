@@ -6,12 +6,6 @@
 
 DResult render_backend_create_command_buffer(RenderBackend *backend, RenderBackendCommandBuffer *command_buffer, CommandBufferInfo *command_buffer_info)
 {
-    if (command_buffer_info->command_pool == NULL)
-    {
-        DERROR("Could not create command buffer. Command pool was NULL.");
-        return D_ERROR;
-    }
-
     command_buffer->state = COMMAND_BUFFER_STATE_INVALID;
 
     VkCommandBufferAllocateInfo command_buffer_alloc_info = {VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO};
@@ -92,8 +86,10 @@ DResult command_buffer_submit(RenderBackendCommandBuffer *command_buffer)
 
 DResult command_buffer_reset(RenderBackendCommandBuffer *command_buffer)
 {
-    // TODO: Reset the buffer
-    command_buffer->state = COMMAND_BUFFER_STATE_INVALID;
+    vkResetCommandBuffer(command_buffer->command_buffer_inner, 0);
+    
+    command_buffer->state = COMMAND_BUFFER_STATE_INITIAL;
+
     return D_SUCCESS;
 }
 
@@ -151,8 +147,8 @@ DResult render_backend_record_command_buffer(RenderBackend *backend, CommandBuff
     VkCommandBuffer command_buffer = command_buffer;
 
     VkRenderPassBeginInfo render_pass_info = {VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO};
-    render_pass_info.renderPass = record_info->pipeline.render_pass.render_pass_inner;
-    render_pass_info.framebuffer = record_info->framebuffer.framebuffer_inner;
+    render_pass_info.renderPass = record_info->pipeline->render_pass.render_pass_inner;
+    render_pass_info.framebuffer = record_info->framebuffer->framebuffer_inner;
     render_pass_info.renderArea.offset = (VkOffset2D){0, 0}; // TODO: Configurable
     render_pass_info.renderArea.extent = backend->swap_chain.extent;
     VkClearValue clear_color = {0.f, 0.f, 0.f, 1.f}; // TODO: Configurable
@@ -162,18 +158,18 @@ DResult render_backend_record_command_buffer(RenderBackend *backend, CommandBuff
     vkCmdBeginRenderPass(command_buffer, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 
     // TODO: Pipeline bind point?
-    vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, record_info->pipeline.pipeline_inner);
+    vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, record_info->pipeline->pipeline_inner);
 
-    vkCmdSetViewport(command_buffer, 0, 1, &record_info->pipeline.viewport);
-    vkCmdSetScissor(command_buffer, 0, 1, &record_info->pipeline.scissor);
+    vkCmdSetViewport(command_buffer, 0, 1, &record_info->pipeline->viewport);
+    vkCmdSetScissor(command_buffer, 0, 1, &record_info->pipeline->scissor);
 
     // TODO: Vertex buffers
-    VkBuffer vertex_buffers[] = {record_info->vertex_buffer.buffer.buffer_inner};
-    VkDeviceSize vertex_buffer_offsets[] = {record_info->vertex_buffer.buffer.offset};
+    VkBuffer vertex_buffers[] = {record_info->vertex_buffer->buffer.buffer_inner};
+    VkDeviceSize vertex_buffer_offsets[] = {record_info->vertex_buffer->buffer.offset};
     vkCmdBindVertexBuffers(command_buffer, 0, 1, vertex_buffers, vertex_buffer_offsets);
 
-    VkBuffer index_buffer = record_info->index_buffer.buffer.buffer_inner;
-    VkDeviceSize index_buffer_offset = record_info->index_buffer.buffer.offset;
+    VkBuffer index_buffer = record_info->index_buffer->buffer.buffer_inner;
+    VkDeviceSize index_buffer_offset = record_info->index_buffer->buffer.offset;
     // TODO: VkIndexType index_buffer_type = record_info->index_buffer.index_type;
     vkCmdBindIndexBuffer(command_buffer, index_buffer, index_buffer_offset, VK_INDEX_TYPE_UINT16);
 

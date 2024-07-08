@@ -5,6 +5,5 @@
 typedef struct RenderPacket
 {
   f32 delta_time;
+  
 } RenderPacket;
-
-

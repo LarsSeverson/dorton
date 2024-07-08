@@ -52,11 +52,7 @@ DResult render_backend_wait_for_fences(RenderBackend *backend, RenderBackendFenc
     for (u32 i = index; i < count; ++i)
     {
         RenderBackendFence *fence = (RenderBackendFence *)darray_get(&fences->fences_inner, i);
-        if (render_backend_wait_for_fence(backend, fence, timeout_ns) != D_SUCCESS)
-        {
-            DERROR("Could not wait for fences.");
-            return D_ERROR;
-        }
+        while(render_backend_wait_for_fence(backend, fence, timeout_ns) == false);
     }
 
     return D_SUCCESS;
@@ -82,4 +78,11 @@ DResult render_backend_reset_fences(RenderBackend *backend, RenderBackendFences 
     }
 
     return D_SUCCESS;
+}
+
+RenderBackendFence *fences_get(RenderBackendFences *fences, u32 index)
+{
+    RenderBackendFence *fence = (RenderBackendFence *)darray_get(&fences->fences_inner, index);
+
+    return fence;
 }

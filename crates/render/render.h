@@ -2,8 +2,7 @@
 
 #include "window/window.h"
 
-#include "render_types.h"
-
+#include "./render_core.h"
 #include "./render_backend/render_backend.h"
 
 typedef struct RendererCreateInfo

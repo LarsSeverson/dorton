@@ -14,7 +14,6 @@ DResult render_backend_create_framebuffer(RenderBackend *backend, RenderBackendF
     framebuffer_create_info.height = framebuffer_info->height;
     framebuffer_create_info.layers = 1;
 
-
     if (vkCreateFramebuffer(backend->device.logical_device, &framebuffer_create_info, backend->vulkan_context.allocator, &framebuffer->framebuffer_inner) != VK_SUCCESS)
     {
         DERROR("Unable to create framebuffer.");
@@ -29,6 +28,6 @@ DResult render_backend_create_framebuffer(RenderBackend *backend, RenderBackendF
 DResult render_backend_destroy_framebuffer(RenderBackend *backend, RenderBackendFramebuffer *framebuffer)
 {
     vkDestroyFramebuffer(backend->device.logical_device, framebuffer->framebuffer_inner, backend->vulkan_context.allocator);
-    
+
     return D_SUCCESS;
 }

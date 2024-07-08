@@ -62,6 +62,12 @@ DResult update(App *app, f32 delta_time)
 
 DResult render(App *app, f32 delta_time)
 {
+  RenderPacket render_packet = {delta_time};
+  if (renderer_draw(&app->renderer, render_packet) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
   return D_SUCCESS;
 }
 

@@ -15,5 +15,7 @@ typedef struct RenderBackendRenderPass
 
 struct RenderBackend;
 
+RenderPassInfo create_default_render_pass_info(struct RenderBackend *backend);
+
 DResult render_backend_create_render_pass(struct RenderBackend *backend, RenderBackendRenderPass *render_pass, RenderPassInfo *render_pass_info);
 DResult render_backend_destroy_render_pass(struct RenderBackend *backend, RenderBackendRenderPass *render_pass);

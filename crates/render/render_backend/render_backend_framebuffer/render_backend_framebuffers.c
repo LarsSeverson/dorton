@@ -7,7 +7,7 @@
 
 DResult render_backend_create_framebuffers(RenderBackend *backend, RenderBackendFramebuffers *framebuffers, FramebuffersInfo *framebuffers_info)
 {
-  u32 size = backend->swap_chain.images_count;
+  u32 size = backend->swap_chain.max_frames_in_flight;
 
   darray_reserve(&framebuffers->framebuffers_inner, RenderBackendFramebuffer, size);
 
@@ -33,6 +33,7 @@ DResult render_backend_create_framebuffers(RenderBackend *backend, RenderBackend
   }
 
   framebuffers->size = size;
+  framebuffers->render_pass = framebuffers_info->render_pass;
 
   return D_SUCCESS;
 }
@@ -52,4 +53,28 @@ DResult render_backend_destroy_framebuffers(RenderBackend *backend, RenderBacken
   darray_destroy(&framebuffers->framebuffers_inner);
 
   return D_SUCCESS;
+}
+
+DResult render_backend_recreate_framebuffers(RenderBackend *backend, RenderBackendFramebuffers *framebuffers)
+{
+  if (render_backend_destroy_framebuffers(backend, framebuffers) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  FramebuffersInfo framebuffers_info = {0};
+  framebuffers_info.render_pass = framebuffers->render_pass;
+
+  if (render_backend_create_framebuffers(backend, framebuffers, &framebuffers_info) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  return D_SUCCESS;
+}
+
+RenderBackendFramebuffer *framebuffers_get(RenderBackendFramebuffers *framebuffers, u32 index)
+{
+  RenderBackendFramebuffer *framebuffer = (RenderBackendFramebuffer *)darray_get(&framebuffers->framebuffers_inner, index);
+  return framebuffer;
 }

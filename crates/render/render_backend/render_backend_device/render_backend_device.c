@@ -1,10 +1,12 @@
 #include "render_backend_device.h"
-#include "render_backend_physical_device.h"
-#include "render_backend_logical_device.h"
 
 #include "logger.h"
 
-DResult render_backend_create_device(struct RenderBackend *backend)
+#include "render/render_backend/render_backend.h"
+#include "./render_backend_physical_device.h"
+#include "./render_backend_logical_device.h"
+
+DResult render_backend_create_device(RenderBackend *backend)
 {
   if (render_backend_pick_physical_device(backend) != D_SUCCESS)
   {
@@ -19,7 +21,7 @@ DResult render_backend_create_device(struct RenderBackend *backend)
   return D_SUCCESS;
 }
 
-DResult render_backend_destroy_device(struct RenderBackend *backend)
+DResult render_backend_destroy_device(RenderBackend *backend)
 {
   render_backend_destroy_logical_device(backend);
   return D_SUCCESS;

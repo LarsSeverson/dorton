@@ -5,6 +5,15 @@
 #include "render/render_backend/render_backend.h"
 #include "render/render_backend/render_backend_command/render_backend_command_buffer/render_backend_command_buffer.h"
 
+CommandPoolInfo create_default_command_pool_info(RenderBackend *backend)
+{
+    CommandPoolInfo command_pool_info = {0};
+    command_pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    command_pool_info.queue_family_index = backend->device.graphics_family;
+
+    return command_pool_info;
+}
+
 DResult render_backend_create_command_pool(RenderBackend *backend, RenderBackendCommandPool *command_pool, CommandPoolInfo *command_pool_info)
 {
     VkCommandPoolCreateInfo command_pool_create_info = {VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO};

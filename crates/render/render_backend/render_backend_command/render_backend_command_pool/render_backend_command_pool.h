@@ -20,5 +20,7 @@ typedef struct RenderBackendCommandPool
 
 struct RenderBackend;
 
+CommandPoolInfo create_default_command_pool_info(struct RenderBackend *backend);
+
 DResult render_backend_create_command_pool(struct RenderBackend *backend, RenderBackendCommandPool *command_pool, CommandPoolInfo *command_pool_info);
 DResult render_backend_destroy_command_pool(struct RenderBackend *backend, RenderBackendCommandPool *command_pool);

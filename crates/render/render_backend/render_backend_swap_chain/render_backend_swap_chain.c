@@ -8,8 +8,6 @@
 #include "render/render_backend/render_backend_device/render_backend_physical_device.h"
 #include "render/render_backend/utils/render_backend_utils.h"
 
-#define MAX_FRAMES_IN_FLIGHT 2
-
 DResult swap_chain_image_views_create(RenderBackendSwapChain *swap_chain, VkDevice logical_device, VkAllocationCallbacks *allocator)
 {
     darray_reserve(&swap_chain->images_views, VkImageView, darray_size(&swap_chain->images));
@@ -116,7 +114,7 @@ DResult render_backend_create_swap_chain(RenderBackend *backend)
     backend->swap_chain.images_count = image_count;
     backend->swap_chain.image_format = swap_chain_surface_format.format;
     backend->swap_chain.extent = swap_chain_extent;
-    backend->swap_chain.max_frames_in_flight = MAX_FRAMES_IN_FLIGHT;
+    backend->swap_chain.max_frames_in_flight = image_count;
 
     return swap_chain_image_views_create(&backend->swap_chain, backend->device.logical_device, backend->vulkan_context.allocator);
 }

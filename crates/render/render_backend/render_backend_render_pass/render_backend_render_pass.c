@@ -4,6 +4,12 @@
 
 #include "render/render_backend/render_backend.h"
 
+RenderPassInfo create_default_render_pass_info(RenderBackend *backend)
+{
+  RenderPassInfo render_pass_info = {0};
+  return render_pass_info;
+}
+
 DResult render_backend_create_render_pass(RenderBackend *backend, RenderBackendRenderPass *render_pass, RenderPassInfo *render_pass_info)
 {
   VkAttachmentDescription color_attachment = {0};
