@@ -6,7 +6,7 @@
 
 RenderPassInfo create_default_render_pass_info(RenderBackend *backend)
 {
-  RenderPassInfo render_pass_info = {0};
+  RenderPassInfo render_pass_info = {};
   return render_pass_info;
 }
 

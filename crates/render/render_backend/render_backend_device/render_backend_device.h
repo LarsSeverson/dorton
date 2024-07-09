@@ -14,6 +14,9 @@ typedef struct RenderBackendDevice
   u32 present_family;
   VkQueue present_queue;
 
+  u32 transfer_family;
+  VkQueue transfer_queue;
+
   RenderBackendCommandPool graphics_command_pool;
 
 } RenderBackendDevice;

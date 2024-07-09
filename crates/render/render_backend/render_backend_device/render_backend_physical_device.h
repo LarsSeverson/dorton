@@ -7,9 +7,12 @@ typedef struct QueueFamilyIndices
 {
   u32 graphics_family;
   u32 present_family;
+  u32 transfer_family;
 
-  u8 graphics_has_value;
-  u8 present_has_value;
+  dbool graphics_has_value;
+  dbool present_has_value;
+  dbool transfer_has_value;
+  
 } QueueFamilyIndices;
 
 DResult render_backend_pick_physical_device(RenderBackend *backend);

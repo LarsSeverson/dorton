@@ -97,6 +97,7 @@ DResult command_buffer_begin_lazy(RenderBackend *backend, RenderBackendCommandBu
 {
     CommandBufferInfo command_buffer_info = {COMMAND_BUFFER_TYPE_PRIMARY};
     command_buffer_info.use = COMMAND_BUFFER_USE_SINGLE;
+    command_buffer_info.command_pool = &backend->transfer_command_pool;
 
     if (render_backend_create_command_buffer(backend, command_buffer, &command_buffer_info) != D_SUCCESS)
     {
@@ -144,7 +145,7 @@ DResult render_backend_record_command_buffer(RenderBackend *backend, CommandBuff
         return D_ERROR;
     }
 
-    VkCommandBuffer command_buffer = command_buffer;
+    VkCommandBuffer command_buffer = record_info->command_buffer->command_buffer_inner;
 
     VkRenderPassBeginInfo render_pass_info = {VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO};
     render_pass_info.renderPass = record_info->pipeline->render_pass.render_pass_inner;
@@ -173,7 +174,7 @@ DResult render_backend_record_command_buffer(RenderBackend *backend, CommandBuff
     // TODO: VkIndexType index_buffer_type = record_info->index_buffer.index_type;
     vkCmdBindIndexBuffer(command_buffer, index_buffer, index_buffer_offset, VK_INDEX_TYPE_UINT16);
 
-    u32 index_count = render_backend_index_count(&record_info->index_buffer);
+    u32 index_count = render_backend_index_count(record_info->index_buffer);
     // TODO: Draw indexed function parameters configurable
     vkCmdDrawIndexed(command_buffer, index_count, 1, 0, 0, 0);
 

@@ -4,6 +4,7 @@
 
 #include "render/render_backend/render_backend_vertex/render_backend_vertices.h"
 #include "render/render_backend/render_backend_buffer/render_backend_buffer.h"
+#include "render/render_backend/render_backend_command/render_backend_command_pool/render_backend_command_pool.h"
 
 typedef struct VertexBufferInfo
 {

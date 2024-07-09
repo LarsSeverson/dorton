@@ -25,9 +25,9 @@ DResult render_backend_destroy_components(RenderBackend *backend, RenderBackendC
       RenderBackendComponent *component = (RenderBackendComponent *)darray_get(&components->components, i);
       render_backend_destroy_component(backend, component);
     }
-
-    darray_destroy(&components->components);
   }
+
+  darray_destroy(&components->components);
 
   *components = (RenderBackendComponents){0};
 
@@ -110,8 +110,10 @@ DResult render_backend_process_components(RenderBackend *backend, RenderBackendC
   if (size == 0)
   {
     DINFO("Cannot process components. Components' size was 0.");
-    return D_IGNORED;
+    return D_ERROR;
   }
+
+  DResult result;
 
   for (u32 i = 0; i < size; ++i)
   {
@@ -123,7 +125,7 @@ DResult render_backend_process_components(RenderBackend *backend, RenderBackendC
     }
   }
 
-  return D_SUCCESS;
+  return result;
 }
 
 DResult render_backend_components_recreate_framebuffers(RenderBackend *backend, RenderBackendComponents *components)
@@ -133,6 +135,7 @@ DResult render_backend_components_recreate_framebuffers(RenderBackend *backend, 
   for (u32 i = 0; i < size; ++i)
   {
     RenderBackendComponent *component = (RenderBackendComponent *)darray_get(&components->components, i);
+
     if (render_backend_recreate_component_framebuffers(backend, component) != D_SUCCESS)
     {
       return D_ERROR;

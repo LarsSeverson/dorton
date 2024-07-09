@@ -8,6 +8,8 @@ typedef struct RenderBackendIndices
 {
     // RenderBackendIndex
     DArray indices_inner;
+    u32 size;
+    
 } RenderBackendIndices;
 
 DResult render_backend_create_indices(RenderBackendIndices *indices, RenderBackendIndex *indices_data, u32 indices_data_size);

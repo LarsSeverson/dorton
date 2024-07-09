@@ -35,6 +35,7 @@ DResult render_backend_destroy_component(RenderBackend *backend, RenderBackendCo
   render_backend_destroy_pipeline(backend, &component->pipeline);
   render_backend_destroy_index_buffer(backend, &component->index_buffer);
   render_backend_destroy_vertex_buffer(backend, &component->vertex_buffer);
+  render_backend_destroy_command_pool(backend, &component->command_pool);
   render_backend_destroy_command_buffers(backend, &component->command_buffers);
   render_backend_destroy_framebuffers(backend, &component->framebuffers);
   render_backend_destroy_render_pass(backend, &component->render_pass);
@@ -42,8 +43,32 @@ DResult render_backend_destroy_component(RenderBackend *backend, RenderBackendCo
   return D_SUCCESS;
 }
 
+DResult render_backend_component_set_vertices(RenderBackendComponent *component, RenderBackendVertices *vertices)
+{
+  return D_SUCCESS;
+}
+
+DResult render_backend_component_set_indices(RenderBackendComponent *component, RenderBackendIndices *indices)
+{
+  return D_SUCCESS;
+}
+
+DResult render_backend_component_set_pipeline(RenderBackendComponent *component, RenderBackendPipeline *pipeline)
+{
+  component->pipeline = *pipeline;
+
+  return D_SUCCESS;
+}
+
 DResult render_backend_process_component(RenderBackend *backend, RenderBackendComponent *component, RenderBackendDrawPacket *draw_packet)
 {
+  if (component->pipeline.pipeline_inner == 0x0)
+  {
+    // TODO: Ignore the draw call?
+    DERROR("Component pipeline not initialized.");
+    return D_ERROR;
+  }
+
   CommandBuffersProcessInfo process_info = {0};
   process_info.pipeline = &component->pipeline;
   process_info.framebuffer = framebuffers_get(&component->framebuffers, draw_packet->image_index);

@@ -11,6 +11,7 @@
 #include "./render_backend_framebuffer/render_backend_framebuffers.h"
 #include "./render_backend_sync/render_backend_fence/render_backend_fences.h"
 #include "./render_backend_sync/render_backend_semaphore/render_backend_semaphores.h"
+#include "./render_backend_command/render_backend_command_pool/render_backend_command_pool.h"
 
 typedef struct RenderBackendCreateInfo
 {
@@ -34,6 +35,8 @@ typedef struct RenderBackend
 
   u32 current_frame;
   dbool resized;
+
+  RenderBackendCommandPool transfer_command_pool;
 
   RenderBackendComponents components;
 

@@ -132,6 +132,17 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
 
   DINFO("  Backend semaphores created.");
 
+  CommandPoolInfo transfer_command_pool_info = {0};
+  transfer_command_pool_info.queue_family_index = backend->device.transfer_family;
+  transfer_command_pool_info.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
+
+  if (render_backend_create_command_pool(backend, &backend->transfer_command_pool, &transfer_command_pool_info) != D_SUCCESS)
+  {
+    return D_FATAL;
+  }
+
+  DINFO("  Backend transfer command pool created.");
+
   backend->current_frame = 0;
 
   DINFO("Render backend created.");
@@ -146,6 +157,11 @@ DResult render_backend_destroy(RenderBackend *backend)
     PFN_vkDestroyDebugUtilsMessengerEXT vk_debugger_destroy_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(backend->vulkan_context.instance, "vkDestroyDebugUtilsMessengerEXT");
     vk_debugger_destroy_func(backend->vulkan_context.instance, backend->vulkan_context.debug_messenger, backend->vulkan_context.allocator);
   }
+
+  render_backend_destroy_components(backend, &backend->components);
+
+  // Transfer command pool
+  render_backend_destroy_command_pool(backend, &backend->transfer_command_pool);
 
   // Semaphores
   render_backend_destroy_semaphores(backend, &backend->image_available_semaphores);
@@ -177,25 +193,30 @@ DResult render_backend_draw(RenderBackend *backend, RenderPacket packet)
 
   if (render_backend_begin_frame(backend, &draw_packet) != D_SUCCESS)
   {
-    return D_ERROR;
+    goto render_backend_draw_error;
   }
 
   if (render_backend_process_frame(backend, &draw_packet) != D_SUCCESS)
   {
-    return D_ERROR;
+    goto render_backend_draw_error;
   }
 
   if (render_backend_draw_frame(backend, &draw_packet) != D_SUCCESS)
   {
-    return D_ERROR;
+    goto render_backend_draw_error;
   }
 
   if (render_backend_end_frame(backend, &draw_packet) != D_SUCCESS)
   {
-    return D_ERROR;
+    goto render_backend_draw_error;
   }
 
   return D_SUCCESS;
+
+render_backend_draw_error:
+  darray_destroy(&draw_packet.draw_command_buffers);
+
+  return D_ERROR;
 }
 
 DResult render_backend_begin_frame(RenderBackend *backend, RenderBackendDrawPacket *draw_packet)
@@ -228,9 +249,16 @@ DResult render_backend_begin_frame(RenderBackend *backend, RenderBackendDrawPack
 
 DResult render_backend_process_frame(RenderBackend *backend, RenderBackendDrawPacket *draw_packet)
 {
-  if (render_backend_process_components(backend, &backend->components, &draw_packet) != D_SUCCESS)
+  if (render_backend_process_components(backend, &backend->components, draw_packet) != D_SUCCESS)
   {
     return D_ERROR;
+  }
+
+  u32 command_buffer_count = (u32)darray_size(&draw_packet->draw_command_buffers);
+
+  if (command_buffer_count == 0)
+  {
+    return D_IGNORED;
   }
 
   RenderBackendSemaphore *image_available_semaphore = semaphores_get(&backend->image_available_semaphores, draw_packet->current_frame);
@@ -245,7 +273,7 @@ DResult render_backend_process_frame(RenderBackend *backend, RenderBackendDrawPa
   submit_info.waitSemaphoreCount = 1;
   submit_info.pWaitSemaphores = wait_semaphores;
   submit_info.pWaitDstStageMask = wait_stages;
-  submit_info.commandBufferCount = (u32)darray_size(&draw_packet->draw_command_buffers);
+  submit_info.commandBufferCount = command_buffer_count;
   submit_info.pCommandBuffers = (VkCommandBuffer *)darray_data(&draw_packet->draw_command_buffers);
   submit_info.signalSemaphoreCount = 1;
   submit_info.pSignalSemaphores = signal_sempahores;

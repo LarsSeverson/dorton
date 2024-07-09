@@ -106,8 +106,7 @@ DResult render_backend_create_index_buffer(RenderBackend *backend, RenderBackend
 DResult render_backend_destroy_index_buffer(RenderBackend *backend, RenderBackendIndexBuffer *index_buffer)
 {
     render_backend_destroy_buffer(backend, &index_buffer->buffer);
-
-    darray_destroy(&index_buffer->indices);
+    render_backend_destroy_indices(&index_buffer->indices);
 
     *index_buffer = (RenderBackendIndexBuffer){0};
 
@@ -116,5 +115,5 @@ DResult render_backend_destroy_index_buffer(RenderBackend *backend, RenderBacken
 
 u32 render_backend_index_count(RenderBackendIndexBuffer *index_buffer)
 {
-    return (u32)darray_size(&index_buffer->indices);
+    return render_backend_indices_size(&index_buffer->indices);
 }

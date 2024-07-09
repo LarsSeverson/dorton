@@ -24,19 +24,19 @@ typedef struct PipelineInfo
   DArray attribute_descriptions;
 
   VkPrimitiveTopology topology;
-  
+
   VkViewport viewport; // TODO: Multiple viewports
-  VkScissor scissor;    // TODO: Multiple scissors
+  VkScissor scissor;   // TODO: Multiple scissors
 
   RenderBackendRasterizerInfo rasterizer_info;
   RenderBackendMultisampleInfo multisample_info;
   RenderBackendColorBlendInfo color_blend_info;
-  
+
   // VkDynamicState
   DArray dynamic_states;
 
   RenderBackendPipelineLayout pipeline_layout;
-  
+
   RenderBackendRenderPass render_pass;
 
 } PipelineInfo;
@@ -49,7 +49,7 @@ typedef struct RenderBackendPipeline
   RenderBackendRenderPass render_pass;
   VkViewport viewport;
   VkScissor scissor;
-  
+
 } RenderBackendPipeline;
 
 struct RenderBackend;

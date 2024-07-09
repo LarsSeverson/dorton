@@ -45,6 +45,10 @@ struct RenderBackend;
 DResult render_backend_create_component(struct RenderBackend *backend, RenderBackendComponent *component, RenderBackendComponentInfo *component_info);
 DResult render_backend_destroy_component(struct RenderBackend *backend, RenderBackendComponent *component);
 
+DResult render_backend_component_set_vertices(RenderBackendComponent *component, RenderBackendVertices *vertices);
+DResult render_backend_component_set_indices(RenderBackendComponent *component, RenderBackendIndices *indices);
+DResult render_backend_component_set_pipeline(RenderBackendComponent *component, RenderBackendPipeline *pipeline);
+
 DResult render_backend_process_component(struct RenderBackend *backend, RenderBackendComponent *component, RenderBackendDrawPacket *draw_packet);
 
 DResult render_backend_recreate_component_framebuffers(struct RenderBackend *backend, RenderBackendComponent *component);

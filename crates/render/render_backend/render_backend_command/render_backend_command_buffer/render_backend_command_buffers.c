@@ -18,7 +18,7 @@ DResult render_backend_create_command_buffers(RenderBackend *backend, RenderBack
 
   darray_reserve(&command_buffers->command_buffers, RenderBackendCommandBuffer, size);
 
-  CommandBufferInfo command_buffer_info = {COMMAND_BUFFER_USE_DEFAULT};
+  CommandBufferInfo command_buffer_info = {COMMAND_BUFFER_TYPE_PRIMARY};
   command_buffer_info.command_pool = command_buffers_info->command_pool;
 
   for (u32 i = 0; i < size; ++i)

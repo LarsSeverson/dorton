@@ -69,6 +69,7 @@ DResult render_backend_copy_buffer(RenderBackend *backend, RenderBackendBuffer *
     return D_ERROR;
   }
 
+
   VkBufferCopy copy_region = {0};
   copy_region.size = size;
   vkCmdCopyBuffer(command_buffer.command_buffer_inner, source->buffer_inner, destination->buffer_inner, 1, &copy_region);

@@ -31,7 +31,7 @@ DResult render_backend_create_empty_vertex_buffer(RenderBackend *backend, Render
 
   void *data;
   vkMapMemory(backend->device.logical_device, staging_buffer.memory, 0, vertex_buffer_size, 0, &data);
-  memcpy(data, 0, (size_t)vertex_buffer_size);
+  memset(data, 0, (size_t)vertex_buffer_size);
   vkUnmapMemory(backend->device.logical_device, staging_buffer.memory);
 
   BufferInfo vertex_buffer_create_info = {VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT};

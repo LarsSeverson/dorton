@@ -7,7 +7,7 @@
 DResult render_backend_create_framebuffer(RenderBackend *backend, RenderBackendFramebuffer *framebuffer, FramebufferInfo *framebuffer_info)
 {
     VkFramebufferCreateInfo framebuffer_create_info = {VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO};
-    framebuffer_create_info.renderPass = framebuffer_info->render_pass;
+    framebuffer_create_info.renderPass = *framebuffer_info->render_pass;
     framebuffer_create_info.attachmentCount = framebuffer_info->attachment_count;
     framebuffer_create_info.pAttachments = framebuffer_info->attachments;
     framebuffer_create_info.width = framebuffer_info->width;

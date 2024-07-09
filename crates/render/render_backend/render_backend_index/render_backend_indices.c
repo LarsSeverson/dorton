@@ -18,6 +18,8 @@ DResult render_backend_create_indices(RenderBackendIndices *indices, RenderBacke
         indices_raw_data[i] = indices_data[i];
     }
 
+    indices->size = indices_data_size;
+
     return D_SUCCESS;
 }
 
@@ -32,7 +34,8 @@ DResult render_backend_destroy_indices(RenderBackendIndices *indices)
 DResult render_backend_indices_push(RenderBackendIndices *indices, RenderBackendIndex index)
 {
     darray_push(&indices->indices_inner, index);
-    
+    indices->size = (u32)darray_size(&indices->indices_inner);
+
     return D_SUCCESS;
 }
 
@@ -48,5 +51,5 @@ RenderBackendIndex *render_backend_indices_data(RenderBackendIndices *indices)
 
 u32 render_backend_indices_size(RenderBackendIndices *indices)
 {
-    return darray_size(&indices->indices_inner);
+    return indices->size;
 }

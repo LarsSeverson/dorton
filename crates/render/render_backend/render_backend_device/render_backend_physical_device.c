@@ -64,6 +64,7 @@ DResult find_queue_families(QueueFamilyIndices *indices, const VkPhysicalDevice 
   for (u32 i = 0; i < queue_family_count; ++i)
   {
     VkQueueFamilyProperties *queue_family = (VkQueueFamilyProperties *)darray_get(&queue_families, i);
+
     if (queue_family->queueFlags & VK_QUEUE_GRAPHICS_BIT)
     {
       indices->graphics_family = index;
@@ -77,6 +78,12 @@ DResult find_queue_families(QueueFamilyIndices *indices, const VkPhysicalDevice 
     {
       indices->present_family = index;
       indices->present_has_value = true;
+    }
+
+    if (queue_family->queueFlags & VK_QUEUE_TRANSFER_BIT)
+    {
+      indices->transfer_family = index;
+      indices->transfer_has_value = true;
     }
 
     if (queue_family_indices_is_complete(indices))
@@ -120,7 +127,7 @@ u8 is_physical_device_suitable(const VkPhysicalDevice physical_device, RenderBac
   return queue_family_indices_is_complete(&indices) && extensions_supported && swap_chain_adequate;
 }
 
-DResult render_backend_pick_physical_device(struct RenderBackend *backend)
+DResult render_backend_pick_physical_device(RenderBackend *backend)
 {
   u32 physical_device_count = 0;
   vkEnumeratePhysicalDevices(backend->vulkan_context.instance, &physical_device_count, NULL);
@@ -158,5 +165,5 @@ DResult render_backend_pick_physical_device(struct RenderBackend *backend)
 
 u8 queue_family_indices_is_complete(QueueFamilyIndices *indices)
 {
-  return indices->graphics_has_value && indices->present_has_value;
+  return indices->graphics_has_value && indices->present_has_value && indices->transfer_has_value;
 }

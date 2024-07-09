@@ -22,8 +22,8 @@ typedef struct RenderBackendCommandBuffer
 {
     VkCommandBuffer command_buffer_inner;
 
-    CommandBufferState state;
     CommandBufferType type;
+    CommandBufferState state;
     CommandBufferUse use;
 
 } RenderBackendCommandBuffer;
