@@ -27,28 +27,6 @@ DResult render_backend_destroy_shaders(RenderBackend *backend, RenderBackendShad
     return D_SUCCESS;
 }
 
-// ShaderInfo vert_shader_info = {SHADER_TYPE_VERTEX};
-// vert_shader_info.main = "main";
-// vert_shader_info.src = "shader";
-
-// RenderBackendShader vert_shader = {0};
-// if (render_backend_shaders_push(backend, shaders, &vert_shader, &vert_shader_info) != D_SUCCESS)
-// {
-//     DFATAL("Could not create backend shaders.");
-//     return D_FATAL;
-// }
-
-// ShaderInfo frag_shader_info = {SHADER_TYPE_FRAGMENT};
-// frag_shader_info.main = "main";
-// frag_shader_info.src = "shader";
-
-// RenderBackendShader frag_shader = {0};
-// if (render_backend_shaders_push(backend, shaders, &frag_shader, &frag_shader_info) != D_SUCCESS)
-// {
-//     DFATAL("Could not create backend shaders.");
-//     return D_FATAL;
-// }
-
 DResult render_backend_shaders_push(RenderBackend *backend, RenderBackendShaders *shaders, RenderBackendShader *shader, ShaderInfo *shader_info)
 {
     if (render_backend_create_shader(backend, shader, shader_info) != VK_SUCCESS)
@@ -59,6 +37,35 @@ DResult render_backend_shaders_push(RenderBackend *backend, RenderBackendShaders
 
     darray_push(&shaders->shaders_inner, *shader);
     darray_push(&shaders->shader_stages, shader->shader_stage);
+
+    return D_SUCCESS;
+}
+
+DResult render_backend_create_default_shaders(RenderBackend *backend, RenderBackendShaders *shaders)
+{
+    render_backend_create_shaders(backend, shaders);
+
+    ShaderInfo vert_shader_info = {SHADER_TYPE_VERTEX};
+    vert_shader_info.main = "main";
+    vert_shader_info.src = "default";
+
+    RenderBackendShader vert_shader = {0};
+    if (render_backend_shaders_push(backend, shaders, &vert_shader, &vert_shader_info) != D_SUCCESS)
+    {
+        DFATAL("Could not create backend shaders.");
+        return D_FATAL;
+    }
+
+    ShaderInfo frag_shader_info = {SHADER_TYPE_FRAGMENT};
+    frag_shader_info.main = "main";
+    frag_shader_info.src = "default";
+
+    RenderBackendShader frag_shader = {0};
+    if (render_backend_shaders_push(backend, shaders, &frag_shader, &frag_shader_info) != D_SUCCESS)
+    {
+        DFATAL("Could not create backend shaders.");
+        return D_FATAL;
+    }
 
     return D_SUCCESS;
 }

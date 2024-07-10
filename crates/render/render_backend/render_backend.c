@@ -152,6 +152,8 @@ DResult render_backend_create(RenderBackend *backend, RenderBackendCreateInfo *c
 
 DResult render_backend_destroy(RenderBackend *backend)
 {
+  vkDeviceWaitIdle(backend->device.logical_device);
+
   if (backend->vulkan_context.debug_messenger)
   {
     PFN_vkDestroyDebugUtilsMessengerEXT vk_debugger_destroy_func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(backend->vulkan_context.instance, "vkDestroyDebugUtilsMessengerEXT");
@@ -193,27 +195,32 @@ DResult render_backend_draw(RenderBackend *backend, RenderPacket packet)
 
   if (render_backend_begin_frame(backend, &draw_packet) != D_SUCCESS)
   {
+    DERROR("Error beginning frame.");
     goto render_backend_draw_error;
   }
 
   if (render_backend_process_frame(backend, &draw_packet) != D_SUCCESS)
   {
+    DERROR("Error processing frame.");
     goto render_backend_draw_error;
   }
 
   if (render_backend_draw_frame(backend, &draw_packet) != D_SUCCESS)
   {
+    DERROR("Error drawing frame.");
     goto render_backend_draw_error;
   }
 
   if (render_backend_end_frame(backend, &draw_packet) != D_SUCCESS)
   {
+    DERROR("Error ending frame.");
     goto render_backend_draw_error;
   }
 
   return D_SUCCESS;
 
 render_backend_draw_error:
+
   darray_destroy(&draw_packet.draw_command_buffers);
 
   return D_ERROR;
@@ -251,6 +258,7 @@ DResult render_backend_process_frame(RenderBackend *backend, RenderBackendDrawPa
 {
   if (render_backend_process_components(backend, &backend->components, draw_packet) != D_SUCCESS)
   {
+    DERROR("Error processing components.");
     return D_ERROR;
   }
 
@@ -258,6 +266,7 @@ DResult render_backend_process_frame(RenderBackend *backend, RenderBackendDrawPa
 
   if (command_buffer_count == 0)
   {
+    DWARN("Command buffer count is 0.");
     return D_IGNORED;
   }
 
@@ -281,6 +290,7 @@ DResult render_backend_process_frame(RenderBackend *backend, RenderBackendDrawPa
   VkFence in_flight_fence = fences_get(&backend->in_flight_fences, draw_packet->current_frame)->fence_inner;
   if (vkQueueSubmit(backend->device.graphics_queue, 1, &submit_info, in_flight_fence) != VK_SUCCESS)
   {
+    DERROR("Error submitting queue.");
     return D_ERROR;
   }
 

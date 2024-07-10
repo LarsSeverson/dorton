@@ -1,22 +1,26 @@
-==19730== Memcheck, a memory error detector
-==19730== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==19730== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
-==19730== Command: ../../bin/dorton
-==19730== Parent PID: 19728
-==19730== 
-==19730== 
-==19730== HEAP SUMMARY:
-==19730==     in use at exit: 289,387 bytes in 3,076 blocks
-==19730==   total heap usage: 506,247 allocs, 499,051 frees, 238,246,921 bytes allocated
-==19730== 
-==19730== LEAK SUMMARY:
-==19730==    definitely lost: 0 bytes in 0 blocks
-==19730==    indirectly lost: 0 bytes in 0 blocks
-==19730==      possibly lost: 0 bytes in 0 blocks
-==19730==    still reachable: 289,355 bytes in 3,075 blocks
-==19730==         suppressed: 32 bytes in 1 blocks
-==19730== Reachable blocks (those to which a pointer was found) are not shown.
-==19730== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==19730== 
-==19730== For lists of detected and suppressed errors, rerun with: -s
-==19730== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==34610== Memcheck, a memory error detector
+==34610== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==34610== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
+==34610== Command: ../../bin/dorton
+==34610== Parent PID: 34608
+==34610== 
+==34610== Warning: set address range perms: large range [0x19683000, 0x2d683000) (defined)
+==34610== Warning: set address range perms: large range [0x19683000, 0x2d683000) (defined)
+==34610== Warning: set address range perms: large range [0x19683000, 0x2d683000) (noaccess)
+==34610== Warning: set address range perms: large range [0x19683000, 0x2d683000) (noaccess)
+==34610== 
+==34610== HEAP SUMMARY:
+==34610==     in use at exit: 289,387 bytes in 3,076 blocks
+==34610==   total heap usage: 551,624 allocs, 543,015 frees, 410,251,697 bytes allocated
+==34610== 
+==34610== LEAK SUMMARY:
+==34610==    definitely lost: 0 bytes in 0 blocks
+==34610==    indirectly lost: 0 bytes in 0 blocks
+==34610==      possibly lost: 0 bytes in 0 blocks
+==34610==    still reachable: 289,355 bytes in 3,075 blocks
+==34610==         suppressed: 32 bytes in 1 blocks
+==34610== Reachable blocks (those to which a pointer was found) are not shown.
+==34610== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==34610== 
+==34610== For lists of detected and suppressed errors, rerun with: -s
+==34610== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

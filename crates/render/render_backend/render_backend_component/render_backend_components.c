@@ -86,14 +86,66 @@ DResult render_backend_components_push_empty(RenderBackend *backend, RenderBacke
     return D_ERROR;
   }
 
+  RenderBackendShaders shaders = {0};
+  if (render_backend_create_default_shaders(backend, &shaders) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
   RenderBackendComponentInfo component_info = {0};
   component_info.render_pass = &render_pass;
   component_info.command_pool = &command_pool;
   component_info.command_buffers = &command_buffers;
   component_info.vertex_buffer = &vertex_buffer;
   component_info.index_buffer = &index_buffer;
+  component_info.shaders = &shaders;
+
+  u32 components_size = components->components_size;
 
   if (render_backend_components_push(backend, components, &component_info) != D_SUCCESS)
+  {
+    return D_ERROR;
+  }
+
+  RenderBackendComponent *component = (RenderBackendComponent *)darray_get(&components->components, components_size);
+
+  VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+
+  RenderBackendRasterizerInfo rasterizer_info = render_backend_create_default_rasterizer_info();
+  RenderBackendMultisampleInfo multisample_info = render_backend_create_default_multisample_info();
+  RenderBackendColorBlendInfo color_blend_info = render_backend_create_default_color_blend_info();
+
+  VkViewport viewport = {};
+  viewport.x = 0.f;
+  viewport.y = 0.f;
+  viewport.width = (f32)backend->swap_chain.extent.width;
+  viewport.height = (f32)backend->swap_chain.extent.height;
+  viewport.minDepth = 0.f;
+  viewport.maxDepth = 1.f;
+
+  // 2D offset problems when working with 3D?
+  VkScissor scissor = {};
+  scissor.offset = (VkOffset2D){0, 0};
+  scissor.extent = backend->swap_chain.extent;
+
+  DArray dynamic_states;
+  darray_reserve(&dynamic_states, VkDynamicState, 2);
+  darray_set(&dynamic_states, VK_DYNAMIC_STATE_VIEWPORT, 0);
+  darray_set(&dynamic_states, VK_DYNAMIC_STATE_SCISSOR, 1);
+
+  RenderBackendPipelineLayout pipeline_layout = render_backend_create_default_pipeline_layout();
+
+  ComponentPipelineInfo component_pipeline_info = {0};
+  component_pipeline_info.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+  component_pipeline_info.viewport = viewport;
+  component_pipeline_info.scissor = scissor;
+  component_pipeline_info.rasterizer_info = &rasterizer_info;
+  component_pipeline_info.multisample_info = &multisample_info;
+  component_pipeline_info.color_blend_info = &color_blend_info;
+  component_pipeline_info.dynamic_states = &dynamic_states;
+  component_pipeline_info.pipeline_layout = &pipeline_layout;
+
+  if (render_backend_component_create_pipeline(backend, component, &component_pipeline_info) != D_SUCCESS)
   {
     return D_ERROR;
   }
@@ -113,19 +165,18 @@ DResult render_backend_process_components(RenderBackend *backend, RenderBackendC
     return D_ERROR;
   }
 
-  DResult result;
-
   for (u32 i = 0; i < size; ++i)
   {
     RenderBackendComponent *component = (RenderBackendComponent *)darray_get(&components->components, i);
 
     if (render_backend_process_component(backend, component, draw_packet) != D_SUCCESS)
     {
+      DERROR("Could not process components.");
       return D_ERROR;
     }
   }
 
-  return result;
+  return D_SUCCESS;
 }
 
 DResult render_backend_components_recreate_framebuffers(RenderBackend *backend, RenderBackendComponents *components)

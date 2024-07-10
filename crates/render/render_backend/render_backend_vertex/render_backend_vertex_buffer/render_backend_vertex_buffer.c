@@ -10,7 +10,7 @@
 
 #include <string.h>
 
-#define DEFAULT_VERTEX_BUFFER_SIZE sizeof(RenderBackendVertex3D) * 8 * 1024 * 1024
+#define DEFAULT_VERTEX_BUFFER_SIZE sizeof(RenderBackendVertex) * 8 * 1024 * 1024
 
 DResult render_backend_create_empty_vertex_buffer(RenderBackend *backend, RenderBackendVertexBuffer *vertex_buffer)
 {
@@ -56,7 +56,7 @@ DResult render_backend_create_empty_vertex_buffer(RenderBackend *backend, Render
 
   vertex_buffer->vertices = (RenderBackendVertices){0};
   vertex_buffer->binding = 0;
-  vertex_buffer->type = VERTEX_TYPE_3D;
+  vertex_buffer->type = VERTEX_TYPE_2D;
 
   return D_SUCCESS;
 }

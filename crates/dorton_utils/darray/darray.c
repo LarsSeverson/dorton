@@ -31,6 +31,11 @@ DResult _darray_reserve(DArray *array, u64 size, u64 stride)
 
 DResult _darray_destroy(DArray *array)
 {
+  if (array == NULL)
+  {
+    return D_IGNORED;
+  }
+
   if (array->raw_array)
   {
     free(array->raw_array);
@@ -183,11 +188,21 @@ DResult _darray_set(DArray *array, const void *val, u64 index)
 
 void *_darray_data(DArray *array)
 {
+  if (array == NULL)
+  {
+    return NULL;
+  }
+
   return array->raw_array;
 }
 
 u64 darray_size(DArray *array)
 {
+  if (array == NULL)
+  {
+    return 0;
+  }
+
   return array->size;
 }
 
