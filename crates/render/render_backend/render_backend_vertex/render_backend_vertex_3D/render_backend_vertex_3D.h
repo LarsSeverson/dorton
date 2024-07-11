@@ -8,8 +8,3 @@ typedef struct RenderBackendVertex3D
   vec3 color;
 
 } RenderBackendVertex3D;
-
-struct RenderBackendVertex;
-
-RenderBackendVertex3D *render_backend_create_vertex_3D(struct RenderBackendVertex *vertex, void *vertex_data);
-DResult render_backend_destroy_vertex_3D(struct RenderBackendVertex *vertex);

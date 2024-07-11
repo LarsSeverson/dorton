@@ -1,7 +1,5 @@
 #include "render_backend_vertex_2D.h"
 
-#include "render/render_backend/render_backend_vertex/render_backend_vertex.h"
-
 #include <stdlib.h>
 #include <string.h>
 
@@ -35,16 +33,4 @@ DArray get_vertex_2D_attribute_descriptions(u32 binding)
   attribute_descriptions_data[1].offset = offsetof(RenderBackendVertex2D, color);
 
   return attribute_descriptions;
-}
-
-RenderBackendVertex2D *render_backend_create_vertex_2D(RenderBackendVertex *vertex, void *vertex_data)
-{
-  RenderBackendVertex2D *vertex_2D = (RenderBackendVertex2D *)calloc(1, sizeof(RenderBackendVertex2D));
-  memcpy(vertex_2D, vertex_data, sizeof(RenderBackendVertex2D));
-
-  vertex->byte_size = sizeof(RenderBackendVertex2D);
-  vertex->get_binding_description = get_vertex_2D_binding_description;
-  vertex->get_attribute_descriptions = get_vertex_2D_attribute_descriptions;
-
-  return vertex_2D;
 }
