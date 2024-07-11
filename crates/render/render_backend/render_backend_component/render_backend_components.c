@@ -75,7 +75,7 @@ DResult render_backend_components_push_empty(RenderBackend *backend, RenderBacke
   }
 
   RenderBackendVertexBuffer vertex_buffer = {0};
-  if (render_backend_create_empty_vertex_buffer(backend, &vertex_buffer) != D_SUCCESS)
+  if (render_backend_create_vertex_buffer(backend, &vertex_buffer) != D_SUCCESS)
   {
     return D_ERROR;
   }
@@ -115,19 +115,6 @@ DResult render_backend_components_push_empty(RenderBackend *backend, RenderBacke
   RenderBackendMultisampleInfo multisample_info = render_backend_create_default_multisample_info();
   RenderBackendColorBlendInfo color_blend_info = render_backend_create_default_color_blend_info();
 
-  VkViewport viewport = {};
-  viewport.x = 0.f;
-  viewport.y = 0.f;
-  viewport.width = (f32)backend->swap_chain.extent.width;
-  viewport.height = (f32)backend->swap_chain.extent.height;
-  viewport.minDepth = 0.f;
-  viewport.maxDepth = 1.f;
-
-  // 2D offset problems when working with 3D?
-  VkScissor scissor = {};
-  scissor.offset = (VkOffset2D){0, 0};
-  scissor.extent = backend->swap_chain.extent;
-
   DArray dynamic_states;
   darray_reserve(&dynamic_states, VkDynamicState, 2);
   darray_set(&dynamic_states, VK_DYNAMIC_STATE_VIEWPORT, 0);
@@ -137,8 +124,6 @@ DResult render_backend_components_push_empty(RenderBackend *backend, RenderBacke
 
   ComponentPipelineInfo component_pipeline_info = {0};
   component_pipeline_info.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-  component_pipeline_info.viewport = viewport;
-  component_pipeline_info.scissor = scissor;
   component_pipeline_info.rasterizer_info = &rasterizer_info;
   component_pipeline_info.multisample_info = &multisample_info;
   component_pipeline_info.color_blend_info = &color_blend_info;

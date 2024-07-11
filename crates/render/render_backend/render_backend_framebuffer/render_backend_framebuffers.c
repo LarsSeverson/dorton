@@ -33,7 +33,6 @@ DResult render_backend_create_framebuffers(RenderBackend *backend, RenderBackend
   }
 
   framebuffers->size = size;
-  framebuffers->render_pass = framebuffers_info->render_pass;
 
   return D_SUCCESS;
 }
@@ -55,17 +54,14 @@ DResult render_backend_destroy_framebuffers(RenderBackend *backend, RenderBacken
   return D_SUCCESS;
 }
 
-DResult render_backend_recreate_framebuffers(RenderBackend *backend, RenderBackendFramebuffers *framebuffers)
+DResult render_backend_recreate_framebuffers(RenderBackend *backend, RenderBackendFramebuffers *framebuffers, FramebuffersInfo *framebuffers_info)
 {
   if (render_backend_destroy_framebuffers(backend, framebuffers) != D_SUCCESS)
   {
     return D_ERROR;
   }
 
-  FramebuffersInfo framebuffers_info = {0};
-  framebuffers_info.render_pass = framebuffers->render_pass;
-
-  if (render_backend_create_framebuffers(backend, framebuffers, &framebuffers_info) != D_SUCCESS)
+  if (render_backend_create_framebuffers(backend, framebuffers, framebuffers_info) != D_SUCCESS)
   {
     return D_ERROR;
   }

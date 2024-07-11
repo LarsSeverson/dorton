@@ -10,8 +10,11 @@
 
 VkPipelineShaderStageCreateInfo *pipeline_create_shader_stage_info(PipelineInfo *pipeline_info)
 {
-    VkPipelineShaderStageCreateInfo *info = render_backend_shaders_get_stages(pipeline_info->shaders);
-    return info;
+    DArray shader_stages = render_backend_shaders_get_stages(pipeline_info->shaders);
+
+    VkPipelineShaderStageCreateInfo *shader_stages_data = (VkPipelineShaderStageCreateInfo *)darray_data(&shader_stages);
+
+    return shader_stages_data;
 }
 
 VkPipelineVertexInputStateCreateInfo pipeline_create_vertex_input_info(PipelineInfo *pipeline_info)
@@ -42,10 +45,8 @@ VkPipelineInputAssemblyStateCreateInfo pipeline_create_input_assembly_info(Pipel
 VkPipelineViewportStateCreateInfo pipeline_create_viewport_info(PipelineInfo *pipeline_info)
 {
     VkPipelineViewportStateCreateInfo viewport_state = {VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO};
-    viewport_state.viewportCount = 1;
-    viewport_state.pViewports = &pipeline_info->viewport;
-    viewport_state.scissorCount = 1;
-    viewport_state.pScissors = &pipeline_info->scissor;
+    viewport_state.viewportCount = pipeline_info->viewport_count;
+    viewport_state.scissorCount = pipeline_info->scissor_count;
 
     return viewport_state;
 }
@@ -163,9 +164,6 @@ DResult render_backend_create_pipeline(RenderBackend *backend, RenderBackendPipe
         DERROR("Unable to create graphics pipeline.");
         return D_ERROR;
     }
-
-    pipeline->viewport = pipeline_info->viewport;
-    pipeline->scissor = pipeline_info->scissor;
     pipeline->render_pass = *pipeline_info->render_pass;
 
     render_backend_destroy_pipeline_info(pipeline_info);

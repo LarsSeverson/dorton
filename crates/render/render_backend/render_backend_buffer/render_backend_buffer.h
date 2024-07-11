@@ -11,6 +11,7 @@ typedef struct BufferInfo
 
   u64 size;
   u64 offset;
+
 } BufferInfo;
 
 typedef struct RenderBackendBuffer
@@ -20,6 +21,7 @@ typedef struct RenderBackendBuffer
 
   u64 size;
   u64 offset;
+  
 } RenderBackendBuffer;
 
 struct RenderBackend;

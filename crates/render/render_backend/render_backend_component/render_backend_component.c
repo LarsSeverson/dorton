@@ -42,47 +42,54 @@ DResult render_backend_destroy_component(RenderBackend *backend, RenderBackendCo
   return D_SUCCESS;
 }
 
-DResult render_backend_component_set_vertices(RenderBackendComponent *component, RenderBackendVertices *vertices)
+DResult render_backend_component_set_vertices(RenderBackend *backend, RenderBackendComponent *component, RenderBackendVertices *vertices)
 {
+  if (render_backend_update_vertex_buffer(backend, &component->vertex_buffer, vertices) != D_SUCCESS)
+  {
+    DERROR("Error setting component vertices.");
+    return D_ERROR;
+  }
+
   return D_SUCCESS;
 }
 
-DResult render_backend_component_set_indices(RenderBackendComponent *component, RenderBackendIndices *indices)
+DResult render_backend_component_set_indices(RenderBackend *backend, RenderBackendComponent *component, RenderBackendIndices *indices)
 {
+  if (render_backend_update_index_buffer(backend, &component->index_buffer, indices) != D_SUCCESS)
+  {
+    DERROR("Error setting component indices.");
+    return D_ERROR;
+  }
+
   return D_SUCCESS;
 }
 
 DResult render_backend_component_create_pipeline(RenderBackend *backend, RenderBackendComponent *component, ComponentPipelineInfo *component_pipeline_info)
 {
-  PipelineInfo pipeline_info = {0};
+  VkVertexInputBindingDescription binding_description = get_vertex_2D_binding_description(0, VERTEX_INPUT_RATE_VERTEX);
+  DArray attribute_descriptions = get_vertex_2D_attribute_descriptions(0);
+  
+  DArray binding_descriptions;
+  darray_reserve(&binding_descriptions, VkVertexInputBindingDescription, 1);
+  darray_set(&binding_descriptions, binding_description, 0);
 
-  VkVertexInputBindingDescription binding_description;
-  DArray attribute_descriptions;
-
-  if (darray_size(&component->vertex_buffer.vertices.vertices_inner))
+  if (component->vertex_buffer.vertices.size)
   {
     binding_description = render_backend_vertex_buffer_get_binding_description(&component->vertex_buffer);
-
-    DArray binding_descriptions;
-    darray_reserve(&binding_descriptions, VkVertexInputBindingDescription, 1);
     darray_set(&binding_descriptions, binding_description, 0);
 
+    darray_destroy(&attribute_descriptions);
     attribute_descriptions = render_backend_vertex_buffer_get_attribute_descriptions(&component->vertex_buffer);
-
-    pipeline_info.binding_descriptions = &binding_descriptions;
-    pipeline_info.attribute_descriptions = &attribute_descriptions;
-  }
-  else
-  {
-    pipeline_info.binding_descriptions = NULL;
-    pipeline_info.attribute_descriptions = NULL;
   }
 
+  PipelineInfo pipeline_info = {0};
   pipeline_info.shader_flags = component_pipeline_info->shader_flags;
   pipeline_info.shaders = &component->shaders;
+  pipeline_info.binding_descriptions = &binding_descriptions;
+  pipeline_info.attribute_descriptions = &attribute_descriptions;
   pipeline_info.topology = component_pipeline_info->topology;
-  pipeline_info.viewport = component_pipeline_info->viewport;
-  pipeline_info.scissor = component_pipeline_info->scissor;
+  pipeline_info.viewport_count = 1;
+  pipeline_info.scissor_count = 1;
   pipeline_info.rasterizer_info = component_pipeline_info->rasterizer_info;
   pipeline_info.multisample_info = component_pipeline_info->multisample_info;
   pipeline_info.color_blend_info = component_pipeline_info->color_blend_info;
@@ -122,5 +129,8 @@ DResult render_backend_process_component(RenderBackend *backend, RenderBackendCo
 
 DResult render_backend_recreate_component_framebuffers(RenderBackend *backend, RenderBackendComponent *component)
 {
-  return render_backend_recreate_framebuffers(backend, &component->framebuffers);
+  FramebuffersInfo framebuffers_info = {0};
+  framebuffers_info.render_pass = &component->render_pass;
+
+  return render_backend_recreate_framebuffers(backend, &component->framebuffers, &framebuffers_info);
 }

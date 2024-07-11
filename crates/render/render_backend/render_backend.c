@@ -191,8 +191,6 @@ DResult render_backend_draw(RenderBackend *backend, RenderPacket packet)
 {
   RenderBackendDrawPacket draw_packet = {0};
 
-  DINFO("Drawing: %d", backend->current_frame);
-
   if (render_backend_begin_frame(backend, &draw_packet) != D_SUCCESS)
   {
     DERROR("Error beginning frame.");

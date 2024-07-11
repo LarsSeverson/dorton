@@ -31,11 +31,19 @@ DResult render_backend_create_render_pass(RenderBackend *backend, RenderBackendR
   sub_pass.colorAttachmentCount = 1;
   sub_pass.pColorAttachments = &color_attachment_ref;
 
+  VkSubpassDependency sub_pass_dependency = {0};
+  sub_pass_dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+  sub_pass_dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+  sub_pass_dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+  sub_pass_dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
   VkRenderPassCreateInfo render_pass_create_info = {VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO};
   render_pass_create_info.attachmentCount = 1;
   render_pass_create_info.pAttachments = &color_attachment;
   render_pass_create_info.subpassCount = 1;
   render_pass_create_info.pSubpasses = &sub_pass;
+  render_pass_create_info.dependencyCount = 1;
+  render_pass_create_info.pDependencies = &sub_pass_dependency;
 
   if (vkCreateRenderPass(backend->device.logical_device, &render_pass_create_info, backend->vulkan_context.allocator, &render_pass->render_pass_inner) != VK_SUCCESS)
   {

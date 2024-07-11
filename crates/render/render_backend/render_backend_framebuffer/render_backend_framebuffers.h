@@ -20,14 +20,12 @@ typedef struct RenderBackendFramebuffers
 
     u32 size;
 
-    RenderBackendRenderPass *render_pass;
-
 } RenderBackendFramebuffers;
 
 struct RenderBackend;
 
 DResult render_backend_create_framebuffers(struct RenderBackend *backend, RenderBackendFramebuffers *framebuffers, FramebuffersInfo *framebuffers_info);
 DResult render_backend_destroy_framebuffers(struct RenderBackend *backend, RenderBackendFramebuffers *framebuffers);
-DResult render_backend_recreate_framebuffers(struct RenderBackend *backend, RenderBackendFramebuffers *framebuffers);
+DResult render_backend_recreate_framebuffers(struct RenderBackend *backend, RenderBackendFramebuffers *framebuffers, FramebuffersInfo *framebuffers_info);
 
 RenderBackendFramebuffer *framebuffers_get(RenderBackendFramebuffers *framebuffers, u32 index);

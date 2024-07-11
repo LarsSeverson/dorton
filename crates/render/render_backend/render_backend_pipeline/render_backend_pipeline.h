@@ -25,8 +25,8 @@ typedef struct PipelineInfo
 
   VkPrimitiveTopology topology;
 
-  VkViewport viewport; // TODO: Multiple viewports
-  VkScissor scissor;   // TODO: Multiple scissors
+  u32 viewport_count;
+  u32 scissor_count;
 
   RenderBackendRasterizerInfo *rasterizer_info;
   RenderBackendMultisampleInfo *multisample_info;
@@ -47,8 +47,6 @@ typedef struct RenderBackendPipeline
   VkPipelineLayout layout;
 
   RenderBackendRenderPass render_pass;
-  VkViewport viewport;
-  VkScissor scissor;
 
 } RenderBackendPipeline;
 

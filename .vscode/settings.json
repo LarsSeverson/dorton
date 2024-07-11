@@ -14,7 +14,8 @@
     "xmemory": "c",
     "xstring": "c",
     "vulkan.h": "c",
-    "render_backend_buffer.h": "c"
+    "render_backend_buffer.h": "c",
+    "render_backend_vertex.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

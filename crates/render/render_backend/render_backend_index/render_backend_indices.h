@@ -9,6 +9,7 @@ typedef struct RenderBackendIndices
     // RenderBackendIndex
     DArray indices_inner;
     u32 size;
+    u64 byte_size;
     
 } RenderBackendIndices;
 

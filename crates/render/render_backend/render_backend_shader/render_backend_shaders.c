@@ -70,7 +70,7 @@ DResult render_backend_create_default_shaders(RenderBackend *backend, RenderBack
     return D_SUCCESS;
 }
 
-VkPipelineShaderStageCreateInfo *render_backend_shaders_get_stages(RenderBackendShaders *shaders)
+DArray render_backend_shaders_get_stages(RenderBackendShaders *shaders)
 {
-    return (VkPipelineShaderStageCreateInfo *)darray_data(&shaders->shader_stages);
+    return shaders->shader_stages;
 }

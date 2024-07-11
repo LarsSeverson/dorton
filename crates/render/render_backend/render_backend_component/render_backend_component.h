@@ -18,9 +18,6 @@ typedef struct ComponentPipelineInfo
 
   VkPrimitiveTopology topology;
 
-  VkViewport viewport; // TODO: Multiple viewports
-  VkScissor scissor;   // TODO: Multiple scissors
-
   RenderBackendRasterizerInfo *rasterizer_info;
   RenderBackendMultisampleInfo *multisample_info;
   RenderBackendColorBlendInfo *color_blend_info;
@@ -70,8 +67,8 @@ struct RenderBackend;
 DResult render_backend_create_component(struct RenderBackend *backend, RenderBackendComponent *component, RenderBackendComponentInfo *component_info);
 DResult render_backend_destroy_component(struct RenderBackend *backend, RenderBackendComponent *component);
 
-DResult render_backend_component_set_vertices(RenderBackendComponent *component, RenderBackendVertices *vertices);
-DResult render_backend_component_set_indices(RenderBackendComponent *component, RenderBackendIndices *indices);
+DResult render_backend_component_set_vertices(struct RenderBackend *backend, RenderBackendComponent *component, RenderBackendVertices *vertices);
+DResult render_backend_component_set_indices(struct RenderBackend *backend, RenderBackendComponent *component, RenderBackendIndices *indices);
 
 DResult render_backend_component_create_pipeline(struct RenderBackend *backend, RenderBackendComponent *component, ComponentPipelineInfo *component_pipeline_info);
 

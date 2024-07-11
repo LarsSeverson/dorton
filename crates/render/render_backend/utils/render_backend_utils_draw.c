@@ -26,7 +26,7 @@ DResult render_backend_postdraw_process_result(RenderBackend *backend, VkResult 
 {
   if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || backend->resized)
   {
-    backend->resized = true;
+    backend->resized = false;
 
     if (render_backend_recreate_swap_chain(backend) != D_SUCCESS)
     {

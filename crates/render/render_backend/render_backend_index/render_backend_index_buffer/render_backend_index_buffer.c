@@ -56,8 +56,7 @@ DResult render_backend_create_empty_index_buffer(RenderBackend *backend, RenderB
 
 DResult render_backend_create_index_buffer(RenderBackend *backend, RenderBackendIndexBuffer *index_buffer, IndexBufferInfo *index_buffer_info)
 {
-    u32 indices_size = render_backend_indices_size(&index_buffer_info->indices);
-    u64 index_buffer_size = sizeof(RenderBackendIndex) * indices_size;
+    u64 index_buffer_size = index_buffer_info->indices->byte_size;
 
     BufferInfo staging_buffer_info = {VK_BUFFER_USAGE_TRANSFER_SRC_BIT};
     staging_buffer_info.properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
@@ -71,7 +70,7 @@ DResult render_backend_create_index_buffer(RenderBackend *backend, RenderBackend
         return D_ERROR;
     }
 
-    RenderBackendIndex *indices_data = render_backend_indices_data(&index_buffer_info->indices);
+    RenderBackendIndex *indices_data = render_backend_indices_data(index_buffer_info->indices);
 
     void *data;
     vkMapMemory(backend->device.logical_device, staging_buffer.memory, 0, index_buffer_size, 0, &data);
@@ -98,7 +97,7 @@ DResult render_backend_create_index_buffer(RenderBackend *backend, RenderBackend
 
     render_backend_destroy_buffer(backend, &staging_buffer);
 
-    index_buffer->indices = index_buffer_info->indices;
+    index_buffer->indices = *index_buffer_info->indices;
 
     return D_SUCCESS;
 }
@@ -109,6 +108,45 @@ DResult render_backend_destroy_index_buffer(RenderBackend *backend, RenderBacken
     render_backend_destroy_indices(&index_buffer->indices);
 
     *index_buffer = (RenderBackendIndexBuffer){0};
+
+    return D_SUCCESS;
+}
+
+DResult render_backend_update_index_buffer(RenderBackend *backend, RenderBackendIndexBuffer *index_buffer, RenderBackendIndices *indices)
+{
+    u64 indices_size = indices->byte_size;
+
+    BufferInfo staging_buffer_info = {VK_BUFFER_USAGE_TRANSFER_SRC_BIT};
+    staging_buffer_info.properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    staging_buffer_info.sharing_mode = VK_SHARING_MODE_EXCLUSIVE;
+    staging_buffer_info.size = indices_size;
+    staging_buffer_info.offset = 0;
+
+    RenderBackendBuffer staging_buffer;
+    if (render_backend_create_buffer(backend, &staging_buffer, &staging_buffer_info) != D_SUCCESS)
+    {
+        DERROR("Error creating staging buffer.");
+        return D_ERROR;
+    }
+
+    RenderBackendIndex *indices_data = render_backend_indices_data(indices);
+
+    void *data;
+    vkMapMemory(backend->device.logical_device, staging_buffer.memory, 0, indices_size, 0, &data);
+    memcpy(data, indices_data, (size_t)indices_size);
+    vkUnmapMemory(backend->device.logical_device, staging_buffer.memory);
+
+    if (render_backend_copy_buffer(backend, &staging_buffer, &index_buffer->buffer, indices_size) != D_SUCCESS)
+    {
+        render_backend_destroy_buffer(backend, &staging_buffer);
+        DERROR("Error copying buffer. Could not update index buffer.");
+
+        return D_ERROR;
+    }
+
+    render_backend_destroy_buffer(backend, &staging_buffer);
+
+    index_buffer->indices = *indices;
 
     return D_SUCCESS;
 }

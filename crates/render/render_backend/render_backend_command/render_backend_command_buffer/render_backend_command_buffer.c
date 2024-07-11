@@ -87,7 +87,7 @@ DResult command_buffer_submit(RenderBackendCommandBuffer *command_buffer)
 DResult command_buffer_reset(RenderBackendCommandBuffer *command_buffer)
 {
     vkResetCommandBuffer(command_buffer->command_buffer_inner, 0);
-    
+
     command_buffer->state = COMMAND_BUFFER_STATE_INITIAL;
 
     return D_SUCCESS;
@@ -152,6 +152,7 @@ DResult render_backend_record_command_buffer(RenderBackend *backend, CommandBuff
     render_pass_info.framebuffer = record_info->framebuffer->framebuffer_inner;
     render_pass_info.renderArea.offset = (VkOffset2D){0, 0}; // TODO: Configurable
     render_pass_info.renderArea.extent = backend->swap_chain.extent;
+
     VkClearValue clear_color = {0.f, 0.f, 0.f, 1.f}; // TODO: Configurable
     render_pass_info.clearValueCount = 1;
     render_pass_info.pClearValues = &clear_color;
@@ -161,8 +162,21 @@ DResult render_backend_record_command_buffer(RenderBackend *backend, CommandBuff
     // TODO: Pipeline bind point?
     vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, record_info->pipeline->pipeline_inner);
 
-    vkCmdSetViewport(command_buffer, 0, 1, &record_info->pipeline->viewport);
-    vkCmdSetScissor(command_buffer, 0, 1, &record_info->pipeline->scissor);
+    VkViewport viewport = {0.0f};
+    viewport.x = 0.0f;
+    viewport.y = 0.0f;
+    viewport.width = (f32)backend->swap_chain.extent.width;
+    viewport.height = (f32)backend->swap_chain.extent.height;
+    viewport.minDepth = 0.0f;
+    viewport.maxDepth = 1.0f;
+
+    vkCmdSetViewport(command_buffer, 0, 1, &viewport);
+
+    VkScissor scissor = {};
+    scissor.offset = (VkOffset2D){0, 0};
+    scissor.extent = backend->swap_chain.extent;
+
+    vkCmdSetScissor(command_buffer, 0, 1, &scissor);
 
     // TODO: Vertex buffers
     VkBuffer vertex_buffers[] = {record_info->vertex_buffer->buffer.buffer_inner};
